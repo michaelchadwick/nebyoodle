@@ -1,0 +1,14 @@
+.DS_Store
+.eslintrc.js
+.eslintrc.json
+.eslintrc.yaml
+.jshintrc
+.git
+.gitignore
+*.icloud
+bower.json
+LICENSE.md
+README.md
+Rakefile
+rsync-exclude.txt
+TODO.md
