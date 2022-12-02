@@ -476,16 +476,6 @@ Nebyoodle._loadSettings = function() {
   var lsSettings = JSON.parse(localStorage.getItem(NEBYOODLE_SETTINGS_KEY))
 
   if (lsSettings) {
-    Nebyoodle.settings.clearWord = lsSettings.clearWord
-
-    if (Nebyoodle.settings.clearWord) {
-      var setting = document.getElementById('button-setting-clear-word')
-
-      if (setting) {
-        setting.dataset.status = 'true'
-      }
-    }
-
     Nebyoodle.settings.darkMode = lsSettings.darkMode
 
     if (Nebyoodle.settings.darkMode) {
@@ -499,18 +489,6 @@ Nebyoodle._loadSettings = function() {
     }
 
     Nebyoodle.settings.gameMode = lsSettings.gameMode || 'daily'
-
-    Nebyoodle.settings.noisy = lsSettings.noisy || false
-
-    if (Nebyoodle.settings.noisy) {
-      Nebyoodle._initAudio()
-
-      var setting = document.getElementById('button-setting-noisy')
-
-      if (setting) {
-        setting.dataset.status = 'true'
-      }
-    }
   } else {
     Nebyoodle.settings = NEBYOODLE_DEFAULTS.settings
   }
@@ -519,24 +497,7 @@ Nebyoodle._loadSettings = function() {
   if (Nebyoodle.settings.gameMode == 'free') {
     Nebyoodle.dom.interactive.gameModeDailyLink.dataset.active = false
     Nebyoodle.dom.interactive.gameModeFreeLink.dataset.active = true
-    Nebyoodle.dom.interactive.difficultyContainer.classList.add('show')
     Nebyoodle.dom.dailyDetails.classList.remove('show')
-    Nebyoodle.dom.interactive.btnCreateNew.disabled = false
-  }
-
-  // STATE->FREE->DIFFICULTY
-  var lsConfigStateFree = JSON.parse(localStorage.getItem(NEBYOODLE_STATE_FREE_KEY))
-
-  if (lsConfigStateFree) {
-    if (lsConfigStateFree.difficulty) {
-      Nebyoodle.dom.interactive.difficultyContainerLinks.forEach(link => link.dataset.active = false)
-
-      var setting = document.getElementById(`diff-${lsConfigStateFree.difficulty}`)
-
-      if (setting) {
-        setting.dataset.active = true
-      }
-    }
   }
 
   // console.log('loaded settings from LS!', Nebyoodle.settings)
@@ -608,63 +569,6 @@ Nebyoodle._changeSetting = async function(setting, value, event) {
 
       break
 
-    case 'difficulty':
-      var gameMode = 'free'
-      var oldDiff = Nebyoodle.state[gameMode].difficulty
-      var newDiff = event.target.dataset.diffid
-
-      // don't prompt unless new difficulty
-      if (newDiff != oldDiff) {
-        // make sure user wants to change difficulty, as it loses all progress
-        var mySubConfirm = new Modal('confirm', 'Change difficulty?',
-          'Changing the difficulty will start a new puzzle, and the current one will be lost. Are you sure you want to do this?',
-          'Yes, change the difficulty',
-          'No, never mind'
-        )
-
-        try {
-          // wait for modal confirmation
-          var confirmed = await mySubConfirm.question()
-
-          // if confirmed, set new difficulty and reset game
-          if (confirmed) {
-            // set internal code model
-            Nebyoodle.state[gameMode].difficulty = newDiff
-
-            // set dom status
-            document.getElementById(`diff-${oldDiff}`).dataset.active = false
-            document.getElementById(event.target.id).dataset.active = true
-
-            Nebyoodle._clearHint()
-
-            // start a new game with newDiff (but using current seedWord)
-            await Nebyoodle._loadExistingSolutionSet('free', Nebyoodle.config['free'].seedWord, true)
-          }
-          else {
-            // document.querySelector(`#container-difficulty input[data-diffid="${oldDiff}"]`).checked = true
-          }
-        } catch (err) {
-          console.error('difficulty change failed', err)
-        }
-      }
-
-      break
-
-    case 'clearWord':
-      var st = document.getElementById('button-setting-clear-word').dataset.status
-
-      if (st == '' || st == 'false') {
-        document.getElementById('button-setting-clear-word').dataset.status = 'true'
-
-        Nebyoodle._saveSetting('clearWord', true)
-      } else {
-        document.getElementById('button-setting-clear-word').dataset.status = 'false'
-
-        Nebyoodle._saveSetting('clearWord', false)
-      }
-
-      break
-
     case 'darkMode':
       var st = document.getElementById('button-setting-dark-mode').dataset.status
 
@@ -678,25 +582,6 @@ Nebyoodle._changeSetting = async function(setting, value, event) {
         document.body.classList.remove('dark-mode')
 
         Nebyoodle._saveSetting('darkMode', false)
-      }
-
-      break
-
-    case 'noisy':
-      var st = document.getElementById('button-setting-noisy').dataset.status
-
-      if (st == '' || st == 'false') {
-        document.getElementById('button-setting-noisy').dataset.status = 'true'
-
-        await Nebyoodle._initAudio()
-
-        Nebyoodle._saveSetting('noisy', true)
-      } else {
-        document.getElementById('button-setting-noisy').dataset.status = 'false'
-
-        await deleteOldCaches()
-
-        Nebyoodle._saveSetting('noisy', false)
       }
 
       break
@@ -747,321 +632,19 @@ Nebyoodle._initDebug = function() {
   }
 }
 
-// initialize seedWordsFile to pull initial seedWord from
-Nebyoodle._initSeedWordsFile = function(gameMode) {
-  // console.log('initializing seedWordsFile:', gameMode)
-
-  Nebyoodle.config[gameMode].seedWordsFile = './assets/json/'
-
-  // currently, this loads the same word source every time,
-  // but future iterations may actually switch
-  if (gameMode == 'free') {
-    Nebyoodle.config[gameMode].seedWordsFile += NEBYOODLE_WORD_SOURCES[NEBYOODLE_DIFFICULTY[Nebyoodle.state[gameMode].difficulty]]
-  } else { // 'daily' is always 'normal' difficulty
-    Nebyoodle.config[gameMode].seedWordsFile += NEBYOODLE_WORD_SOURCES[NEBYOODLE_DIFFICULTY['normal']]
-  }
-
-  Nebyoodle.config[gameMode].seedWordsFile += `/words_9-9.json`
-
-  // console.log(`Nebyoodle.config[${gameMode}].seedWordsFile`, Nebyoodle.config[gameMode].seedWordsFile)
-}
-
-// TODO: add to CacheStorage
-// initialize dictionary to find words for solutionSet
-Nebyoodle._initDictionaryFile = function(gameMode) {
-  // console.log('initializing dictionary file:', gameMode)
-
-  Nebyoodle.config[gameMode].dictionary = './assets/json/'
-
-  if (gameMode == 'free') {
-    Nebyoodle.config[gameMode].dictionary += `${NEBYOODLE_WORD_SOURCES[NEBYOODLE_DIFFICULTY[Nebyoodle.state[gameMode].difficulty]]}`
-  } else { // 'daily' is always 'normal' difficulty
-    Nebyoodle.config[gameMode].dictionary += `${NEBYOODLE_WORD_SOURCES[NEBYOODLE_DIFFICULTY['normal']]}`
-  }
-
-  Nebyoodle.config[gameMode].dictionary += `/words_3-${Nebyoodle.__getMaxWordLength()}.json`
-}
-
 // create new solutionSet, which resets progress
-Nebyoodle._createNewSolutionSet = async function(gameMode, newWord = null) {
-  // console.log(`**** creatING new '${gameMode}' solutionSet ****`)
-
-  // set config to defaults
-  Nebyoodle.config[gameMode].letters = []
-  Nebyoodle.config[gameMode].tilesSelected = []
-
-  if (gameMode == 'free') {
-    switch (NEBYOODLE_DIFF_TO_LENGTH[parseInt(Nebyoodle.difficulty)]) {
-      case 3: Nebyoodle.config[gameMode].solutionSet = EMPTY_OBJ_SET_3; break
-      case 5: Nebyoodle.config[gameMode].solutionSet = EMPTY_OBJ_SET_5; break
-      case 7: Nebyoodle.config[gameMode].solutionSet = EMPTY_OBJ_SET_7; break
-      case 9:
-      default:
-        Nebyoodle.config[gameMode].solutionSet = EMPTY_OBJ_SET; break
-    }
-  } else {
-    Nebyoodle.config[gameMode].solutionSet = EMPTY_OBJ_SET
-  }
+Nebyoodle._createNewSolutionSet = async function(gameMode) {
+  console.log(`**** creatING new '${gameMode}' solutionSet ****`)
 
   // set state to defaults
   Nebyoodle.state[gameMode].gameState = 'IN_PROGRESS'
-  Nebyoodle.state[gameMode].guessedWords = []
   Nebyoodle.state[gameMode].lastCompletedTime = null
   Nebyoodle.state[gameMode].lastPlayedTime = null
-
-  // set default FREE difficulty if none
-  if (gameMode == 'free') {
-    if (!Nebyoodle.state.free.difficulty) {
-      Nebyoodle.state.free.difficulty = 'normal'
-    }
-  }
-
-  // initialize appropriate dictionary and seed words files
-  Nebyoodle._initDictionaryFile(gameMode)
-  Nebyoodle._initSeedWordsFile(gameMode)
-
-  // get seed word
-  if (gameMode == 'free') {
-    if (!newWord) {
-      try {
-        newWord = await Nebyoodle.__getNewSeedWord()
-
-        // console.log(`_createNewSolutionSet with 'random' seed word '${newWord.toUpperCase()}'...`)
-      } catch (err) {
-        console.error('could not get new seed word', err)
-      }
-    }
-  } else { // 'daily' always uses day hash
-    try {
-      // console.log('_createNewSolutionSet->fetching NEBYOODLE_DAILY_SCRIPT')
-
-      const response = await fetch(NEBYOODLE_DAILY_SCRIPT)
-      const data = await response.json()
-      newWord = data['word']
-
-      Nebyoodle.__updateDailyDetails(data['index'])
-
-      if (newWord) {
-        // console.log(`Seed word for ${Nebyoodle.__getTodaysDate()}:`, newWord.toUpperCase())
-      } else {
-        console.error('daily word went bork', newWord)
-      }
-    } catch (e) {
-      console.error('could not get daily seed word', e)
-    }
-  }
-
-  // set gameMode's state seedWord
-  Nebyoodle.state[gameMode].seedWord = newWord
-  Nebyoodle._saveGame()
-
-  // console.log(`_createNewSolutionSet '${gameMode}' seedWord`, newWord.toUpperCase())
-
-  // create Findle/Nebyoodle solutionSet
-  try {
-    const findle = await Nebyoodle.__createFindle(
-      Nebyoodle.state[gameMode].seedWord,
-      Nebyoodle.config[gameMode].dictionary,
-      Nebyoodle.state[gameMode]
-    )
-
-    if (findle) {
-      /********************************************************************
-      * set new Nebyoodle/Findle solution                                    *
-      * -------------------                                               *
-      * load object of arrays (e.g. {"3":['aaa'],"4":['aaaa']})           *
-      * turn into object of objects (e.g. {"3":{'aaa':0},"4":{'aaaa':0}}) *
-      *********************************************************************/
-
-      // get a range of object keys from 3..Nebyoodle.__getMaxWordLength()
-      const categories = Array.from({length: Nebyoodle.__getMaxWordLength() - 2}, (x, i) => (i + 3).toString());
-
-      // zero them all out because setting it to the EMPTY_OBJ_SET does not work :'(
-      categories.forEach(category => {
-        Nebyoodle.config[gameMode].solutionSet[category] = {}
-      })
-
-      // create Nebyoodle's solutionSet
-      Object.keys(findle).forEach(key => {
-        findle[key].forEach(word => {
-          if (key <= Nebyoodle.__getMaxWordLength()) {
-            if (!Nebyoodle.config[gameMode].solutionSet[key.toString()][word]) {
-              Nebyoodle.config[gameMode].solutionSet[key.toString()][word] = {}
-            }
-
-            Nebyoodle.config[gameMode].solutionSet[key.toString()][word] = 0
-          }
-        })
-      })
-
-      // set tile letter tracking
-      Nebyoodle.config[gameMode].letters = newWord.split('')
-
-      // set score
-      Nebyoodle._setScore(0)
-
-      // choose letters randomly from solutionSet
-      Nebyoodle._shuffleTiles()
-
-      // console.log(`**** creatED new '${gameMode}' solutionSet ****`)
-    }
-  } catch (err) {
-    console.error('could not create new solution', err)
-  }
 }
 
 // load existing solutionSet, which retains past progress
-Nebyoodle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNewDiff = false) {
-  // console.log(`**** loadING existing '${gameMode}' solutionSet ****`)
-
-  // set config to defaults
-  Nebyoodle.config[gameMode].letters = []
-  Nebyoodle.config[gameMode].tilesSelected = []
-
-  // grab appropriate EMPTY_OBJ_SET
-  if (gameMode == 'free') {
-    switch (Nebyoodle.__getMaxWordLength()) {
-      case 3: Nebyoodle.config[gameMode].solutionSet = EMPTY_OBJ_SET_3; break
-      case 5: Nebyoodle.config[gameMode].solutionSet = EMPTY_OBJ_SET_5; break
-      case 7: Nebyoodle.config[gameMode].solutionSet = EMPTY_OBJ_SET_7; break
-      case 9:
-      default:
-        Nebyoodle.config[gameMode].solutionSet = EMPTY_OBJ_SET; break
-    }
-  } else {
-    Nebyoodle.config[gameMode].solutionSet = EMPTY_OBJ_SET
-  }
-
-  // initialize appropriate dictionary and seed words files
-  Nebyoodle._initDictionaryFile(gameMode)
-  Nebyoodle._initSeedWordsFile(gameMode)
-
-  // new game with static seed word
-  if (gameMode == 'free') {
-    if (!newWord) {
-      try {
-        newWord = await Nebyoodle.__getNewSeedWord()
-
-        // console.log(`_loadExistingSolutionSet with 'random' seed word '${newWord.toUpperCase()}'...`)
-      } catch (err) {
-        console.error('could not get new seed word', err)
-      }
-    }
-  } else { // 'daily' always uses day hash
-    try {
-      // console.log('_loadExistingSolutionSet->fetching NEBYOODLE_DAILY_SCRIPT')
-
-      const response = await fetch(NEBYOODLE_DAILY_SCRIPT)
-      const data = await response.json()
-      newWord = data['word']
-
-      Nebyoodle.__updateDailyDetails(data['index'])
-
-      if (newWord) {
-        // console.log(`DAILY seed word for ${Nebyoodle.__getTodaysDate()}:`, newWord.toUpperCase())
-      } else {
-        console.error('daily word went bork', newWord)
-      }
-    } catch (e) {
-      console.error('could not get daily seed word', e)
-    }
-  }
-
-  // set gameMode's state seedWord
-  Nebyoodle.state[gameMode].seedWord = newWord
-  Nebyoodle._saveGame()
-  // console.log(`_loadExistingSolutionSet '${gameMode}' seedWord`, newWord.toUpperCase())
-
-  // load existing solutionSet
-  try {
-    const findle = await Nebyoodle.__createFindle(
-      Nebyoodle.state[gameMode].seedWord,
-      Nebyoodle.config[gameMode].dictionary,
-      Nebyoodle.state[gameMode]
-    )
-
-    if (findle) {
-      /********************************************************************
-      * set new Nebyoodle/Findle solution                                    *
-      * -------------------                                               *
-      * load object of arrays (e.g. {"3":['aaa'],"4":['aaaa']})           *
-      * turn into object of objects (e.g. {"3":{'aaa':0},"4":{'aaaa':0}}) *
-      *********************************************************************/
-
-      // get a range of object keys from 3..Nebyoodle.__getMaxWordLength()
-      const categories = Array.from({length: Nebyoodle.__getMaxWordLength() - 2}, (x, i) => (i + 3).toString());
-      const solutionSet = Nebyoodle.config[gameMode].solutionSet
-
-      // zero them all out because setting it to the EMPTY_OBJ_SET does not work :'(
-      categories.forEach(category => {
-        Nebyoodle.config[gameMode].solutionSet[category] = {}
-      })
-
-      // re-create Nebyoodle's solutionSet
-      Object.keys(findle).forEach(key => {
-        findle[key].forEach(word => {
-          if (key <= Nebyoodle.__getMaxWordLength()) {
-            if (!solutionSet[key.toString()][word]) {
-              Nebyoodle.config[gameMode].solutionSet[key.toString()][word] = {}
-            }
-
-            Nebyoodle.config[gameMode].solutionSet[key.toString()][word] = 0
-          }
-        })
-      })
-
-      // set tile letter tracking
-      Nebyoodle.config[gameMode].letters = newWord.split('')
-
-      // if just changing FREE difficulty, clear guessedWords
-      if (isNewDiff) {
-        Nebyoodle.state['free'].guessedWords = []
-        Nebyoodle._setScore(0)
-        Nebyoodle._saveGame()
-      } // else check for pre-guessed words
-      else {
-        let lsConfig = null
-
-        if (Nebyoodle.__getGameMode() == 'daily') {
-          lsConfig = JSON.parse(localStorage.getItem(NEBYOODLE_STATE_DAILY_KEY))
-        } else {
-          lsConfig = JSON.parse(localStorage.getItem(NEBYOODLE_STATE_FREE_KEY))
-        }
-
-        Nebyoodle.state[gameMode].guessedWords = []
-
-        // console.log(`checking for '${gameMode}' pre-guessed words...`, lsConfig.guessedWords)
-
-        if (lsConfig.guessedWords && lsConfig.guessedWords.length) {
-          // console.log('found some pre-guessed words, so adding to code')
-
-          lsConfig.guessedWords.forEach(word => {
-            Nebyoodle.state[gameMode].guessedWords.push(word)
-            Nebyoodle.config[gameMode].solutionSet[word.length][word] = 1
-          })
-
-          // console.log('loaded existing solutionSet and checked off pre-guessed words', Nebyoodle.config[gameMode].solutionSet)
-
-          // set score to existing number of guessedWords
-          Nebyoodle._setScore(Nebyoodle.state[gameMode].guessedWords.length)
-        } else {
-          // set score back to 0
-          // console.log('found no pre-guessed words')
-          Nebyoodle._setScore(0)
-        }
-      }
-
-      // shuffle tiles randomly
-      Nebyoodle._shuffleTiles()
-
-      // see if we've already won
-      Nebyoodle._checkWinState()
-
-      // console.log(`**** loadED existing '${gameMode}' solutionSet ****`)
-    }
-  } catch (err) {
-    console.error('could not create new solution', err)
-  }
+Nebyoodle._loadExistingSolutionSet = async function(gameMode) {
+  console.log(`**** loadING existing '${gameMode}' solutionSet ****`)
 }
 
 // ask to create new free gamemode puzzle
@@ -1120,93 +703,15 @@ Nebyoodle._resetFreeProgress = async function() {
 }
 
 // submit a guess
-Nebyoodle._submitWord = function(word) {
-  // console.log('submitting word...', word)
+Nebyoodle._submitGuess = function(guess) {
+  console.log('submitting guess...', guess)
 
   if (Nebyoodle.state[Nebyoodle.__getGameMode()].gameState == 'IN_PROGRESS') {
-    if (word.length > 2) {
-      if (typeof Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet[word.length][word] != 'undefined') {
-        if (Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet[word.length][word] !== 1) {
-
-          if (word.length == Nebyoodle.__getMaxWordLength()) {
-            Nebyoodle._audioPlay(`doo-dah-doo`)
-          } else {
-            // choose haaahs[1-3] at random and play
-            var num = Math.floor(Math.random() * 3) + 1
-            Nebyoodle._audioPlay(`haaahs${num}`)
-          }
-
-          if (!Nebyoodle.state[Nebyoodle.__getGameMode()].guessedWords) {
-            Nebyoodle.state[Nebyoodle.__getGameMode()].guessedWords = []
-          }
-
-          Nebyoodle.state[Nebyoodle.__getGameMode()].guessedWords.push(word)
-          Nebyoodle.state[Nebyoodle.__getGameMode()].guessedWords.sort()
-          Nebyoodle.state[Nebyoodle.__getGameMode()].lastPlayedTime = new Date().getTime()
-          Nebyoodle.state[Nebyoodle.__getGameMode()].statistics.wordsFound += 1
-
-          Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet[word.length][word] = 1
-
-          // clear hint if it's the same word
-          if (word == Nebyoodle.config[Nebyoodle.__getGameMode()].hintWord) {
-            Nebyoodle._clearHint()
-          }
-
-          // do a little dance
-          Nebyoodle._animateCSS('#guess', 'tada').then(() => {
-            Nebyoodle.dom.guess.classList.remove('first-guess')
-
-            if (Nebyoodle.settings.clearWord) {
-              Nebyoodle._resetTiles()
-              Nebyoodle._resetGuess()
-            }
-          })
-
-          // make a little love
-          Nebyoodle._increaseScore()
-
-          // get down tonight
-          Nebyoodle._saveGame()
-
-          // get down tonight
-          Nebyoodle._checkWinState()
-        } else {
-          modalOpen('repeated-word', true, true)
-
-          Nebyoodle._animateCSS('#guess', 'headShake')
-        }
-      } else {
-        modalOpen('invalid-word', true, true)
-        Nebyoodle._animateCSS('#guess', 'headShake')
-      }
-    } else {
-      modalOpen('invalid-length', true, true)
-      Nebyoodle._animateCSS('#guess', 'headShake')
-    }
+    console.log('game still in progresss, so guess submitted');
   } else {
     // game is over, so no more guessed allowed
-    // console.error('current game is over; no more guesses!')
+    console.error('current game is over; no more guesses!')
   }
-}
-
-// increase score
-Nebyoodle._increaseScore = function() {
-  // get current score as an integer
-  var curGuessed = parseInt(Nebyoodle.dom.scoreGuessed.innerHTML)
-  // increase and convert back to string
-  Nebyoodle.dom.scoreGuessed.innerHTML = (curGuessed + 1).toString()
-}
-// set score
-Nebyoodle._setScore = function(guessed = 0) {
-  // console.log('setting score...')
-
-  // set UI elements
-  Nebyoodle.dom.scoreGuessed.innerHTML = guessed.toString()
-  Nebyoodle.dom.scoreGuessedOf.innerHTML = ' of '
-  Nebyoodle.dom.scoreTotal.innerHTML = Nebyoodle.__getSolutionSize().toString()
-  Nebyoodle.dom.scoreTotalWords.innerHTML = ' words'
-
-  // console.log('score set!', `${Nebyoodle.dom.score.innerHTML}`)
 }
 
 // game state checking
@@ -1316,12 +821,6 @@ Nebyoodle._resetInput = function() {
 
   Nebyoodle._resetGuess()
 }
-// set all tiles back to 'tbd'
-Nebyoodle._resetTiles = function() {
-  Array.from(Nebyoodle.dom.interactive.tiles).forEach(tile => {
-    tile.dataset.state = 'tbd'
-  })
-}
 // blank out the current DOM guess div
 Nebyoodle._resetGuess = function() {
   Nebyoodle.dom.guess.innerHTML = ''
@@ -1329,130 +828,12 @@ Nebyoodle._resetGuess = function() {
   Nebyoodle.dom.interactive.btnGuessLookup.disabled = true
 }
 
-// disable all UI tiles
-Nebyoodle._disableTiles = function() {
-  Array.from(Nebyoodle.dom.interactive.tiles).forEach(tile => {
-    tile.setAttribute('disabled', '')
-    tile.dataset.state = 'disabled'
-  })
-}
 Nebyoodle._disableUIButtons = function() {
   Object.values(Nebyoodle.dom.mainUI).forEach(btn => {
     if (btn.id !== 'button-show-progress') {
       btn.setAttribute('disabled', '')
     }
   })
-}
-// disable hint system
-Nebyoodle._disableHint = function() {
-  Nebyoodle.dom.interactive.btnHint.disabled = true
-}
-// enable hint system
-Nebyoodle._enableHint = function() {
-  Nebyoodle.dom.interactive.btnHint.disabled = false
-}
-// randomize the order of tiles
-Nebyoodle._shuffleTiles = function() {
-  let letters = Nebyoodle.config[Nebyoodle.__getGameMode()].letters
-
-  // console.log('shuffling letters', letters)
-
-  // shuffle order of letters
-  var j, x, index;
-  for (index = letters.length - 1; index > 0; index--) {
-    j = Math.floor(Math.random() * (index + 1));
-    x = letters[index];
-    letters[index] = letters[j];
-    letters[j] = x;
-  }
-
-  // fill UI tiles with letters
-  Array.from(Nebyoodle.dom.interactive.tiles).forEach((tile, i) => {
-    tile.innerHTML = letters[i]
-  })
-
-  // make sure game is playable again
-  Nebyoodle._resetInput()
-}
-
-// remove last letter in DOM guess div
-Nebyoodle._removeLastLetter = function() {
-  if (Nebyoodle.state[Nebyoodle.__getGameMode()].gameState == 'IN_PROGRESS') {
-    // remove last position from selected array
-    if (Nebyoodle.config[Nebyoodle.__getGameMode()].tilesSelected.length) {
-      var last = Nebyoodle.config[Nebyoodle.__getGameMode()].tilesSelected.pop()
-
-      Array.from(Nebyoodle.dom.interactive.tiles).forEach(tile => {
-        if (tile.dataset.pos == last) {
-          tile.dataset.state = 'tbd'
-
-          Nebyoodle._animateCSS(`#${tile.id}`, 'pulse')
-        }
-      })
-    }
-
-    // remove last letter of active guess
-    if (Nebyoodle.dom.guess.innerHTML.length) {
-      Nebyoodle.dom.guess.innerHTML = Nebyoodle.dom.guess.innerHTML.slice(0, Nebyoodle.dom.guess.innerHTML.length - 1)
-
-      Nebyoodle._audioPlay('tile_delete')
-
-      Nebyoodle._checkGuess()
-    }
-  }
-}
-
-// dynamically resize board depending on viewport
-Nebyoodle._resizeBoard = function() {
-  // console.log('--------------- resizing board ---------------')
-
-  var boardContainer = document.querySelector('#board-container')
-
-  // console.log('windowHeight', window.innerHeight)
-  // console.log('docBodyScrollHeight', document.body.scrollHeight)
-  // console.log('docDocElemClientHeight', document.documentElement.clientHeight)
-  // console.log('docDocElemScrollHeight', document.documentElement.scrollHeight)
-
-  var boardHeight = boardContainer.clientHeight + 20
-
-  // console.log('boardHeight', boardHeight)
-
-  var containerHeight = Math.min(Math.floor(boardHeight), 350)
-
-  // console.log('containerHeight', containerHeight)
-
-  var tileHeight = 2.5 * Math.floor(containerHeight / 3)
-
-  // console.log('tileHeight', tileHeight)
-
-  var board = document.querySelector('#board')
-  board.style.width = `${containerHeight}px`
-  board.style.height = `${tileHeight}px`
-
-  // console.log(`resized to ${containerHeight}w x ${tileHeight}h`)
-}
-
-// user clicks a tile
-Nebyoodle._onTileClick = function(tile) {
-  const tileStatus = tile.target.dataset.state
-
-  if (tileStatus == 'tbd') {
-    Nebyoodle._animateCSS(`#${tile.target.id}`, 'pulse')
-
-    // change tile status
-    tile.target.dataset.state = 'selected'
-
-    // push another selected tile onto selected array
-    Nebyoodle.config[Nebyoodle.__getGameMode()].tilesSelected.push(tile.target.dataset.pos)
-
-    // add selected tile to guess
-    Nebyoodle.dom.guess.innerHTML += tile.target.innerHTML
-
-    Nebyoodle._audioPlay('tile_click')
-
-    // check guess for validity
-    Nebyoodle._checkGuess()
-  }
 }
 
 // modal: show how many words have been guessed
@@ -1674,86 +1055,6 @@ Nebyoodle._displayGameSolution = function() {
   return html
 }
 
-// initialize hint system when button clicked
-Nebyoodle._initHint = function() {
-  // console.log('checking for hintWord...')
-
-  if (!Nebyoodle.config[Nebyoodle.__getGameMode()].hintWord) {
-    const wordsLeft = Nebyoodle.__getUnGuessedWords()
-    Nebyoodle.config[Nebyoodle.__getGameMode()].hintWord = wordsLeft[Math.floor(Math.random() * wordsLeft.length)]
-
-    // console.log('hintWord created:', Nebyoodle.config[Nebyoodle.__getGameMode()].hintWord.toUpperCase())
-
-    Array.from(Nebyoodle.config[Nebyoodle.__getGameMode()].hintWord).forEach(l => {
-      Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWord.push('_')
-    })
-
-    Nebyoodle.dom.interactive.btnHintReset.classList.add('show')
-
-    // console.log('hintObscuredWord reset:', Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWord.join(' ').toUpperCase())
-  } else {
-    // console.log('hintWord already existing:', Nebyoodle.config[Nebyoodle.__getGameMode()].hintWord.toUpperCase())
-  }
-
-  Nebyoodle._cycleHint()
-}
-// continually add letters to hint until max reached
-Nebyoodle._cycleHint = function() {
-  // console.log('cycling hintWord status...')
-
-  const hintWord = Nebyoodle.config[Nebyoodle.__getGameMode()].hintWord
-
-  // set maximum number of letters to show before forcing a new hint
-  var maxLetters = Math.ceil(hintWord.length / 2)
-
-  // console.log(`length: ${hintWord.length}, maxLetters: ${maxLetters}, count: ${Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWordCounter}`)
-
-  // if we haven't yet revealed enough letters,
-  // change a _ to a letter
-  if (Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWordCounter < maxLetters) {
-    let idx = 0
-    let foundEmpty = false
-
-    while (!foundEmpty) {
-      idx = Math.floor(Math.random() * Nebyoodle.config[Nebyoodle.__getGameMode()].hintWord.length)
-
-      if (Nebyoodle.config[Nebyoodle.__getGameMode()].hintWord[idx]) {
-        if (Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWord[idx] == '_') {
-          Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWord[idx] = Nebyoodle.config[Nebyoodle.__getGameMode()].hintWord[idx];
-          foundEmpty = true
-        }
-      }
-    }
-
-    // console.log('Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWord', Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWord.join(' ').toUpperCase())
-
-    Nebyoodle.dom.interactive.btnHint.innerHTML = Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWord.join('')
-
-    Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWordCounter++
-  }
-
-  if (Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWordCounter == maxLetters) {
-    // console.log('maxLetters reached, no more letters')
-
-    Nebyoodle.dom.interactive.btnHint.classList.add('not-a-button')
-    Nebyoodle.dom.interactive.btnHint.setAttribute('disabled', true)
-  }
-}
-// change not-a-button hint back to button hint
-Nebyoodle._clearHint = function() {
-  // console.log('clearing hintWord...')
-
-  Nebyoodle.dom.interactive.btnHint.classList.remove('not-a-button')
-  Nebyoodle.dom.interactive.btnHint.removeAttribute('disabled')
-  Nebyoodle.dom.interactive.btnHint.innerHTML = 'HINT?'
-
-  Nebyoodle.dom.interactive.btnHintReset.classList.remove('show')
-
-  Nebyoodle.config[Nebyoodle.__getGameMode()].hintWord = null
-  Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWord = []
-  Nebyoodle.config[Nebyoodle.__getGameMode()].hintObscuredWordCounter = 0
-}
-
 // handle both clicks and touches outside of modals
 Nebyoodle._handleClickTouch = function(event) {
   var dialog = document.getElementsByClassName('modal-dialog')[0]
@@ -1884,60 +1185,6 @@ Nebyoodle._attachEventListeners = function() {
   Nebyoodle.dom.interactive.btnStats.addEventListener('click', () => modalOpen('stats'))
   Nebyoodle.dom.interactive.btnSettings.addEventListener('click', () => modalOpen('settings'))
 
-  // [A] tile interaction
-  Array.from(Nebyoodle.dom.interactive.tiles).forEach(tile => {
-    tile.addEventListener('click', (t) => {
-      Nebyoodle._onTileClick(t)
-    })
-  })
-
-  // ❔ hint
-  Nebyoodle.dom.interactive.btnHint.addEventListener('click', () => {
-    Nebyoodle._initHint()
-  })
-
-  // X hint reset
-  Nebyoodle.dom.interactive.btnHintReset.addEventListener('click', () => {
-    Nebyoodle._clearHint()
-  })
-
-  // ✅ submit word
-  Nebyoodle.dom.interactive.btnSubmit.addEventListener('click', () => {
-    Nebyoodle._submitWord(Nebyoodle.dom.guess.innerHTML)
-  })
-
-  // ⌫ backspace
-  Nebyoodle.dom.interactive.btnBackspace.addEventListener('click', () => {
-    Nebyoodle._removeLastLetter()
-  })
-
-  // X clear
-  Nebyoodle.dom.interactive.btnClearGuess.addEventListener('click', () => {
-    Nebyoodle._resetInput()
-  })
-
-  // 🔀 shuffle
-  Nebyoodle.dom.interactive.btnShuffle.addEventListener('click', () => {
-    Nebyoodle._shuffleTiles()
-  })
-
-  // := show current game word list progress
-  Nebyoodle.dom.interactive.btnShowProgress.addEventListener('click', () => {
-    modalOpen('show-progress')
-  })
-
-  // + create new solution
-  Nebyoodle.dom.interactive.btnCreateNew.addEventListener('click', () => {
-    Nebyoodle._confirmFreeCreateNew()
-  })
-
-  // 📕 dictionary lookup
-  Nebyoodle.dom.interactive.btnGuessLookup.addEventListener('click', () => {
-    if (Nebyoodle.dom.guess.classList.contains('valid')) {
-      modalOpen('dictionary')
-    }
-  })
-
   // local debug buttons
   if (Nebyoodle.env == 'local') {
     if (Nebyoodle.dom.interactive.debug.all) {
@@ -1971,62 +1218,9 @@ Nebyoodle._attachEventListeners = function() {
     }
   }
 
-  // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
-  document.addEventListener('keydown', (event) => {
-    if (event.code == 'Enter') {
-      Nebyoodle._submitWord(Nebyoodle.dom.guess.innerHTML)
-    } else if (event.code == 'Backspace' || event.code == 'Delete') {
-      Nebyoodle._removeLastLetter()
-    } else {
-      var excludedKeys = ['Alt', 'Control', 'Meta', 'Shift']
-      var validLetters = Nebyoodle.config[Nebyoodle.__getGameMode()].letters.map(l => l.toUpperCase())
-      var pressedLetter = event.code.charAt(event.code.length - 1)
-
-      if (!excludedKeys.some(key => event.getModifierState(key))) {
-        // console.log('no modifier key is being held, so trigger letter')
-
-        if (validLetters.includes(pressedLetter)) {
-          // find any available tiles to select
-          var boardTiles = Array.from(Nebyoodle.dom.interactive.tiles)
-
-          var availableTiles = boardTiles.filter(tile =>
-            tile.innerHTML.toUpperCase() == pressedLetter &&
-            tile.dataset.state == 'tbd'
-          )
-
-          // if we found one, select first found
-          // this only works in Findle, not Nebyoodle
-          if (availableTiles.length) {
-            var tileToPush = availableTiles[0]
-
-            tileToPush.dataset.state = 'selected'
-
-            // push another selected tile onto selected array
-            Nebyoodle.config[Nebyoodle.__getGameMode()].tilesSelected.push(tileToPush.dataset.pos)
-
-            // add selected tile to guess
-            Nebyoodle.dom.guess.innerHTML += tileToPush.innerHTML
-
-            // do a little dance
-            Nebyoodle._animateCSS(`#${tileToPush.id}`, 'pulse')
-            Nebyoodle._audioPlay('tile_click')
-
-            // check guess for validity
-            Nebyoodle._checkGuess()
-          }
-        }
-      } else {
-        // console.log('a modifier key is being held, so ignore letter', event)
-      }
-    }
-  })
-
   // When the user clicks or touches anywhere outside of the modal, close it
   window.addEventListener('click', Nebyoodle._handleClickTouch)
   window.addEventListener('touchend', Nebyoodle._handleClickTouch)
-
-  window.onload = Nebyoodle._resizeBoard
-  window.onresize = Nebyoodle._resizeBoard
 
   // console.log('added event listeners')
 }
@@ -2034,59 +1228,6 @@ Nebyoodle._attachEventListeners = function() {
 /************************************************************************
  * _private __helper methods *
  ************************************************************************/
-
-Nebyoodle.__createFindle = async (word, dictionary, config) => {
-  // console.log(`creating new Findle for '${word.toUpperCase()}' with ${dictionary} file...`)
-
-  // create new empty Findle instance
-  const findleInstance = new Findle(word, dictionary, config)
-
-  // console.log('findleInstance', findleInstance)
-
-  // create a new solution to return
-  try {
-    await findleInstance.createSolution()
-    // return solution
-    return findleInstance.solution
-  } catch (err) {
-    console.error('Findle.createSolution() failed', err)
-  }
-}
-
-
-// load random seed word for solutionSet
-Nebyoodle.__getNewSeedWord = async function() {
-  // console.log('Nebyoodle.settings', Nebyoodle.settings)
-  // console.log(`Nebyoodle.config[${Nebyoodle.__getGameMode()}]`, Nebyoodle.config[Nebyoodle.__getGameMode()])
-
-  const seedWordsFile = Nebyoodle.config[Nebyoodle.__getGameMode()].seedWordsFile
-  const response = await fetch(seedWordsFile)
-  const responseJson = await response.json()
-
-  // random max-length word
-  let possibles = responseJson['9']
-  let possibleIdx = Math.floor(Math.random() * possibles.length)
-
-  this.seedWord = possibles[possibleIdx]
-
-  return this.seedWord
-}
-
-// get array of words not yet guessed for hint system
-Nebyoodle.__getUnGuessedWords = function() {
-  var words = Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet
-  var wordsLeft = []
-
-  Object.keys(words).forEach(length => {
-    Object.keys(words[length]).forEach(word => {
-      if (!words[length][word]) {
-        wordsLeft.push(word)
-      }
-    })
-  })
-
-  return wordsLeft
-}
 
 // timestamp to display date
 Nebyoodle.__getFormattedDate = function(date) {
@@ -2100,40 +1241,6 @@ Nebyoodle.__getFormattedDate = function(date) {
   formatted_date += `${date.getSeconds().toString().padStart(2, '0')}`
 
   return formatted_date
-}
-
-// return Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet size
-Nebyoodle.__getSolutionSize = function() {
- //  console.log('getting the current gameMode solutionSize...')
-
-  let categorySize = 0
-  let solutionSize = 0
-
-  const solutionSet = Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet
-
-  Object.keys(solutionSet).forEach(category => {
-    if (parseInt(category) <= Nebyoodle.__getMaxWordLength()) {
-      categorySize = Object.keys(solutionSet[category]).length
-      solutionSize += categorySize
-    }
-  })
-
- //  console.log(`solutionSize for ${Nebyoodle.__getGameMode()} is ${solutionSize}`)
-
-  return solutionSize
-}
-
-// helper method to get game difficulty as a max letter length
-Nebyoodle.__getMaxWordLength = function() {
-  if (Nebyoodle.config.gameMode == 'daily') {
-    return 9
-  }
-
-  let diff = Nebyoodle.state[Nebyoodle.__getGameMode()].difficulty
-
-  if (!diff) diff = 'normal'
-
-  return NEBYOODLE_DIFF_TO_LENGTH[diff]
 }
 
 // get displayable string for today's date
@@ -2156,26 +1263,8 @@ Nebyoodle.__updateDailyDetails = function(index) {
 }
 
 Nebyoodle.__winAnimation = async function() {
-  return new Promise((resolve, reject) => {
-    Array.from(Nebyoodle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '1s'))
-
-    setTimeout(() => Nebyoodle._animateCSS('#tile1', 'bounce'), 0)
-    setTimeout(() => Nebyoodle._animateCSS('#tile2', 'bounce'), 100)
-    setTimeout(() => Nebyoodle._animateCSS('#tile3', 'bounce'), 200)
-    setTimeout(() => Nebyoodle._animateCSS('#tile4', 'bounce'), 300)
-    setTimeout(() => Nebyoodle._animateCSS('#tile5', 'bounce'), 400)
-    setTimeout(() => Nebyoodle._animateCSS('#tile6', 'bounce'), 500)
-    setTimeout(() => Nebyoodle._animateCSS('#tile7', 'bounce'), 600)
-    setTimeout(() => Nebyoodle._animateCSS('#tile8', 'bounce'), 700)
-    setTimeout(() => Nebyoodle._animateCSS('#tile9', 'bounce'), 800)
-
-    setTimeout(() => resolve('__winAnimation ended'), 2000)
-  })
 }
 
-Nebyoodle.__resetTilesDuration = function() {
-  Array.from(Nebyoodle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '0.1s'), 0)
-}
 
 /************************************************************************
  * ON PAGE LOAD, DO THIS *

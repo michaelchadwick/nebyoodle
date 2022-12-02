@@ -36,6 +36,6 @@ const NEBYOODLE_DEFAULTS = {
   },
   'settings': {
     'darkMode': false,
-    'gameMode': 'daily'
+    'gameMode': 'free'
   }
 }

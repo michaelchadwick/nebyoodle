@@ -15,10 +15,10 @@
   <meta name="application-name" content="Nebyoodle">
   <meta name="title" content="Nebyoodle" />
   <meta property="og:title" content="Nebyoodle - A daily Nebyoolae music guessing game">
-  <meta property="og:url" content="https://nebyoodle.neb.host">
+  <meta property="og:url" content="https://guess.nebyoolae.com">
   <meta property="og:description" content="Guess the music track. A new track each day.">
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:domain" content="nebyoodle.neb.host">
+  <meta property="twitter:domain" content="guess.nebyoolae.com">
 
   <!-- FAVICONS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -144,89 +144,81 @@
 
   <section id="game">
 
-    <div id="mode-container">
+    <div id="top-half">
 
-      <div id="gamemode-container" class="setting-row">
-        <a href="#" id="gamemode-0"
-          data-active="true"
-          date-gamemodeid="daily"
-          onclick="Nebyoodle._changeSetting('gameMode', 'daily', event)"
-        >Daily</a>
+      <div id="mode-container">
+        <div id="gamemode-container" class="setting-row">
+          <a href="#" id="gamemode-0"
+            data-active="false"
+            date-gamemodeid="daily"
+            onclick="Nebyoodle._changeSetting('gameMode', 'daily', event)"
+          >Daily</a>
 
-        &nbsp;/&nbsp;
+          &nbsp;/&nbsp;
 
-        <a href="#" id="gamemode-1"
-          data-active="false"
-          date-gamemodeid="free"
-          onclick="Nebyoodle._changeSetting('gameMode', 'free', event)"
-        >Free Play</a>
+          <a href="#" id="gamemode-1"
+            data-active="true"
+            date-gamemodeid="free"
+            onclick="Nebyoodle._changeSetting('gameMode', 'free', event)"
+          >Free Play</a>
+        </div>
+
+        <div id="daily-details" class="setting-row">
+          Nebyoodle #<span class="index"></span> for <span class="day"></span>
+        </div>
       </div>
 
-      <div id="daily-details" class="setting-row">
-        Nebyoodle #<span class="index"></span> for <span class="day"></span>
-      </div>
-
-      <div id="difficulty-container" class="setting-row">
-        <a href="#" id="diff-simple"
-          data-active="false"
-          data-diffid="simple"
-          onclick="Nebyoodle._changeSetting('difficulty', '', event)"
-        >Simple</a>
-
-        &nbsp;/&nbsp;
-
-        <a href="#" id="diff-easy"
-          data-active="false"
-          data-diffid="easy"
-          onclick="Nebyoodle._changeSetting('difficulty', '', event)"
-        >Easy</a>
-
-        &nbsp;/&nbsp;
-
-        <a href="#" id="diff-medium"
-          data-active="false"
-          data-diffid="medium"
-          onclick="Nebyoodle._changeSetting('difficulty', '', event)"
-        >Medium</a>
-
-        &nbsp;/&nbsp;
-
-        <a href="#" id="diff-normal"
-          data-active="true"
-          data-diffid="normal"
-          onclick="Nebyoodle._changeSetting('difficulty', '', event)"
-        >Normal</a>
+      <div id="guesses-container">
+        <div id="guess1"></div>
+        <div id="guess2"></div>
+        <div id="guess3"></div>
+        <div id="guess4"></div>
+        <div id="guess5"></div>
+        <div id="guess6"></div>
       </div>
 
     </div>
 
-    <div id="guess-container">
-      <div id="guess"></div>
-    </div>
+    <div id="bot-first-half">
 
-    <div id="board-container">
-      <div id="board">
-        <div class="row">
-          <div class="tile" data-state="tbd" data-pos="1" id="tile1"></div>
-          <div class="tile" data-state="tbd" data-pos="2" id="tile2"></div>
-          <div class="tile" data-state="tbd" data-pos="3" id="tile3"></div>
-        </div>
-        <div class="row">
-          <div class="tile" data-state="tbd" data-pos="4" id="tile4"></div>
-          <div class="tile" data-state="tbd" data-pos="5" id="tile5"></div>
-          <div class="tile" data-state="tbd" data-pos="6" id="tile6"></div>
-        </div>
-        <div class="row">
-          <div class="tile" data-state="tbd" data-pos="7" id="tile7"></div>
-          <div class="tile" data-state="tbd" data-pos="8" id="tile8"></div>
-          <div class="tile" data-state="tbd" data-pos="9" id="tile9"></div>
+      <div id="audio-container"></div>
+
+      <div id="timeline-container">
+        <div id="timeline">
+          <div fill="0.0625" class="intro-unplayed" style="transform: scaleX(0.0625);"></div>
+          <div fill="0" class="intro-played" style="transform: scaleX(0);"></div>
+          <div class="marker" style="left: 6.25%;"></div>
+          <div class="marker" style="left: 12.5%;"></div>
+          <div class="marker" style="left: 25%;"></div>
+          <div class="marker" style="left: 43.75%;"></div>
+          <div class="marker" style="left: 68.75%;"></div>
+          <div class="marker" style="left: 99.9%;"></div>
         </div>
       </div>
+
+      <div id="play-container">
+        <div id="start-time">0:00</div>
+        <div id="play-pause">
+          <button><i class="fa-solid fa-play"></i></button>
+        </div>
+        <div id="end-time">0:00</div>
+      </div>
+
     </div>
 
-    <div id="score-container">
-      <span id="score-guessed"></span><span id="score-guessed-of"></span>
-      <span id="score-total"></span><span id="score-total-words"></span>
+    <div id="bot-second-half">
+
+      <div id="search-container">
+        <input type="text" placeholder="Search for title / album" />
+      </div>
+      <div id="submit-container">
+        <button class="btn-skip">
+          <span>Skip</span>
+          <span>(+1s)</span>
+        </button>
+        <button class="btn-submit">Submit</button>
+      </div>
+
     </div>
 
   </section>
