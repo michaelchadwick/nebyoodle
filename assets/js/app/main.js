@@ -205,6 +205,13 @@ async function modalOpen(type) {
 
       break
 
+    case 'get-track':
+      Nebyoodle._getTrack()
+      break
+    case 'get-tracks':
+      Nebyoodle._getTracks()
+      break
+
     case 'show-solution':
       this.myModal = new Modal('perm-debug', 'Master Word List',
         Nebyoodle._displayGameSolution(),
@@ -836,6 +843,63 @@ Nebyoodle._disableUIButtons = function() {
   })
 }
 
+Nebyoodle._getTrack = async function() {
+  // current song nid range = 1409 -> 2249
+  const params = {
+    songId: Math.floor(Math.random() * 1409) + 840
+  }
+
+  console.log('params.songId', params.songId)
+
+  const response1 = await fetch(NEBYOODLE_SONG1_SCRIPT + '?songId=' + params.songId)
+  const track1 = await response1.json()
+
+  const response2 = await fetch(NEBYOODLE_SONG2_SCRIPT + '?songId=' + params.songId)
+  const track2 = await response2.json()
+
+  if (track1.data && track2.data) {
+    console.log(track1.data[0], track2.data[0])
+    const data1 = track1.data[0];
+    const data2 = track2.data[0];
+
+    const title = data1.title
+    const artist_id = data1.field_artist_id.name
+    const album_id = data2.field_album_id.name
+    // const instruments = data.field_instruments.data.map(d => d.meta.drupal_internal__target)
+
+    let html = ''
+    html += `<strong>Title</strong>: ${title}, <strong>Artist</strong>: ${artist_id}, <strong>Album</strong>: ${album_id}<br />`
+    // html += `<strong>Instruments</strong>: ${instruments}`
+    Nebyoodle.dom.trackData.innerHTML = html
+
+  } else {
+    console.error('could not fetch track from remote source')
+  }
+}
+
+Nebyoodle._getTracks = async function() {
+  const response = await fetch(NEBYOODLE_DAILY_SCRIPT)
+  const tracks = await response.json()
+
+  if (tracks) {
+    console.log(tracks.data)
+    const data = tracks.data[0];
+    const title = data.attributes.title
+
+    // const instruments = data.field_instruments.data.map(d => d.meta.drupal_internal__target)
+
+    let html = ''
+    html += `<strong>Title</strong>: ${title}`
+    // html += `, <strong>Artist</strong>: ${artist_id}`
+    // html += `, <strong>Album</strong>: ${album_id}<br />`
+    // html += `<strong>Instruments</strong>: ${instruments}`
+    Nebyoodle.dom.trackData.innerHTML = html
+
+  } else {
+    console.error('could not fetch tracks from remote source')
+  }
+}
+
 // modal: show how many words have been guessed
 Nebyoodle._displayGameProgress = function() {
   var html = ''
@@ -1188,6 +1252,15 @@ Nebyoodle._attachEventListeners = function() {
   // local debug buttons
   if (Nebyoodle.env == 'local') {
     if (Nebyoodle.dom.interactive.debug.all) {
+      // 🪣 get single Nebyoolae track from music.nebyoolae.com
+      Nebyoodle.dom.interactive.debug.btnGetTrack.addEventListener('click', () => {
+        modalOpen('get-track')
+      })
+      // 🪣 get Nebyoolae tracks from music.nebyoolae.com
+      Nebyoodle.dom.interactive.debug.btnGetTracks.addEventListener('click', () => {
+        modalOpen('get-tracks')
+      })
+
       // 🪣 show master word list
       Nebyoodle.dom.interactive.debug.btnShowList.addEventListener('click', () => {
         modalOpen('show-solution')

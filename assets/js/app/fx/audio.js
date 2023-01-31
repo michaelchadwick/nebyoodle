@@ -2,7 +2,7 @@
 /* sound playing mechanisms */
 /* global Nebyoodle */
 
-const NEBYOODLE_CACHE_AUDIO_KEY = 'bogdle-cache-audio'
+const NEBYOODLE_CACHE_AUDIO_KEY = 'nebyoodle-cache-audio'
 const NEBYOODLE_ASSET_DATA_PATH = '/assets/audio'
 
 // Try to get data from the cache, but fall back to fetching it live.

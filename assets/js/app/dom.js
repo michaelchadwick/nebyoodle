@@ -7,6 +7,7 @@ Nebyoodle.dom = {
   'navOverlay': document.getElementById('nav-overlay'),
   'navContent': document.getElementById('nav-content'),
   'dailyDetails': document.getElementById('daily-details'),
+  'trackData': document.getElementById('track-data'),
   'guess': document.getElementById('guess'),
   'score': document.getElementById('score-container'),
   'scoreGuessed': document.getElementById('score-guessed'),
@@ -26,16 +27,7 @@ Nebyoodle.dom.interactive = {
   'difficultyContainerLinks': document.querySelectorAll('#difficulty-container a'),
   'gameModeDailyLink': document.getElementById('gamemode-0'),
   'gameModeFreeLink': document.getElementById('gamemode-1'),
-  'btnSubmit': document.getElementById('button-submit'),
-  'btnBackspace': document.getElementById('button-backspace'),
-  'btnClearGuess': document.getElementById('button-clear-guess'),
-  'btnShuffle': document.getElementById('button-shuffle'),
-  'btnShowProgress': document.getElementById('button-show-progress'),
-  'btnGuessLookup': document.getElementById('button-guess-lookup'),
-  'btnCreateNew': document.getElementById('button-create-new'),
-  'btnHint': document.getElementById('button-hint'),
-  'btnHintReset': document.getElementById('button-hint-reset'),
-  'tiles': document.getElementsByClassName('tile')
+  'btnSubmit': document.getElementById('button-submit')
 }
 // DOM > main UI buttons
 Nebyoodle.dom.mainUI = {
@@ -50,6 +42,8 @@ Nebyoodle.dom.mainUI = {
 // DOM > interactive elements (debug)
 Nebyoodle.dom.interactive.debug = {
   'all': document.getElementById('debug-buttons'),
+  'btnGetTrack': document.getElementById('button-get-track'),
+  'btnGetTracks': document.getElementById('button-get-tracks'),
   'btnShowList': document.getElementById('button-show-solution'),
   'btnResetProgress': document.getElementById('button-reset-progress'),
   'btnShowConfig': document.getElementById('button-show-config'),

@@ -9,6 +9,8 @@ const NEBYOODLE_SETTINGS_KEY = 'nebyoodle-settings'
 
 const NEBYOODLE_ENV_PROD_URL = 'nebyoodle.fun'
 const NEBYOODLE_DAILY_SCRIPT = './assets/scripts/daily.php'
+const NEBYOODLE_SONG1_SCRIPT = './assets/scripts/song1.php'
+const NEBYOODLE_SONG2_SCRIPT = './assets/scripts/song2.php'
 
 
 const NEBYOODLE_DEFAULTS = {
