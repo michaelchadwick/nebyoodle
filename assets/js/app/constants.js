@@ -7,19 +7,23 @@ const NEBYOODLE_STATE_FREE_KEY = 'nebyoodle-state-free'
 
 const NEBYOODLE_SETTINGS_KEY = 'nebyoodle-settings'
 
-const NEBYOODLE_ENV_PROD_URL = 'nebyoodle.fun'
+const NEBYOOCOM_BASE_URL = 'https://music.nebyoolae.com'
+const NEBYOODLE_ENV_PROD_URL = [
+  'nebyoodle.fun',
+  'guess.nebyoolae.com'
+]
 const NEBYOODLE_DAILY_SCRIPT = './assets/scripts/daily.php'
-const NEBYOODLE_SONG1_SCRIPT = './assets/scripts/song1.php'
-const NEBYOODLE_SONG2_SCRIPT = './assets/scripts/song2.php'
-
+const NEBYOODLE_SONG_SCRIPT = './assets/scripts/song.php'
 
 const NEBYOODLE_DEFAULTS = {
   'config': {
     'daily': {
-
+      retryCount: 0,
+      retryMax: 5
     },
     'free': {
-
+      retryCount: 0,
+      retryMax: 5
     }
   },
   'state': {

@@ -8,12 +8,9 @@ Nebyoodle.dom = {
   'navContent': document.getElementById('nav-content'),
   'dailyDetails': document.getElementById('daily-details'),
   'trackData': document.getElementById('track-data'),
-  'guess': document.getElementById('guess'),
-  'score': document.getElementById('score-container'),
-  'scoreGuessed': document.getElementById('score-guessed'),
-  'scoreGuessedOf': document.getElementById('score-guessed-of'),
-  'scoreTotal': document.getElementById('score-total'),
-  'scoreTotalWords': document.getElementById('score-total-words'),
+  'guesses': document.getElementById('guesses-container'),
+  'audioContainer': document.getElementById('audio-container'),
+  'audioElem': document.getElementById('audio-element'),
 }
 
 // DOM > interactive elements
@@ -23,21 +20,16 @@ Nebyoodle.dom.interactive = {
   'btnHelp': document.getElementById('button-help'),
   'btnStats': document.getElementById('button-stats'),
   'btnSettings': document.getElementById('button-settings'),
-  'difficultyContainer': document.getElementById('difficulty-container'),
-  'difficultyContainerLinks': document.querySelectorAll('#difficulty-container a'),
   'gameModeDailyLink': document.getElementById('gamemode-0'),
-  'gameModeFreeLink': document.getElementById('gamemode-1'),
-  'btnSubmit': document.getElementById('button-submit')
+  'gameModeFreeLink': document.getElementById('gamemode-1')
 }
 // DOM > main UI buttons
 Nebyoodle.dom.mainUI = {
-  'btnSubmit': document.getElementById('button-submit'),
-  'btnBackspace': document.getElementById('button-backspace'),
-  'btnClearGuess': document.getElementById('button-clear-guess'),
-  'btnShuffle': document.getElementById('button-shuffle'),
-  'btnShowProgress': document.getElementById('button-show-progress'),
-  'btnGuessLookup': document.getElementById('button-guess-lookup'),
-  'btnCreateNew': document.getElementById('button-create-new')
+  'btnPlayPause': document.getElementById('button-play-pause'),
+  'btnPlayPauseIcon': document.getElementById('button-play-pause-icon'),
+  'inputGuess': document.getElementById('input-guess'),
+  'btnSkip': document.getElementById('button-skip'),
+  'btnSubmit': document.getElementById('button-submit')
 }
 // DOM > interactive elements (debug)
 Nebyoodle.dom.interactive.debug = {

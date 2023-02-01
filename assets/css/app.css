@@ -9,8 +9,8 @@
   --black: #111111;
   --off-white: #f1f1f1;
   --gray: #e1e1e1;
+  --gray-medium: #a7a7a7;
   --gray-dark: #787878;
-  --disabled: #dddddd;
   --marker-color: #222222;
 }
 
@@ -39,8 +39,8 @@ body {
 }
 
 code {
-  background-color: #f1f1f1;
-  border: 1px solid #e1e1e1;
+  background-color: var(--off-white);
+  border: 1px solid var(--gray);
   border-radius: 4px;
   display: inline-block;
   padding: 2px 4px 0;
@@ -76,13 +76,14 @@ button {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
 }
   button:disabled {
-    background-color: #eeeeee;
-    color: var(--disabled);
+    background-color: var(--gray);
+    border-color: var(--gray-medium);
+    color: var(--gray-medium);
     cursor: not-allowed;
   }
     button:disabled:hover {
-      background-color: inherit;
-      color: inherit;
+      background-color: var(--gray);
+      color: var(--gray-medium);
     }
 
   button.icon {
@@ -120,6 +121,13 @@ button {
       margin-left: 6px;
     }
 
+input:disabled,
+select:disabled {
+  background-color: var(--gray);
+  color: var(--gray);
+  cursor: not-allowed;
+}
+
 .container {
   align-items: center;
   display: flex;
@@ -140,7 +148,7 @@ button {
     opacity: 0;
   }
     .radio input[type=radio] + .radio-label.radio-label-disabled {
-      color: #666;
+      color: var(--unplayed-color);
     }
     .radio input[type=radio] + .radio-label:before {
       background: #f4f4f4;
@@ -273,7 +281,7 @@ header {
           }
         }
           header .menu-left #nav-overlay #nav-content a {
-            color: #111;
+            color: var(--black);
             text-decoration: none;
           }
 
@@ -316,7 +324,7 @@ header {
             background: var(--base-color);
             border-top: 2px solid var(--dark-color);
             bottom: 0;
-            color: #111;
+            color: var(--black);
             font-family: 'Consolas', sans-serif;
             font-size: 12px;
             font-weight: 500;
@@ -461,7 +469,7 @@ section#game {
           text-decoration: underline;
         }
         section#game #top-half #mode-container .setting-row button#button-create-new {
-          background-color: #ddd;
+          background-color: var(--gray);
           border-radius: 4px;
           font-weight: normal;
           height: 22px;
@@ -476,7 +484,7 @@ section#game {
       }
 
       section#game #top-half #mode-container #daily-details {
-        color: #222222;
+        color: var(--marker-color);
         display: none;
         font-size: 0.9rem;
         height: 20px;
@@ -489,6 +497,15 @@ section#game {
           section#game #top-half #mode-container #daily-details .day {
             font-weight: 600;
           }
+
+    section#game #top-half #track-data {
+      background-color: var(--light-color);
+      padding: 1rem;
+    }
+      section#game #top-half #track-data.lds-dual-ring {
+        padding: 1rem 0;
+        width: 100%;
+      }
 
     section#game #top-half #guesses-container {
       display: flex;
@@ -583,6 +600,15 @@ section#game {
         height: 48px;
         width: 48px;
       }
+        @media (hover: hover) {
+          section#game #bot-first-half #play-container button:hover {
+            background-color: var(--light-color);
+          }
+        section#game #bot-first-half #play-container button:disabled {
+          background-color: var(--gray);
+          border-color: var(--gray-medium);
+          color: var(--gray-medium);
+        }
 
   section#game #bot-second-half {
     display: flex;
@@ -597,12 +623,13 @@ section#game {
       border: 1px solid var(--gray-dark);
       display: flex;
       height: 50px;
-      padding: 0 11px;
+      padding: 0 5px;
       position: relative;
     }
       section#game #bot-second-half #search-container input {
         border: none;
         height: 40px;
+        outline: none;
         padding: 0 10px;
         width: 100%;
       }
@@ -624,16 +651,21 @@ section#game {
         padding: 0 35px;
         position: relative;
       }
-        section#game #bot-second-half #submit-container button.btn-skip span:nth-child(2) {
+        @media (hover: hover) {
+          section#game #bot-second-half #submit-container button:not(:disabled):hover {
+            background-color: var(--light-color);
+          }
+        }
+        section#game #bot-second-half #submit-container button#button-skip span:nth-child(2) {
           text-transform: initial;
         }
 
 /* utility classes */
 .debug {
-  color: #715ec7;
+  color: var(--debug-color);
 }
 
 .disabled {
-  color: #888888 !important;
+  color: var(--gray-dark) !important;
   cursor: default;
 }

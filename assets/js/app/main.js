@@ -212,13 +212,6 @@ async function modalOpen(type) {
       Nebyoodle._getTracks()
       break
 
-    case 'show-solution':
-      this.myModal = new Modal('perm-debug', 'Master Word List',
-        Nebyoodle._displayGameSolution(),
-        null,
-        null
-      )
-      break
     case 'show-config':
       this.myModal = new Modal('perm-debug', 'Game Config (code model only)',
         Nebyoodle._displayGameConfig(),
@@ -226,9 +219,18 @@ async function modalOpen(type) {
         null
       )
       break
+
     case 'show-state':
       this.myModal = new Modal('perm-debug', 'Game State (load/save to LS)',
         Nebyoodle._displayGameState(),
+        null,
+        null
+      )
+      break
+
+    case 'show-solution':
+      this.myModal = new Modal('perm-debug', 'Correct Solution',
+        Nebyoodle._displayGameSolution(),
         null,
         null
       )
@@ -483,6 +485,8 @@ Nebyoodle._loadSettings = function() {
   var lsSettings = JSON.parse(localStorage.getItem(NEBYOODLE_SETTINGS_KEY))
 
   if (lsSettings) {
+    // console.log('found previous settings')
+
     Nebyoodle.settings.darkMode = lsSettings.darkMode
 
     if (Nebyoodle.settings.darkMode) {
@@ -497,7 +501,11 @@ Nebyoodle._loadSettings = function() {
 
     Nebyoodle.settings.gameMode = lsSettings.gameMode || 'daily'
   } else {
+    // console.log('no previous settings found -- setting to defaults...')
+
     Nebyoodle.settings = NEBYOODLE_DEFAULTS.settings
+
+    localStorage.setItem(NEBYOODLE_SETTINGS_KEY, JSON.stringify(Nebyoodle.settings))
   }
 
   // STATE->GAMEMODE
@@ -622,11 +630,11 @@ Nebyoodle._initDebug = function() {
     })
   }
 
-  var qd = {};
+  var qd = {}
   if (location.search) location.search.substr(1).split("&").forEach(function(item) {
     var s = item.split("="),
         k = s[0],
-        v = s[1] && decodeURIComponent(s[1]); //  null-coalescing / short-circuit
+        v = s[1] && decodeURIComponent(s[1]); // null-coalescing / short-circuit
     //(k in qd) ? qd[k].push(v) : qd[k] = [v]
     (qd[k] = qd[k] || []).push(v) // null-coalescing / short-circuit
   })
@@ -641,7 +649,7 @@ Nebyoodle._initDebug = function() {
 
 // create new solutionSet, which resets progress
 Nebyoodle._createNewSolutionSet = async function(gameMode) {
-  console.log(`**** creatING new '${gameMode}' solutionSet ****`)
+  // console.log(`**** creatING new '${gameMode}' solutionSet ****`)
 
   // set state to defaults
   Nebyoodle.state[gameMode].gameState = 'IN_PROGRESS'
@@ -714,10 +722,10 @@ Nebyoodle._submitGuess = function(guess) {
   console.log('submitting guess...', guess)
 
   if (Nebyoodle.state[Nebyoodle.__getGameMode()].gameState == 'IN_PROGRESS') {
-    console.log('game still in progresss, so guess submitted');
+    console.log('game still in progresss, so guess submitted')
   } else {
     // game is over, so no more guessed allowed
-    console.error('current game is over; no more guesses!')
+    console.error('current game is over -- no more guesses!')
   }
 }
 
@@ -801,7 +809,7 @@ Nebyoodle._checkWinState = function() {
         Nebyoodle._disableHint()
 
         // disable main UI (until future re-enabling)
-        Nebyoodle._disableUIButtons()
+        Nebyoodle._disableUI()
 
         // display modal win thingy
         modalOpen('win')
@@ -835,55 +843,112 @@ Nebyoodle._resetGuess = function() {
   Nebyoodle.dom.interactive.btnGuessLookup.disabled = true
 }
 
-Nebyoodle._disableUIButtons = function() {
-  Object.values(Nebyoodle.dom.mainUI).forEach(btn => {
-    if (btn.id !== 'button-show-progress') {
-      btn.setAttribute('disabled', '')
+Nebyoodle._disableUI = function() {
+  Object.values(Nebyoodle.dom.mainUI).forEach(elem => {
+    if (elem.id !== 'button-play-pause-icon') {
+      elem.setAttribute('disabled', '')
     }
   })
 }
 
+Nebyoodle._enableUI = function() {
+  Object.values(Nebyoodle.dom.mainUI).forEach(elem => {
+    if (elem.id !== 'button-play-pause-icon') {
+      elem.removeAttribute('disabled')
+    }
+  })
+}
+
+// get a single random song from music.nebyoolae.com
 Nebyoodle._getTrack = async function() {
+  Nebyoodle.dom.trackData.innerHTML = ''
+  Nebyoodle.dom.trackData.classList.add('lds-dual-ring')
+
   // current song nid range = 1409 -> 2249
-  const params = {
-    songId: Math.floor(Math.random() * 1409) + 840
-  }
+  const songId = Math.floor(Math.random() * 1409) + 840
 
-  console.log('params.songId', params.songId)
+  const response = await fetch(NEBYOODLE_SONG_SCRIPT + '?songId=' + songId)
 
-  const response1 = await fetch(NEBYOODLE_SONG1_SCRIPT + '?songId=' + params.songId)
-  const track1 = await response1.json()
+  if (response) {
+    const track = await response.json()
 
-  const response2 = await fetch(NEBYOODLE_SONG2_SCRIPT + '?songId=' + params.songId)
-  const track2 = await response2.json()
+    if (track.data[0]) {
+      Nebyoodle.config[Nebyoodle.__getGameMode()].retryCount = 0
+      Nebyoodle.dom.trackData.classList.remove('lds-dual-ring')
 
-  if (track1.data && track2.data) {
-    console.log(track1.data[0], track2.data[0])
-    const data1 = track1.data[0];
-    const data2 = track2.data[0];
+      // console.log('track', track)
+      // console.log('data', track.data[0])
+      // console.log('incl', track.included)
 
-    const title = data1.title
-    const artist_id = data1.field_artist_id.name
-    const album_id = data2.field_album_id.name
-    // const instruments = data.field_instruments.data.map(d => d.meta.drupal_internal__target)
+      // main attributes
+      const attr = track.data[0].attributes
 
-    let html = ''
-    html += `<strong>Title</strong>: ${title}, <strong>Artist</strong>: ${artist_id}, <strong>Album</strong>: ${album_id}<br />`
-    // html += `<strong>Instruments</strong>: ${instruments}`
-    Nebyoodle.dom.trackData.innerHTML = html
+      const description = new DOMParser().parseFromString(attr.body, "text/html").body.textContent
+      const date = attr.field_release_date
 
+      const songName = attr.title
+      const songPath = attr.path.alias
+      const songLink = `${NEBYOOCOM_BASE_URL}${songPath}`
+
+      // includes
+      const albumName = track.included[0].attributes.name
+      const albumPath = track.included[0].attributes.path.alias
+      const albumLink = `${NEBYOOCOM_BASE_URL}${albumPath}`
+      const artistName = track.included[1].attributes.name
+
+      // const cover = track.included[2].attributes
+      // console.log('cover', cover)
+
+      // html markup to display
+      let html = ''
+      html += `<strong>Title</strong>: <a href="${songLink}" target="_blank">${songName}</a>, `
+      html += `<strong>Artist</strong>: ${artistName}, `
+      html += `<strong>Album</strong>: <a href="${albumLink}" target="_blank">${albumName}</a><br />`
+      html += `<strong>Released</strong>: ${date}<br />`
+      html += `<strong>Description</strong>: ${description}`
+      Nebyoodle.dom.trackData.innerHTML = html
+
+      // add audio data to game
+      // console.log('attr.field_local_link.uri', attr.field_local_link.uri)
+
+      const audioUrl = attr.field_local_link
+        ? `${NEBYOOCOM_BASE_URL}${attr.field_local_link.uri.split('internal:')[1]}`
+        : ''
+
+      // console.log('audioUrl', audioUrl)
+
+      document.getElementById('audio-element').src = audioUrl
+
+      Nebyoodle._enableUI()
+    } else {
+      const retries = Nebyoodle.config[Nebyoodle.__getGameMode()].retryCount
+      const max = Nebyoodle.config[Nebyoodle.__getGameMode()].retryMax
+
+      if (retries < max) {
+        console.error(`songId #${songId} does not exist. retrying...`)
+        Nebyoodle.config[Nebyoodle.__getGameMode()].retryCount++
+        Nebyoodle._getTrack()
+      } else {
+        console.error(`songId #${songId} does not exist. giving up.`)
+        Nebyoodle.dom.trackData.classList.remove('lds-dual-ring')
+        Nebyoodle.dom.trackData.innerHTML = `could not find a valid song`
+      }
+    }
   } else {
     console.error('could not fetch track from remote source')
+    Nebyoodle.dom.trackData.classList.remove('lds-dual-ring')
+    Nebyoodle.dom.trackData.innerHTML = 'could not fetch track :('
   }
 }
 
+// get all the songs from music.nebyoolae.com
 Nebyoodle._getTracks = async function() {
   const response = await fetch(NEBYOODLE_DAILY_SCRIPT)
   const tracks = await response.json()
 
   if (tracks) {
     console.log(tracks.data)
-    const data = tracks.data[0];
+    const data = tracks.data[0]
     const title = data.attributes.title
 
     // const instruments = data.field_instruments.data.map(d => d.meta.drupal_internal__target)
@@ -898,41 +963,6 @@ Nebyoodle._getTracks = async function() {
   } else {
     console.error('could not fetch tracks from remote source')
   }
-}
-
-// modal: show how many words have been guessed
-Nebyoodle._displayGameProgress = function() {
-  var html = ''
-
-  if (Nebyoodle.__getGameMode() == 'free') {
-    html += `<h6>difficulty: ${Nebyoodle.state[Nebyoodle.__getGameMode()].difficulty}</h6>`
-  }
-
-  html += '<ul>'
-
-  // check each length category (max...3, etc.)
-  // total up words guessed in each
-  Object.keys(Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet).reverse().forEach(category => {
-    if (parseInt(category) <= Nebyoodle.__getMaxWordLength()) {
-      html += `<li><span class="solution-category">${category}-LETTER</span>`
-
-      var categoryEntries = Object.entries(Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet[category])
-      var categoryGuessed = categoryEntries
-        .filter(entry => entry[1])
-
-      categoryLength = Object.keys(Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet[category])
-        .length
-
-      html += ` ${categoryGuessed.length} of ${categoryLength}`
-      html += `<ul><li>`
-      html += categoryGuessed.map(x => x[0].toUpperCase()).sort().join(', ')
-      html += `</li></ul></li>`
-    }
-  })
-
-  html += '</ul>'
-
-  return html
 }
 
 // modal: debug: display Nebyoodle.config
@@ -1137,6 +1167,73 @@ Nebyoodle._handleClickTouch = function(event) {
   }
 }
 
+Nebyoodle._handlePlayButton = function() {
+  console.log('play-pause button clicked')
+  if (Nebyoodle.dom.audioElem.paused) {
+    Nebyoodle._playAudio()
+  } else {
+    Nebyoodle.dom.audioElem.pause()
+    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-play')
+    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-pause')
+  }
+}
+
+// copy results to clipboard for sharing
+Nebyoodle._shareResults = async function() {
+  const shareText = `
+    I beat Nebyoodle on ${Nebyoodle.__getTodaysDate()}. Have you tried? https://nebyoodle.neb.host
+  `
+
+  if (navigator.canShare) {
+    navigator.share({ text: shareText })
+
+    modalOpen('shared')
+  } else {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(shareText).then(() => {
+        modalOpen('shared')
+      }).catch(() => {
+        console.error('could not copy text to clipboard')
+
+        modalOpen('no-clipboard-access')
+
+        return
+      })
+
+      // const canWrite = await navigator.permissions.query({ name: 'clipboard-write' })
+
+      // if (canWrite.state == 'granted') {
+      //   navigator.clipboard.writeText(shareText).then(() => {
+      //     modalOpen('shared')
+      //   }).catch(() => console.error('could not copy text to clipboard'))
+      // } else {
+      //   console.warn('clipboard access was denied')
+
+      //   modalOpen('no-clipboard-access')
+      // }
+    } else {
+      console.warn('no sharing or clipboard access available')
+
+      modalOpen('no-clipboard-access')
+
+      return
+    }
+  }
+}
+
+Nebyoodle._playAudio = async function() {
+  try {
+    console.log('trying to play audioElem', Nebyoodle.dom.audioElem.src)
+    await Nebyoodle.dom.audioElem.play()
+    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-pause')
+    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-play')
+  } catch (err) {
+    console.error('could not play audioElem')
+    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-pause')
+    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-play')
+  }
+}
+
 // debug: beat game to check win state
 Nebyoodle._winGame = function(state = null) {
   const solutionSet = Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet
@@ -1193,49 +1290,6 @@ Nebyoodle._winGame = function(state = null) {
   Nebyoodle._checkWinState()
 }
 
-// copy results to clipboard for sharing
-Nebyoodle._shareResults = async function() {
-  const shareText = `
-    I beat Nebyoodle on ${Nebyoodle.__getTodaysDate()}. Have you tried? https://nebyoodle.neb.host
-  `
-
-  if (navigator.canShare) {
-    navigator.share({ text: shareText })
-
-    modalOpen('shared')
-  } else {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(shareText).then(() => {
-        modalOpen('shared')
-      }).catch(() => {
-        console.error('could not copy text to clipboard')
-
-        modalOpen('no-clipboard-access')
-
-        return
-      })
-
-      // const canWrite = await navigator.permissions.query({ name: 'clipboard-write' })
-
-      // if (canWrite.state == 'granted') {
-      //   navigator.clipboard.writeText(shareText).then(() => {
-      //     modalOpen('shared')
-      //   }).catch(() => console.error('could not copy text to clipboard'))
-      // } else {
-      //   console.warn('clipboard access was denied')
-
-      //   modalOpen('no-clipboard-access')
-      // }
-    } else {
-      console.warn('no sharing or clipboard access available')
-
-      modalOpen('no-clipboard-access')
-
-      return
-    }
-  }
-}
-
 // add event listeners to DOM
 Nebyoodle._attachEventListeners = function() {
   // {} header icons to open modals
@@ -1245,49 +1299,74 @@ Nebyoodle._attachEventListeners = function() {
   Nebyoodle.dom.interactive.btnNavClose.addEventListener('click', () => {
     Nebyoodle.dom.navOverlay.classList.toggle('show')
   })
-  Nebyoodle.dom.interactive.btnHelp.addEventListener('click', () => modalOpen('help'))
-  Nebyoodle.dom.interactive.btnStats.addEventListener('click', () => modalOpen('stats'))
-  Nebyoodle.dom.interactive.btnSettings.addEventListener('click', () => modalOpen('settings'))
+  Nebyoodle.dom.interactive.btnHelp.addEventListener('click', () => {
+    modalOpen('help')
+  })
+  Nebyoodle.dom.interactive.btnStats.addEventListener('click', () => {
+    modalOpen('stats')
+  })
+  Nebyoodle.dom.interactive.btnSettings.addEventListener('click', () => {
+    modalOpen('settings')
+  })
+
+  // audio play/pause control
+  Nebyoodle.dom.mainUI.btnPlayPause.addEventListener('click', Nebyoodle._handlePlayButton, false)
 
   // local debug buttons
   if (Nebyoodle.env == 'local') {
     if (Nebyoodle.dom.interactive.debug.all) {
       // 🪣 get single Nebyoolae track from music.nebyoolae.com
-      Nebyoodle.dom.interactive.debug.btnGetTrack.addEventListener('click', () => {
-        modalOpen('get-track')
-      })
+      if (Nebyoodle.dom.interactive.debug.btnGetTrack) {
+        Nebyoodle.dom.interactive.debug.btnGetTrack.addEventListener('click', () => {
+          modalOpen('get-track')
+        })
+      }
       // 🪣 get Nebyoolae tracks from music.nebyoolae.com
-      Nebyoodle.dom.interactive.debug.btnGetTracks.addEventListener('click', () => {
-        modalOpen('get-tracks')
-      })
+      if (Nebyoodle.dom.interactive.debug.btnGetTracks) {
+        Nebyoodle.dom.interactive.debug.btnGetTracks.addEventListener('click', () => {
+          modalOpen('get-tracks')
+        })
+      }
 
       // 🪣 show master word list
-      Nebyoodle.dom.interactive.debug.btnShowList.addEventListener('click', () => {
-        modalOpen('show-solution')
-      })
+      if (Nebyoodle.dom.interactive.debug.btnShowList) {
+        Nebyoodle.dom.interactive.debug.btnShowList.addEventListener('click', () => {
+          modalOpen('show-solution')
+        })
+      }
 
       // ⚙️ show current Nebyoodle config
-      Nebyoodle.dom.interactive.debug.btnShowConfig.addEventListener('click', () => {
-        modalOpen('show-config')
-      })
+      if (Nebyoodle.dom.interactive.debug.btnShowConfig) {
+        Nebyoodle.dom.interactive.debug.btnShowConfig.addEventListener('click', () => {
+          modalOpen('show-config')
+        })
+      }
 
       // 🎚️ show current Nebyoodle state
-      Nebyoodle.dom.interactive.debug.btnShowState.addEventListener('click', () => {
-        modalOpen('show-state')
-      })
+      if (Nebyoodle.dom.interactive.debug.btnShowState) {
+        Nebyoodle.dom.interactive.debug.btnShowState.addEventListener('click', () => {
+          modalOpen('show-state')
+        })
+      }
 
       // 🏆 win game immediately
-      Nebyoodle.dom.interactive.debug.btnWinGame.addEventListener('click', () => {
-        Nebyoodle._winGame()
-      })
+      if (Nebyoodle.dom.interactive.debug.btnWinGame) {
+        Nebyoodle.dom.interactive.debug.btnWinGame.addEventListener('click', () => {
+          Nebyoodle._winGame()
+        })
+      }
       // 🏅 almost win game (post-penultimate move)
-      Nebyoodle.dom.interactive.debug.btnWinGameAlmost.addEventListener('click', () => {
-        Nebyoodle._winGame('almost')
-      })
+      if (Nebyoodle.dom.interactive.debug.btnWinGameAlmost) {
+        Nebyoodle.dom.interactive.debug.btnWinGameAlmost.addEventListener('click', () => {
+          Nebyoodle._winGame('almost')
+        })
+      }
       // 🏁 display win tile animation
-      Nebyoodle.dom.interactive.debug.btnWinAnimation.addEventListener('click', () => {
-        Nebyoodle.__winAnimation().then(() => Nebyoodle.__resetTilesDuration())
-      })
+      if (Nebyoodle.dom.interactive.debug.btnWinAnimation) {
+        Nebyoodle.dom.interactive.debug.btnWinAnimation.addEventListener('click', () => {
+          Nebyoodle.__winAnimation().then(() => Nebyoodle.__resetTilesDuration())
+        })
+      }
     }
   }
 

@@ -1,13 +1,35 @@
-.tile {
-  --animate-duration: 100ms;
-}
-
 header .menu-left #nav-overlay #nav-content {
   animation: SlideRight 200ms;
 }
 
-section#game #guess-container #guess {
+section#game #guesses-container {
   animation-duration: 400ms;
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  height: 16px;
+  padding: 2rem 0 1rem;
+  width: 16px;
+}
+  .lds-dual-ring:after {
+    animation: lds-dual-ring 1.2s linear infinite;
+    border: 6px solid #fff;
+    border-color: #fff transparent #fff transparent;
+    border-radius: 50%;
+    content: " ";
+    display: block;
+    height: 8px;
+    margin: 0 auto;
+    width: 8px;
+  }
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyFrames SlideRight {

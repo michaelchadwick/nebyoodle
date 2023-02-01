@@ -41,7 +41,9 @@
   <!-- FONTAWESOME
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="./assets/fontawesome/css/fontawesome.min.css">
+  <link rel="stylesheet" href="./assets/fontawesome/css/regular.min.css">
   <link rel="stylesheet" href="./assets/fontawesome/css/solid.min.css">
+  <link rel="stylesheet" href="./assets/fontawesome/css/brands.min.css">
 
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -101,11 +103,12 @@
             </button>
             <div class="ddsub">
               <button id="button-get-track" class="icon" title="Get Track">
-                <i class="fa-solid fa-music"></i>
+                <i class="fa-brands fa-itunes-note"></i>
               </button>
               <button id="button-get-tracks" class="icon" title="Get Tracks">
                 <i class="fa-solid fa-music"></i>
               </button>
+              <!--
               <button id="button-show-config" class="icon" title="Show Config">
                 <i class="fa-solid fa-gears"></i>
               </button>
@@ -124,6 +127,7 @@
               <button id="button-win-animation" class="icon" title="Win Animation">
                 <i class="fa-solid fa-flag-checkered"></i>
               </button>
+              -->
             </div>
           </div>
         </nav>
@@ -189,7 +193,9 @@
 
     <div id="bot-first-half">
 
-      <div id="audio-container"></div>
+      <div id="audio-container">
+        <audio id="audio-element" src=""></audio>
+      </div>
 
       <div id="timeline-container">
         <div id="timeline">
@@ -207,7 +213,9 @@
       <div id="play-container">
         <div id="start-time">0:00</div>
         <div id="play-pause">
-          <button><i class="fa-solid fa-play"></i></button>
+          <button id="button-play-pause" disabled>
+            <i id="button-play-pause-icon" class="fa-solid fa-play"></i>
+          </button>
         </div>
         <div id="end-time">0:00</div>
       </div>
@@ -217,14 +225,16 @@
     <div id="bot-second-half">
 
       <div id="search-container">
-        <input type="text" placeholder="Search for title / album" />
+        <input type="text" id="input-guess" placeholder="Search for title / album" disabled />
       </div>
       <div id="submit-container">
-        <button class="btn-skip">
+        <button id="button-skip" disabled>
           <span>Skip</span>
           <span>(+1s)</span>
         </button>
-        <button class="btn-submit">Submit</button>
+        <button id="button-submit" disabled>
+          Submit
+        </button>
       </div>
 
     </div>
