@@ -28,21 +28,23 @@ const NEBYOODLE_DEFAULTS = {
   },
   'state': {
     'daily': {
-      'gameState': 'IN_PROGRESS',
-      'lastCompletedTime': null,
-      'lastPlayedTime': null,
-      'statistics': []
+      durationMax: 1,
+      gameState: 'IN_PROGRESS',
+      lastCompletedTime: null,
+      lastPlayedTime: null,
+      statistics: []
     },
     'free': {
-      'gameState': 'IN_PROGRESS',
-      'lastCompletedTime': null,
-      'lastPlayedTime': null,
-      'statistics': []
+      durationMax: 1,
+      gameState: 'IN_PROGRESS',
+      lastCompletedTime: null,
+      lastPlayedTime: null,
+      statistics: []
     }
   },
   'settings': {
-    'darkMode': false,
-    'gameMode': 'free'
+    darkMode: false,
+    gameMode: 'free'
   }
 }
 
