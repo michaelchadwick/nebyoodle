@@ -45,3 +45,5 @@ const NEBYOODLE_DEFAULTS = {
     'gameMode': 'free'
   }
 }
+
+const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'
