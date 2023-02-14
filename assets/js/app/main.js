@@ -921,6 +921,9 @@ Nebyoodle._getTrack = async function() {
 
       document.getElementById('audio-element').src = audioUrl
 
+      // listen for currentTime and stop when durationMax is reached
+      document.getElementById('audio-element').addEventListener('timeupdate', Nebyoodle._handleTime)
+
       Nebyoodle._enableUI()
     } else {
       const retries = Nebyoodle.config[Nebyoodle.__getGameMode()].retryCount
@@ -1151,6 +1154,21 @@ Nebyoodle._displayGameSolution = function() {
   return html
 }
 
+Nebyoodle._handleTime = function(event) {
+  const currentTime = event.target.currentTime
+
+  // console.log('currentTime', currentTime)
+
+  if (currentTime >= Nebyoodle.state[Nebyoodle.__getGameMode()].durationMax) {
+    // console.log('durationMax reached. stopping audio', this)
+
+    // "stop" the audio, i.e. pause and reset back to beginning
+    Nebyoodle.dom.audioElem.pause()
+    Nebyoodle.dom.audioElem.currentTime = 0
+    Nebyoodle._togglePlayPauseButton()
+  }
+}
+
 // handle both clicks and touches outside of modals
 Nebyoodle._handleClickTouch = function(event) {
   var dialog = document.getElementsByClassName('modal-dialog')[0]
@@ -1170,11 +1188,19 @@ Nebyoodle._handleClickTouch = function(event) {
 }
 
 Nebyoodle._handlePlayButton = function() {
-  console.log('play-pause button clicked')
   if (Nebyoodle.dom.audioElem.paused) {
     Nebyoodle._playAudio()
   } else {
     Nebyoodle.dom.audioElem.pause()
+    Nebyoodle._togglePlayPauseButton()
+  }
+}
+
+Nebyoodle._togglePlayPauseButton = function() {
+  if (Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.contains('fa-pause')) {
+    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-pause')
+    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-play')
+  } else {
     Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-play')
     Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-pause')
   }
@@ -1225,14 +1251,15 @@ Nebyoodle._shareResults = async function() {
 
 Nebyoodle._playAudio = async function() {
   try {
-    console.log('trying to play audioElem', Nebyoodle.dom.audioElem.src)
+    // console.log('trying to play audioElem', Nebyoodle.dom.audioElem.src)
+
     await Nebyoodle.dom.audioElem.play()
-    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-pause')
-    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-play')
+
+    Nebyoodle._togglePlayPauseButton()
   } catch (err) {
     console.error('could not play audioElem')
-    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-pause')
-    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-play')
+
+    Nebyoodle._togglePlayPauseButton()
   }
 }
 
