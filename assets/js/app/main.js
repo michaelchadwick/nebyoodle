@@ -917,14 +917,8 @@ Nebyoodle._getTrack = async function() {
         ? `${NEBYOOCOM_BASE_URL}${attr.field_local_link.uri.split('internal:')[1]}`
         : ''
 
-      // console.log('audioUrl', audioUrl)
-
-      document.getElementById('audio-element').src = audioUrl
-
-      // listen for currentTime and stop when durationMax is reached
-      document.getElementById('audio-element').addEventListener('timeupdate', Nebyoodle._handleTime)
-
-      Nebyoodle._enableUI()
+      Nebyoodle.dom.audioElem.src = audioUrl
+      Nebyoodle.dom.audioElem.load()
     } else {
       const retries = Nebyoodle.config[Nebyoodle.__getGameMode()].retryCount
       const max = Nebyoodle.config[Nebyoodle.__getGameMode()].retryMax
@@ -1154,12 +1148,22 @@ Nebyoodle._displayGameSolution = function() {
   return html
 }
 
-Nebyoodle._handleTime = function(event) {
+// handle duration of audio element
+Nebyoodle._handleAudioDuration = function(event) {
   const currentTime = event.target.currentTime
+  const durationMax = Nebyoodle.state[Nebyoodle.__getGameMode()].durationMax
 
-  // console.log('currentTime', currentTime)
+  // console.log('currentTime / durationMax', currentTime, durationMax)
 
-  if (currentTime >= Nebyoodle.state[Nebyoodle.__getGameMode()].durationMax) {
+  let durVal = NEBYOODLE_DUR_PCT[Nebyoodle.state[Nebyoodle.__getGameMode()].skips]
+  let fillVal = (currentTime / durationMax) * durVal
+
+  // console.log('_handleAudioDuration fillVal', fillVal)
+
+  Nebyoodle.dom.timelinePlayed.setAttribute('fill', fillVal)
+  Nebyoodle.dom.timelinePlayed.style.transform = `scaleX(${fillVal})`
+
+  if (currentTime >= durationMax) {
     // console.log('durationMax reached. stopping audio', this)
 
     // "stop" the audio, i.e. pause and reset back to beginning
@@ -1193,6 +1197,38 @@ Nebyoodle._handlePlayButton = function() {
   } else {
     Nebyoodle.dom.audioElem.pause()
     Nebyoodle._togglePlayPauseButton()
+  }
+}
+
+Nebyoodle._handleSkipButton = function() {
+  /*
+    0 skip(s) = 0:00-0:01 (Skip (+1s)), fill=0.0625
+    1 skip(s) = 0:00-0:02 (Skip (+2s)), fill=0.1250
+    2 skip(s) = 0:00-0:04 (Skip (+3s)), fill=0.2500
+    3 skip(s) = 0:00-0:07 (Skip (+4s)), fill=0.4375
+    4 skip(s) = 0:00-0:11 (Skip (+5s)), fill=0.6875
+    5 skip(s) = 0:00-0:16 (Skip)      , fill=0.999
+  */
+
+  // increase number of skips
+  Nebyoodle.state[Nebyoodle.__getGameMode()].skips++
+
+  // if we still have skips left, then update audio and UI
+  if (Nebyoodle.state[Nebyoodle.__getGameMode()].skips < NEBYOODLE_SKP_TXT.length) {
+    // set new duration
+    Nebyoodle.state[Nebyoodle.__getGameMode()].durationMax = NEBYOODLE_SKP_VAL[Nebyoodle.state[Nebyoodle.__getGameMode()].skips]
+
+    // update timeline
+    const fillVal = NEBYOODLE_DUR_PCT[Nebyoodle.state[Nebyoodle.__getGameMode()].skips]
+
+    Nebyoodle.dom.timelineUnplayed.setAttribute('fill', fillVal)
+    Nebyoodle.dom.timelineUnplayed.style.transform = `scaleX(${fillVal})`
+
+    // update skip button
+    Nebyoodle.dom.mainUI.skipSeconds.innerText = NEBYOODLE_SKP_TXT[Nebyoodle.state[Nebyoodle.__getGameMode()].skips]
+  } else {
+    Nebyoodle.dom.mainUI.btnSkip.setAttribute('disabled', true)
+    Nebyoodle.dom.mainUI.btnSubmit.setAttribute('disabled', true)
   }
 }
 
@@ -1249,13 +1285,14 @@ Nebyoodle._shareResults = async function() {
   }
 }
 
+// play audio from beginning to durationMax
 Nebyoodle._playAudio = async function() {
   try {
     // console.log('trying to play audioElem', Nebyoodle.dom.audioElem.src)
 
-    await Nebyoodle.dom.audioElem.play()
-
     Nebyoodle._togglePlayPauseButton()
+
+    Nebyoodle.dom.audioElem.play()
   } catch (err) {
     console.error('could not play audioElem')
 
@@ -1338,8 +1375,30 @@ Nebyoodle._attachEventListeners = function() {
     modalOpen('settings')
   })
 
+  // audio-element events
+  // listen for when it empties
+  Nebyoodle.dom.audioElem.addEventListener('emptied', () => {
+    // console.log('audioElem got emptied')
+
+    Nebyoodle._disableUI()
+  })
+  // now listen for when it gets loaded again
+  Nebyoodle.dom.audioElem.addEventListener('canplaythrough', () => {
+    // console.log('audioElem can now play again')
+
+    Nebyoodle.state[Nebyoodle.__getGameMode()].durationMax = NEBYOODLE_SKP_VAL[Nebyoodle.state[Nebyoodle.__getGameMode()].skips]
+
+    Nebyoodle._enableUI()
+  })
+
+  // check for currentTime changes and update timeline accordingly
+  Nebyoodle.dom.audioElem.addEventListener('timeupdate', Nebyoodle._handleAudioDuration)
+
   // audio play/pause control
   Nebyoodle.dom.mainUI.btnPlayPause.addEventListener('click', Nebyoodle._handlePlayButton, false)
+
+  // audio play/pause control
+  Nebyoodle.dom.mainUI.btnSkip.addEventListener('click', Nebyoodle._handleSkipButton, false)
 
   // local debug buttons
   if (Nebyoodle.env == 'local') {
@@ -1460,7 +1519,6 @@ Nebyoodle.__updateDailyDetails = function(index) {
 
 Nebyoodle.__winAnimation = async function() {
 }
-
 
 /************************************************************************
  * ON PAGE LOAD, DO THIS *

@@ -11,6 +11,9 @@ Nebyoodle.dom = {
   'guesses': document.getElementById('guesses-container'),
   'audioContainer': document.getElementById('audio-container'),
   'audioElem': document.getElementById('audio-element'),
+  'timeline': document.getElementById('timeline'),
+  'timelineUnplayed': document.querySelector('.intro-unplayed'),
+  'timelinePlayed': document.querySelector('.intro-played'),
 }
 
 // DOM > interactive elements
@@ -29,6 +32,7 @@ Nebyoodle.dom.mainUI = {
   'btnPlayPauseIcon': document.getElementById('button-play-pause-icon'),
   'inputGuess': document.getElementById('input-guess'),
   'btnSkip': document.getElementById('button-skip'),
+  'skipSeconds': document.getElementById('skip-seconds'),
   'btnSubmit': document.getElementById('button-submit')
 }
 // DOM > interactive elements (debug)

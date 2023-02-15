@@ -15,6 +15,10 @@ const NEBYOODLE_ENV_PROD_URL = [
 const NEBYOODLE_DAILY_SCRIPT = './assets/scripts/daily.php'
 const NEBYOODLE_SONG_SCRIPT = './assets/scripts/song.php'
 
+const NEBYOODLE_DUR_PCT = [0.0625, 0.1250, 0.25, 0.4375, 0.6875, 0.999]
+const NEBYOODLE_SKP_TXT = ['(+1s)', '(+2s)', '(+3s)', '(+4s)', '(+5s)', '']
+const NEBYOODLE_SKP_VAL = [1, 2, 4, 7, 11, 16]
+
 const NEBYOODLE_DEFAULTS = {
   'config': {
     'daily': {
@@ -32,6 +36,8 @@ const NEBYOODLE_DEFAULTS = {
       gameState: 'IN_PROGRESS',
       lastCompletedTime: null,
       lastPlayedTime: null,
+      skips: 0,
+      skipsVal: NEBYOODLE_SKP_VAL[0],
       statistics: []
     },
     'free': {
@@ -39,6 +45,8 @@ const NEBYOODLE_DEFAULTS = {
       gameState: 'IN_PROGRESS',
       lastCompletedTime: null,
       lastPlayedTime: null,
+      skips: 0,
+      skipsVal: NEBYOODLE_SKP_VAL[0],
       statistics: []
     }
   },

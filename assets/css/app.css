@@ -3,8 +3,8 @@
   --light-color:  #a6c4ee;
   --dark-color: #244471;
   --debug-color: #715ec7;
-  --played-color: #1ED760;
-  --unplayed-color: #666666;
+  --played-color: #1ebbd7;
+  --unplayed-color: #8d8d8d;
   --white: #ffffff;
   --black: #111111;
   --off-white: #f1f1f1;
@@ -527,6 +527,10 @@ section#game {
     justify-content: center;
     width: 100%;
   }
+    section#game #bot-first-half #audio-container {
+
+    }
+
     section#game #bot-first-half #timeline-container {
       align-items: center;
       border-bottom: 1px solid var(--black);
