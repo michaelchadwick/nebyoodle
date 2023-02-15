@@ -1199,6 +1199,7 @@ Nebyoodle._handlePlayButton = function() {
     Nebyoodle._playAudio()
   } else {
     Nebyoodle.dom.audioElem.pause()
+    Nebyoodle.dom.audioElem.currentTime = 0
     Nebyoodle._togglePlayPauseButton()
   }
 }
