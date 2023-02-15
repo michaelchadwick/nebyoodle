@@ -11,6 +11,8 @@ Nebyoodle.dom = {
   'guesses': document.getElementById('guesses-container'),
   'audioContainer': document.getElementById('audio-container'),
   'audioElem': document.getElementById('audio-element'),
+  'playContainer': document.getElementById('play-container'),
+  'playSeconds': document.getElementById('start-time-seconds'),
   'timeline': document.getElementById('timeline'),
   'timelineUnplayed': document.querySelector('.intro-unplayed'),
   'timelinePlayed': document.querySelector('.intro-played'),

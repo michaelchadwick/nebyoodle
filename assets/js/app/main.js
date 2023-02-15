@@ -886,6 +886,7 @@ Nebyoodle._getTrack = async function() {
       const attr = track.data[0].attributes
 
       const description = new DOMParser().parseFromString(attr.body, "text/html").body.textContent
+      const duration = new Date(attr.field_duration * 1000).toISOString().slice(14,19)
       const date = attr.field_release_date
 
       const songName = attr.title
@@ -903,9 +904,10 @@ Nebyoodle._getTrack = async function() {
 
       // html markup to display
       let html = ''
-      html += `<strong>Title</strong>: <a href="${songLink}" target="_blank">${songName}</a>, `
-      html += `<strong>Artist</strong>: ${artistName}, `
+      html += `<strong>Title</strong>: <a href="${songLink}" target="_blank">${songName}</a><br />`
+      html += `<strong>Artist</strong>: ${artistName}<br />`
       html += `<strong>Album</strong>: <a href="${albumLink}" target="_blank">${albumName}</a><br />`
+      html += `<strong>Duration</strong>: ${duration}<br />`
       html += `<strong>Released</strong>: ${date}<br />`
       html += `<strong>Description</strong>: ${description}`
       Nebyoodle.dom.trackData.innerHTML = html
@@ -1162,6 +1164,7 @@ Nebyoodle._handleAudioDuration = function(event) {
 
   Nebyoodle.dom.timelinePlayed.setAttribute('fill', fillVal)
   Nebyoodle.dom.timelinePlayed.style.transform = `scaleX(${fillVal})`
+  Nebyoodle.dom.playSeconds.innerText = Math.floor(currentTime).toString().padStart(2, '0')
 
   if (currentTime >= durationMax) {
     // console.log('durationMax reached. stopping audio', this)

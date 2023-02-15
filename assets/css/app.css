@@ -589,6 +589,17 @@ section#game {
         /* background-color: lightblue; */
         min-width: 100px;
       }
+        section#game #bot-first-half #play-container div.time-bits {
+          font-size: 0;
+        }
+          section#game #bot-first-half #play-container div.time-bits span {
+            font-size: 1rem;
+            letter-spacing: 0.05rem;
+            padding: 0;
+          }
+        section#game #bot-first-half #play-container div#start-time {
+          text-align: left;
+        }
         section#game #bot-first-half #play-container div#play-pause {
           text-align: center;
         }
