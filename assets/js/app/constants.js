@@ -21,14 +21,8 @@ const NEBYOODLE_SKP_VAL = [1, 2, 4, 7, 11, 16]
 
 const NEBYOODLE_DEFAULTS = {
   'config': {
-    'daily': {
-      retryCount: 0,
-      retryMax: 5
-    },
-    'free': {
-      retryCount: 0,
-      retryMax: 5
-    }
+    'daily': {},
+    'free': {}
   },
   'state': {
     'daily': {

@@ -863,82 +863,69 @@ Nebyoodle._enableUI = function() {
 
 // get a single random song from music.nebyoolae.com
 Nebyoodle._getTrack = async function() {
+  // add loading animation until fetch is done
   Nebyoodle.dom.trackData.innerHTML = ''
   Nebyoodle.dom.trackData.classList.add('lds-dual-ring')
 
-  // current song nid range = 1409 -> 2249
-  const songId = Math.floor(Math.random() * 1409) + 840
-
-  const response = await fetch(NEBYOODLE_SONG_SCRIPT + '?songId=' + songId)
+  const response = await fetch(NEBYOODLE_SONG_SCRIPT)
 
   if (response) {
     const track = await response.json()
 
     if (track.data[0]) {
-      Nebyoodle.config[Nebyoodle.__getGameMode()].retryCount = 0
       Nebyoodle.dom.trackData.classList.remove('lds-dual-ring')
 
       // console.log('track', track)
       // console.log('data', track.data[0])
-      // console.log('incl', track.included)
 
       // main attributes
-      const attr = track.data[0].attributes
-
-      const description = new DOMParser().parseFromString(attr.body, "text/html").body.textContent
-      const duration = new Date(attr.field_duration * 1000).toISOString().slice(14,19)
-      const date = attr.field_release_date
+      const attr = track.data[0]
 
       const songName = attr.title
       const songPath = attr.path.alias
       const songLink = `${NEBYOOCOM_BASE_URL}${songPath}`
 
-      // includes
-      const albumName = track.included[0].attributes.name
-      const albumPath = track.included[0].attributes.path.alias
-      const albumLink = `${NEBYOOCOM_BASE_URL}${albumPath}`
-      const artistName = track.included[1].attributes.name
+      const artistName = attr.field_artist_id.name
 
-      // const cover = track.included[2].attributes
-      // console.log('cover', cover)
+      const albumName = attr.field_album_id.name
+      const albumPath = attr.field_album_id.path.alias
+      const albumLink = `${NEBYOOCOM_BASE_URL}${albumPath}`
+      const albumCoverFull = `${NEBYOOCOM_BASE_URL}${attr.field_album_id.field_album_cover.uri.url}`
+
+      let albumCoverSmall = albumCoverFull.split('files/')
+      albumCoverSmall = albumCoverSmall[0] + 'files/styles/thumbnail/public/' + albumCoverSmall[1]
+
+      const duration = new Date(attr.field_duration * 1000).toISOString().slice(14,19)
+      const released = attr.field_release_date
+      const description = new DOMParser().parseFromString(attr.body, "text/html").body.textContent
+
+      const audioUrl = attr.field_local_link
+        ? `${NEBYOOCOM_BASE_URL}${attr.field_local_link.uri.split('internal:')[1]}`
+        : ''
 
       // html markup to display
       let html = ''
       html += `<strong>Title</strong>: <a href="${songLink}" target="_blank">${songName}</a><br />`
       html += `<strong>Artist</strong>: ${artistName}<br />`
       html += `<strong>Album</strong>: <a href="${albumLink}" target="_blank">${albumName}</a><br />`
+      html += `<a href=""><img src="${albumCoverSmall}" /></a><br />`
       html += `<strong>Duration</strong>: ${duration}<br />`
-      html += `<strong>Released</strong>: ${date}<br />`
+      html += `<strong>Released</strong>: ${released}<br />`
       html += `<strong>Description</strong>: ${description}`
       Nebyoodle.dom.trackData.innerHTML = html
 
-      // add audio data to game
-      // console.log('attr.field_local_link.uri', attr.field_local_link.uri)
-
-      const audioUrl = attr.field_local_link
-        ? `${NEBYOOCOM_BASE_URL}${attr.field_local_link.uri.split('internal:')[1]}`
-        : ''
-
+      // load track into audio-element
       Nebyoodle.dom.audioElem.src = audioUrl
       Nebyoodle.dom.audioElem.load()
     } else {
-      const retries = Nebyoodle.config[Nebyoodle.__getGameMode()].retryCount
-      const max = Nebyoodle.config[Nebyoodle.__getGameMode()].retryMax
-
-      if (retries < max) {
-        console.error(`songId #${songId} does not exist. retrying...`)
-        Nebyoodle.config[Nebyoodle.__getGameMode()].retryCount++
-        Nebyoodle._getTrack()
-      } else {
-        console.error(`songId #${songId} does not exist. giving up.`)
-        Nebyoodle.dom.trackData.classList.remove('lds-dual-ring')
-        Nebyoodle.dom.trackData.innerHTML = `could not find a valid song`
-      }
+      console.error('fetched track has invalid data')
+      Nebyoodle.dom.trackData.classList.remove('lds-dual-ring')
+      Nebyoodle.dom.trackData.innerHTML = `got track, but it's wonky :(`
     }
   } else {
     console.error('could not fetch track from remote source')
     Nebyoodle.dom.trackData.classList.remove('lds-dual-ring')
-    Nebyoodle.dom.trackData.innerHTML = 'could not fetch track :('
+    Nebyoodle.dom.trackData.innerHTML = 'could not get track :('
   }
 }
 
