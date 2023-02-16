@@ -31,17 +31,17 @@ async function modalOpen(type) {
     case 'help':
       this.myModal = new Modal('perm', 'How to Play Nebyoodle',
         `
-          <p>Listen to the intro of a Nebyoolae music track, and then find the correct title in the list.</p>
+          <p>Listen to the intro of a Nebyoolae music song, and then find the correct title in the list.</p>
 
-          <p>Skipped or incorrect attempts unlock more of the track.</p>
+          <p>Skipped or incorrect attempts unlock more of the song.</p>
 
           <p>Answer in as few tries as possible and share your score!</p>
 
           <h4>Daily</h4>
-          <p>One new track to guess each day.</p>
+          <p>One new song to guess each day.</p>
 
           <h4>Free</h4>
-          <p>Keep guessing as many tracks as you want! Go for the longest combo!</p>
+          <p>Keep guessing as many songs as you want! Go for the longest combo!</p>
 
           <hr />
 
@@ -205,11 +205,11 @@ async function modalOpen(type) {
 
       break
 
-    case 'get-track':
-      Nebyoodle._getTrack()
+    case 'get-song':
+      Nebyoodle._getSong()
       break
-    case 'get-tracks':
-      Nebyoodle._getTracks()
+    case 'get-songs':
+      Nebyoodle._getSongs()
       break
 
     case 'show-config':
@@ -861,25 +861,25 @@ Nebyoodle._enableUI = function() {
   })
 }
 
-// get a single random song from music.nebyoolae.com
-Nebyoodle._getTrack = async function() {
+// get a single random valid song from music.nebyoolae.com
+Nebyoodle._getSong = async function() {
   // add loading animation until fetch is done
-  Nebyoodle.dom.trackData.innerHTML = ''
-  Nebyoodle.dom.trackData.classList.add('lds-dual-ring')
+  Nebyoodle.dom.songData.innerHTML = ''
+  Nebyoodle.dom.songData.classList.add('lds-dual-ring')
 
   const response = await fetch(NEBYOODLE_SONG_SCRIPT)
 
   if (response) {
-    const track = await response.json()
+    const song = await response.json()
 
-    if (track.data[0]) {
-      Nebyoodle.dom.trackData.classList.remove('lds-dual-ring')
+    if (song.data[0]) {
+      Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
 
-      // console.log('track', track)
-      // console.log('data', track.data[0])
+      // console.log('song', song)
+      // console.log('data', song.data[0])
 
       // main attributes
-      const attr = track.data[0]
+      const attr = song.data[0]
 
       const songName = attr.title
       const songPath = attr.path.alias
@@ -912,31 +912,31 @@ Nebyoodle._getTrack = async function() {
       html += `<strong>Duration</strong>: ${duration}<br />`
       html += `<strong>Released</strong>: ${released}<br />`
       html += `<strong>Description</strong>: ${description}`
-      Nebyoodle.dom.trackData.innerHTML = html
+      Nebyoodle.dom.songData.innerHTML = html
 
-      // load track into audio-element
+      // load song into audio-element
       Nebyoodle.dom.audioElem.src = audioUrl
       Nebyoodle.dom.audioElem.load()
     } else {
-      console.error('fetched track has invalid data')
-      Nebyoodle.dom.trackData.classList.remove('lds-dual-ring')
-      Nebyoodle.dom.trackData.innerHTML = `got track, but it's wonky :(`
+      console.error('fetched song has invalid data')
+      Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
+      Nebyoodle.dom.songData.innerHTML = `got song, but it's wonky :(`
     }
   } else {
-    console.error('could not fetch track from remote source')
-    Nebyoodle.dom.trackData.classList.remove('lds-dual-ring')
-    Nebyoodle.dom.trackData.innerHTML = 'could not get track :('
+    console.error('could not fetch song from remote source')
+    Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
+    Nebyoodle.dom.songData.innerHTML = 'could not get song :('
   }
 }
 
-// get all the songs from music.nebyoolae.com
-Nebyoodle._getTracks = async function() {
-  const response = await fetch(NEBYOODLE_DAILY_SCRIPT)
-  const tracks = await response.json()
+// get all valid songs from music.nebyoolae.com
+Nebyoodle._getSongs = async function() {
+  const response = await fetch(NEBYOODLE_SONGS_SCRIPT)
+  const songs = await response.json()
 
-  if (tracks) {
-    console.log(tracks.data)
-    const data = tracks.data[0]
+  if (songs) {
+    console.log(songs.data)
+    const data = songs.data[0]
     const title = data.attributes.title
 
     // const instruments = data.field_instruments.data.map(d => d.meta.drupal_internal__target)
@@ -946,10 +946,10 @@ Nebyoodle._getTracks = async function() {
     // html += `, <strong>Artist</strong>: ${artist_id}`
     // html += `, <strong>Album</strong>: ${album_id}<br />`
     // html += `<strong>Instruments</strong>: ${instruments}`
-    Nebyoodle.dom.trackData.innerHTML = html
+    Nebyoodle.dom.songData.innerHTML = html
 
   } else {
-    console.error('could not fetch tracks from remote source')
+    console.error('could not fetch songs from remote source')
   }
 }
 
@@ -1394,16 +1394,16 @@ Nebyoodle._attachEventListeners = function() {
   // local debug buttons
   if (Nebyoodle.env == 'local') {
     if (Nebyoodle.dom.interactive.debug.all) {
-      // 🪣 get single Nebyoolae track from music.nebyoolae.com
-      if (Nebyoodle.dom.interactive.debug.btnGetTrack) {
-        Nebyoodle.dom.interactive.debug.btnGetTrack.addEventListener('click', () => {
-          modalOpen('get-track')
+      // 🪣 get single Nebyoolae song from music.nebyoolae.com
+      if (Nebyoodle.dom.interactive.debug.btnGetSong) {
+        Nebyoodle.dom.interactive.debug.btnGetSong.addEventListener('click', () => {
+          modalOpen('get-song')
         })
       }
-      // 🪣 get Nebyoolae tracks from music.nebyoolae.com
-      if (Nebyoodle.dom.interactive.debug.btnGetTracks) {
-        Nebyoodle.dom.interactive.debug.btnGetTracks.addEventListener('click', () => {
-          modalOpen('get-tracks')
+      // 🪣 get all Nebyoolae songs from music.nebyoolae.com
+      if (Nebyoodle.dom.interactive.debug.btnGetSongs) {
+        Nebyoodle.dom.interactive.debug.btnGetSongs.addEventListener('click', () => {
+          modalOpen('get-songs')
         })
       }
 

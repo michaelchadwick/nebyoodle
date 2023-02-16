@@ -6,7 +6,7 @@ A Heardle-like daily music guessing game, featuring the works of, well, me. Name
 
 ## JSON:API
 
-Uses the following Drupal modules to pull track info from [https://music.nebyoolae.com](https://music.nebyoolae.com):
+Uses the following Drupal modules to pull song info from [https://music.nebyoolae.com](https://music.nebyoolae.com):
 
 * [JSON:API](https://www.drupal.org/docs/core-modules-and-themes/core-modules/jsonapi-module)
 * [JSON:API Boost](https://www.drupal.org/project/jsonapi_boost)

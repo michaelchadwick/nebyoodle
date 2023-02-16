@@ -7,7 +7,7 @@ Nebyoodle.dom = {
   'navOverlay': document.getElementById('nav-overlay'),
   'navContent': document.getElementById('nav-content'),
   'dailyDetails': document.getElementById('daily-details'),
-  'trackData': document.getElementById('track-data'),
+  'songData': document.getElementById('song-data'),
   'guesses': document.getElementById('guesses-container'),
   'audioContainer': document.getElementById('audio-container'),
   'audioElem': document.getElementById('audio-element'),
@@ -40,8 +40,8 @@ Nebyoodle.dom.mainUI = {
 // DOM > interactive elements (debug)
 Nebyoodle.dom.interactive.debug = {
   'all': document.getElementById('debug-buttons'),
-  'btnGetTrack': document.getElementById('button-get-track'),
-  'btnGetTracks': document.getElementById('button-get-tracks'),
+  'btnGetSong': document.getElementById('button-get-song'),
+  'btnGetSongs': document.getElementById('button-get-songs'),
   'btnShowList': document.getElementById('button-show-solution'),
   'btnResetProgress': document.getElementById('button-reset-progress'),
   'btnShowConfig': document.getElementById('button-show-config'),

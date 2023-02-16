@@ -498,11 +498,11 @@ section#game {
             font-weight: 600;
           }
 
-    section#game #top-half #track-data {
+    section#game #top-half #song-data {
       background-color: var(--light-color);
       padding: 1rem;
     }
-      section#game #top-half #track-data.lds-dual-ring {
+      section#game #top-half #song-data.lds-dual-ring {
         padding: 1rem 0;
         width: 100%;
       }
@@ -586,7 +586,6 @@ section#game {
       width: 100%;
     }
       section#game #bot-first-half #play-container div {
-        /* background-color: lightblue; */
         min-width: 100px;
       }
         section#game #bot-first-half #play-container div.time-bits {
@@ -601,28 +600,30 @@ section#game {
           text-align: left;
         }
         section#game #bot-first-half #play-container div#play-pause {
-          text-align: center;
+          display: flex;
+          min-width: 50px;
         }
+          section#game #bot-first-half #play-container div#play-pause button {
+            background-color: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 25px;
+            color: var(--black);
+            font-size: 1.5rem;
+            height: 48px;
+            width: 48px;
+          }
+            @media (hover: hover) {
+              section#game #bot-first-half #play-container div#play-pause button:hover {
+                background-color: var(--light-color);
+              }
+            section#game #bot-first-half #play-container div#play-pause button:disabled {
+              background-color: var(--gray);
+              border-color: var(--gray-medium);
+              color: var(--gray-medium);
+            }
+
         section#game #bot-first-half #play-container div#end-time {
           text-align: right;
-        }
-      section#game #bot-first-half #play-container button {
-        background-color: var(--white);
-        border: 2px solid var(--black);
-        border-radius: 25px;
-        color: var(--black);
-        font-size: 1.5rem;
-        height: 48px;
-        width: 48px;
-      }
-        @media (hover: hover) {
-          section#game #bot-first-half #play-container button:hover {
-            background-color: var(--light-color);
-          }
-        section#game #bot-first-half #play-container button:disabled {
-          background-color: var(--gray);
-          border-color: var(--gray-medium);
-          color: var(--gray-medium);
         }
 
   section#game #bot-second-half {
