@@ -650,6 +650,8 @@ section#game {
         border-color: var(--dark-color);
       }
       section#game #bot-second-half #search-container #guess-container {
+        align-items: center;
+        display: flex;
         width: 100%;
       }
         section#game #bot-second-half #search-container #guess-container input#guess-input {
@@ -661,6 +663,14 @@ section#game {
           section#game #bot-second-half #search-container #guess-container input#guess-input:focus {
             outline: none;
           }
+        section#game #bot-second-half #search-container #guess-container button#button-guess-clear {
+          background-color: transparent;
+          color: var(--black);
+          display: none;
+          font-size: 1.25rem;
+          font-weight: 700;
+        }
+
         section#game #bot-second-half #search-container #guess-container #guess-result {
           background: var(--white);
           border: 2px solid var(--dark-color);

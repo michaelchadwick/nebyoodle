@@ -1190,6 +1190,7 @@ Nebyoodle._handleGuessInput = function(event) {
       list += '<li>' + terms[i] + '</li>'
     }
 
+    Nebyoodle.dom.mainUI.btnGuessClear.style.display = 'block'
     Nebyoodle.dom.mainUI.guessResult.style.display = 'block'
     Nebyoodle.dom.mainUI.guessResultList.innerHTML = list
   }
@@ -1211,6 +1212,12 @@ Nebyoodle._handleGuessList = function(event) {
   Nebyoodle.dom.mainUI.guessResult.style.display = 'none'
 
   Nebyoodle.dom.mainUI.btnSubmit.removeAttribute('disabled')
+}
+
+Nebyoodle._clearGuess = function() {
+  Nebyoodle.dom.mainUI.guessInput.value = ''
+  Nebyoodle.dom.mainUI.btnGuessClear.style.display = 'none'
+  Nebyoodle.dom.mainUI.guessResult.style.display = 'none'
 }
 
 Nebyoodle._togglePlayPauseButton = function() {
@@ -1379,6 +1386,7 @@ Nebyoodle._attachEventListeners = function() {
   // guesses
   Nebyoodle.dom.mainUI.guessInput.addEventListener('keyup', Nebyoodle._handleGuessInput, false)
   Nebyoodle.dom.mainUI.guessResultList.addEventListener('click', Nebyoodle._handleGuessList, false)
+  Nebyoodle.dom.mainUI.btnGuessClear.addEventListener('click', Nebyoodle._clearGuess)
   // skip/submit
   Nebyoodle.dom.mainUI.btnSkip.addEventListener('click', Nebyoodle._handleSkipButton, false)
   Nebyoodle.dom.mainUI.btnSubmit.addEventListener('click', Nebyoodle._handleSubmitButton, false)

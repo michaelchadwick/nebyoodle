@@ -37,6 +37,7 @@ Nebyoodle.dom.mainUI = {
   'guessResult': document.getElementById('guess-result'),
   'guessResultList': document.getElementById('guess-result-list'),
   'guessResultCounter': document.getElementById('guess-result-counter'),
+  'btnGuessClear': document.getElementById('button-guess-clear'),
   'btnSkip': document.getElementById('button-skip'),
   'skipSeconds': document.getElementById('skip-seconds'),
   'btnSubmit': document.getElementById('button-submit')
