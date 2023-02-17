@@ -311,6 +311,15 @@ Nebyoodle.initApp = async () => {
 
 // load state/statistics from LS -> code model
 Nebyoodle._loadGame = async function() {
+  /* ************************* */
+  /* allSongData from LS       */
+  /* ************************* */
+  const lsSongData = localStorage.getItem(NEBYOODLE_SONG_DATA_KEY)
+
+  if (lsSongData) {
+    Nebyoodle.allSongData = JSON.parse(lsSongData)
+  }
+
   let dailyCreateOrLoad = ''
   let freeCreateOrLoad = ''
 
@@ -859,25 +868,32 @@ Nebyoodle._getSong = async function() {
 
 // get all valid songs from music.nebyoolae.com
 Nebyoodle._getSongs = async function() {
-  const response = await fetch(NEBYOODLE_SONGS_SCRIPT)
-  const songs = await response.json()
+  const lsSongData = localStorage.getItem(NEBYOODLE_SONG_DATA_KEY)
 
-  if (songs) {
-    console.log(songs.data)
+  if (!lsSongData) {
+    const response = await fetch(NEBYOODLE_SONGS_SCRIPT)
+    const songs = await response.json()
 
-    const data = songs.data
+    if (songs) {
+      console.log(songs.data)
 
-    data.forEach(attr => {
-      const title = attr.title
-      const album = attr.field_album_id.name
+      const data = songs.data
 
-      let html = ''
-      html += `<strong>${title}</strong> on `
-      html += `<strong>${album}</strong>`
-      Nebyoodle.allSongData.push(html)
-    })
+      data.forEach(attr => {
+        const title = attr.title
+        const album = attr.field_album_id.name
+
+        Nebyoodle.allSongData.push(`<strong>${title}</strong> - <strong>${album}</strong>`)
+      })
+
+      localStorage.setItem(NEBYOODLE_SONG_DATA_KEY, JSON.stringify(Nebyoodle.allSongData))
+    } else {
+      console.error('could not fetch songs from remote source')
+    }
   } else {
-    console.error('could not fetch songs from remote source')
+    console.log('allSongData already downloaded')
+
+    Nebyoodle.allSongData = JSON.parse(lsSongData)
   }
 }
 
@@ -1163,7 +1179,6 @@ Nebyoodle._handleGuessInput = function(event) {
     Nebyoodle.dom.mainUI.guessResult.style.display = 'none'
     Nebyoodle.dom.mainUI.guessResultCounter.innerHTML = 'No results yet'
   } else {
-    Nebyoodle.dom.mainUI.btnSubmit.removeAttribute('disabled')
     Nebyoodle.dom.mainUI.guessResultList.innerHTML = ''
 
     let list = ''
@@ -1178,6 +1193,24 @@ Nebyoodle._handleGuessInput = function(event) {
     Nebyoodle.dom.mainUI.guessResult.style.display = 'block'
     Nebyoodle.dom.mainUI.guessResultList.innerHTML = list
   }
+}
+
+Nebyoodle._handleGuessList = function(event) {
+  let elem = null
+
+  if (event.target.computedRole == 'strong') {
+    elem = event.target.parentElement
+  } else {
+    elem = event.target
+  }
+
+  const choiceText = new DOMParser().parseFromString(elem.innerHTML, 'text/html').body.textContent
+
+  Nebyoodle.dom.mainUI.guessInput.value = choiceText
+
+  Nebyoodle.dom.mainUI.guessResult.style.display = 'none'
+
+  Nebyoodle.dom.mainUI.btnSubmit.removeAttribute('disabled')
 }
 
 Nebyoodle._togglePlayPauseButton = function() {
@@ -1345,7 +1378,7 @@ Nebyoodle._attachEventListeners = function() {
 
   // guesses
   Nebyoodle.dom.mainUI.guessInput.addEventListener('keyup', Nebyoodle._handleGuessInput, false)
-
+  Nebyoodle.dom.mainUI.guessResultList.addEventListener('click', Nebyoodle._handleGuessList, false)
   // skip/submit
   Nebyoodle.dom.mainUI.btnSkip.addEventListener('click', Nebyoodle._handleSkipButton, false)
   Nebyoodle.dom.mainUI.btnSubmit.addEventListener('click', Nebyoodle._handleSubmitButton, false)

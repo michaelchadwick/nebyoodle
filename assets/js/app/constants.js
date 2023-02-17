@@ -7,6 +7,8 @@ const NEBYOODLE_STATE_FREE_KEY = 'nebyoodle-state-free'
 
 const NEBYOODLE_SETTINGS_KEY = 'nebyoodle-settings'
 
+const NEBYOODLE_SONG_DATA_KEY = 'nebyoodle-song-data'
+
 const NEBYOOCOM_BASE_URL = 'https://music.nebyoolae.com'
 const NEBYOODLE_ENV_PROD_URL = [
   'nebyoodle.fun',
