@@ -805,7 +805,7 @@ Nebyoodle._getSong = async function() {
   Nebyoodle.dom.songData.innerHTML = ''
   Nebyoodle.dom.songData.classList.add('lds-dual-ring')
 
-  const response = await fetch(NEBYOODLE_SONG_SCRIPT)
+  const response = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}`)
 
   if (response) {
     const song = await response.json()
@@ -813,31 +813,31 @@ Nebyoodle._getSong = async function() {
     if (song.data[0]) {
       Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
 
-      console.log('data', song.data[0])
+      // console.log('data', song.data[0])
 
-      // main attributes
-      const attr = song.data[0]
+      const data = song.data[0]
+      // const baseURL = Nebyoodle.env == 'prod' ? NEBYOOCOM_PROD_URL : NEBYOOCOM_LOCAL_URL
+      const baseURL = NEBYOOCOM_PROD_URL
 
-      const songName = attr.title
-      const songPath = attr.path.alias
-      const songLink = `${NEBYOOCOM_BASE_URL}${songPath}`
+      const songName = data.title
+      const songPath = data.path.alias
+      const songLink = `${baseURL}${songPath}`
 
-      const artistName = attr.field_artist_id.name
+      const artistName = data.field_artist_id.name
 
-      const albumName = attr.field_album_id.name
-      const albumNameInternal = attr.field_album_id.path.alias.split('/album/')[1].replaceAll('-','_')
-      const albumPath = attr.field_album_id.path.alias
-      const albumLink = `${NEBYOOCOM_BASE_URL}${albumPath}`
-      const albumCoverFull = `${NEBYOOCOM_BASE_URL}${attr.field_album_id.field_album_cover.uri.url}`
-      const temp = albumCoverFull.split('files/')
-      const albumCoverSmall = temp[0] + 'files/nebyoodle/' + albumNameInternal + '.jpg'
+      const albumName = data.field_album_id.name
+      const albumNameInternal = data.field_album_id.path.alias.split('/album/')[1].replaceAll('-','_')
+      const albumPath = data.field_album_id.path.alias
+      const albumLink = `${baseURL}${albumPath}`
+      const albumCoverFull = `${baseURL}${data.field_album_id.field_album_cover.uri.url}`.split('files/')
+      const albumCoverSmall = albumCoverFull[0] + 'files/nebyoodle/' + albumNameInternal + '.jpg'
 
-      const duration = new Date(attr.field_duration * 1000).toISOString().slice(14,19)
-      const released = attr.field_release_date
-      const description = new DOMParser().parseFromString(attr.body, "text/html").body.textContent
+      const duration = new Date(data.field_duration * 1000).toISOString().slice(14,19)
+      const released = data.field_release_date
+      const description = new DOMParser().parseFromString(data.body, "text/html").body.textContent
 
-      const audioUrl = attr.field_local_link
-        ? `${NEBYOOCOM_BASE_URL}${attr.field_local_link.uri.split('internal:')[1]}`
+      const audioUrl = data.field_local_link
+        ? `${baseURL}${data.field_local_link.uri.split('internal:')[1]}`
         : ''
 
       // html markup to display
@@ -845,7 +845,7 @@ Nebyoodle._getSong = async function() {
       html += `<strong>Title</strong>: <a href="${songLink}" target="_blank">${songName}</a><br />`
       html += `<strong>Artist</strong>: ${artistName}<br />`
       html += `<strong>Album</strong>: <a href="${albumLink}" target="_blank">${albumName}</a><br />`
-      html += `<a href=""><img src="${albumCoverSmall}" /></a><br />`
+      html += `<a href="${albumLink}" target="_blank"><img src="${albumCoverSmall}" /></a><br />`
       html += `<strong>Duration</strong>: ${duration}<br />`
       html += `<strong>Released</strong>: ${released}<br />`
       html += `<strong>Description</strong>: ${description}`
@@ -879,9 +879,9 @@ Nebyoodle._getSongs = async function() {
 
       const data = songs.data
 
-      data.forEach(attr => {
-        const title = attr.title
-        const album = attr.field_album_id.name
+      data.forEach(song => {
+        const title = song.title
+        const album = song.field_album_id.name
 
         Nebyoodle.allSongData.push(`<strong>${title}</strong> - <strong>${album}</strong>`)
       })
