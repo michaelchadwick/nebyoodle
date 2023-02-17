@@ -32,7 +32,11 @@ Nebyoodle.dom.interactive = {
 Nebyoodle.dom.mainUI = {
   'btnPlayPause': document.getElementById('button-play-pause'),
   'btnPlayPauseIcon': document.getElementById('button-play-pause-icon'),
-  'inputGuess': document.getElementById('input-guess'),
+  'searchContainer': document.getElementById('search-container'),
+  'guessInput': document.getElementById('guess-input'),
+  'guessResult': document.getElementById('guess-result'),
+  'guessResultList': document.getElementById('guess-result-list'),
+  'guessResultCounter': document.getElementById('guess-result-counter'),
   'btnSkip': document.getElementById('button-skip'),
   'skipSeconds': document.getElementById('skip-seconds'),
   'btnSubmit': document.getElementById('button-submit')

@@ -17,6 +17,7 @@ Nebyoodle.state.free = {}
 
 // config: only saved while game is loaded
 Nebyoodle.config = {}
+Nebyoodle.allSongData = []
 Nebyoodle.config.daily = NEBYOODLE_DEFAULTS.config.daily
 Nebyoodle.config.free = NEBYOODLE_DEFAULTS.config.free
 
@@ -31,7 +32,7 @@ async function modalOpen(type) {
     case 'help':
       this.myModal = new Modal('perm', 'How to Play Nebyoodle',
         `
-          <p>Listen to the intro of a Nebyoolae music song, and then find the correct title in the list.</p>
+          <p>Listen to the intro of a Nebyoolae song, and then find the correct title/album in the list.</p>
 
           <p>Skipped or incorrect attempts unlock more of the song.</p>
 
@@ -208,6 +209,7 @@ async function modalOpen(type) {
     case 'get-song':
       Nebyoodle._getSong()
       break
+
     case 'get-songs':
       Nebyoodle._getSongs()
       break
@@ -703,90 +705,39 @@ Nebyoodle._resetFreeProgress = async function() {
     "wordsFound": prevWordsFound
   }
 
-  // set dictionary to default
-  Nebyoodle._initDictionaryFile('free')
-
-  // set score to 0
-  Nebyoodle._setScore(0)
-
-  // re-enable DOM inputs
-  Nebyoodle._resetInput()
-
-  // choose letters randomly from solutionSet
-  Nebyoodle._shuffleTiles()
-
   // save those defaults to localStorage
   Nebyoodle._saveGame()
 }
 
 // submit a guess
-Nebyoodle._submitGuess = function(guess) {
+Nebyoodle._submitGuess = function() {
+  const guess = Nebyoodle.dom.mainUI.guessInput.value
+
   console.log('submitting guess...', guess)
 
   if (Nebyoodle.state[Nebyoodle.__getGameMode()].gameState == 'IN_PROGRESS') {
     console.log('game still in progresss, so guess submitted')
+
+    // TODO...
   } else {
     // game is over, so no more guessed allowed
     console.error('current game is over -- no more guesses!')
   }
 }
 
-// game state checking
-Nebyoodle._checkGuess = function() {
-  // console.log('checking current guess...')
-
-  // reset classes
-  Nebyoodle.dom.guess.classList.remove('valid', 'first-guess')
-  Nebyoodle.dom.interactive.btnGuessLookup.disabled = true
-
-  // guess valid length?
-  if (Nebyoodle.dom.guess.innerHTML.length > 2) {
-    let word = Nebyoodle.dom.guess.innerHTML.trim()
-    let solutionSet = Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet
-
-    // check all categories of words in solutionSet
-    Object.keys(solutionSet).forEach(key => {
-      if (parseInt(key) <= Nebyoodle.__getMaxWordLength()) {
-
-        // guess == valid word?
-        if (Object.keys(solutionSet[key]).includes(word)) {
-          Nebyoodle.dom.guess.classList.add('valid')
-          Nebyoodle.dom.interactive.btnGuessLookup.disabled = false
-
-          // and it's the first time?
-          if (!solutionSet[key][word]) {
-            Nebyoodle.dom.guess.classList.add('first-guess')
-            Nebyoodle._animateCSS('#guess', 'pulse')
-          }
-        }
-
-      }
-    })
-  }
-}
 Nebyoodle._checkWinState = function() {
   // console.log('checking for win state...', Nebyoodle.__getGameMode())
 
-  const solutionSet = Nebyoodle.config[Nebyoodle.__getGameMode()].solutionSet
+  const solution = Nebyoodle.config[Nebyoodle.__getGameMode()].solution
 
-  if (solutionSet) {
-    const solutionSetValues = []
+  if (solution) {
+    // console.log('solution', solution)
 
-    Object.values(solutionSet).forEach(cat => {
-      Object.values(cat).forEach(val => {
-        solutionSetValues.push(val)
-      })
-    })
-
-    // console.log('solutionSetValues', solutionSetValues)
-
-    if (solutionSetValues.every((val) => val)) {
-     //  console.log('Nebyoodle._checkWinState(): game won!', solutionSet)
+    if (solution == guess) {
+     //  console.log('game won!')
 
       // set state stuff
-      const gameState = Nebyoodle.state[Nebyoodle.__getGameMode()].gameState
-
-      if (gameState == 'IN_PROGRESS') {
+      if (Nebyoodle.state[Nebyoodle.__getGameMode()].gameState == 'IN_PROGRESS') {
         // make sure to only increment wins if we are going from
         // IN_PROGRESS -> GAME_OVER (ignores page refreshes)
         Nebyoodle.state[Nebyoodle.__getGameMode()].statistics.gamesPlayed += 1
@@ -802,15 +753,7 @@ Nebyoodle._checkWinState = function() {
       modalOpen('win-game')
 
       Nebyoodle.__winAnimation().then(() => {
-        Nebyoodle.__resetTilesDuration()
-
         // disable inputs (until future re-enabling)
-        Nebyoodle._disableTiles()
-
-        // disable hint (until future re-enabling)
-        Nebyoodle._disableHint()
-
-        // disable main UI (until future re-enabling)
         Nebyoodle._disableUI()
 
         // display modal win thingy
@@ -819,30 +762,15 @@ Nebyoodle._checkWinState = function() {
         return true
       })
     } else {
-      // console.log('Nebyoodle._checkWinState(): game not yet won')
+      console.log('game not yet won')
 
       return false
     }
   } else {
-    console.error('solutionSet not found')
+    console.error('solution not found')
 
     return false
   }
-}
-
-// reset UI tiles to default state
-Nebyoodle._resetInput = function() {
-  Nebyoodle._resetTiles()
-
-  Nebyoodle._enableHint()
-
-  Nebyoodle._resetGuess()
-}
-// blank out the current DOM guess div
-Nebyoodle._resetGuess = function() {
-  Nebyoodle.dom.guess.innerHTML = ''
-  Nebyoodle.dom.guess.classList.remove('valid')
-  Nebyoodle.dom.interactive.btnGuessLookup.disabled = true
 }
 
 Nebyoodle._disableUI = function() {
@@ -855,8 +783,9 @@ Nebyoodle._disableUI = function() {
 
 Nebyoodle._enableUI = function() {
   Object.values(Nebyoodle.dom.mainUI).forEach(elem => {
-    if (elem.id !== 'button-play-pause-icon') {
+    if (elem.id !== 'button-play-pause-icon' && elem.id !== 'button-submit') {
       elem.removeAttribute('disabled')
+      elem.classList.remove('disabled')
     }
   })
 }
@@ -875,8 +804,7 @@ Nebyoodle._getSong = async function() {
     if (song.data[0]) {
       Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
 
-      // console.log('song', song)
-      // console.log('data', song.data[0])
+      console.log('data', song.data[0])
 
       // main attributes
       const attr = song.data[0]
@@ -888,12 +816,12 @@ Nebyoodle._getSong = async function() {
       const artistName = attr.field_artist_id.name
 
       const albumName = attr.field_album_id.name
+      const albumNameInternal = attr.field_album_id.path.alias.split('/album/')[1].replaceAll('-','_')
       const albumPath = attr.field_album_id.path.alias
       const albumLink = `${NEBYOOCOM_BASE_URL}${albumPath}`
       const albumCoverFull = `${NEBYOOCOM_BASE_URL}${attr.field_album_id.field_album_cover.uri.url}`
-
-      let albumCoverSmall = albumCoverFull.split('files/')
-      albumCoverSmall = albumCoverSmall[0] + 'files/styles/thumbnail/public/' + albumCoverSmall[1]
+      const temp = albumCoverFull.split('files/')
+      const albumCoverSmall = temp[0] + 'files/nebyoodle/' + albumNameInternal + '.jpg'
 
       const duration = new Date(attr.field_duration * 1000).toISOString().slice(14,19)
       const released = attr.field_release_date
@@ -936,18 +864,18 @@ Nebyoodle._getSongs = async function() {
 
   if (songs) {
     console.log(songs.data)
-    const data = songs.data[0]
-    const title = data.attributes.title
 
-    // const instruments = data.field_instruments.data.map(d => d.meta.drupal_internal__target)
+    const data = songs.data
 
-    let html = ''
-    html += `<strong>Title</strong>: ${title}`
-    // html += `, <strong>Artist</strong>: ${artist_id}`
-    // html += `, <strong>Album</strong>: ${album_id}<br />`
-    // html += `<strong>Instruments</strong>: ${instruments}`
-    Nebyoodle.dom.songData.innerHTML = html
+    data.forEach(attr => {
+      const title = attr.title
+      const album = attr.field_album_id.name
 
+      let html = ''
+      html += `<strong>${title}</strong> on `
+      html += `<strong>${album}</strong>`
+      Nebyoodle.allSongData.push(html)
+    })
   } else {
     console.error('could not fetch songs from remote source')
   }
@@ -1223,6 +1151,35 @@ Nebyoodle._handleSkipButton = function() {
   }
 }
 
+Nebyoodle._handleSubmitButton = function() {
+  Nebyoodle._submitGuess()
+}
+
+Nebyoodle._handleGuessInput = function(event) {
+  const value = event.target.value
+
+  if (value == '') {
+    Nebyoodle.dom.mainUI.btnSubmit.setAttribute('disabled', 'true')
+    Nebyoodle.dom.mainUI.guessResult.style.display = 'none'
+    Nebyoodle.dom.mainUI.guessResultCounter.innerHTML = 'No results yet'
+  } else {
+    Nebyoodle.dom.mainUI.btnSubmit.removeAttribute('disabled')
+    Nebyoodle.dom.mainUI.guessResultList.innerHTML = ''
+
+    let list = ''
+    let terms = Nebyoodle.__autocompleteMatch(value)
+
+    Nebyoodle.dom.mainUI.guessResultCounter.innerHTML = `${terms.length} results found for '${value}'.`
+
+    for (i = 0; i < terms.length; i++) {
+      list += '<li>' + terms[i] + '</li>'
+    }
+
+    Nebyoodle.dom.mainUI.guessResult.style.display = 'block'
+    Nebyoodle.dom.mainUI.guessResultList.innerHTML = list
+  }
+}
+
 Nebyoodle._togglePlayPauseButton = function() {
   if (Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.contains('fa-pause')) {
     Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-pause')
@@ -1320,8 +1277,6 @@ Nebyoodle._winGame = function(state = null) {
       })
     })
 
-    Nebyoodle._setScore(count)
-
     Nebyoodle.state[Nebyoodle.__getGameMode()].lastPlayedTime = new Date().getTime()
 
     Nebyoodle._saveGame()
@@ -1388,8 +1343,14 @@ Nebyoodle._attachEventListeners = function() {
   // audio play/pause control
   Nebyoodle.dom.mainUI.btnPlayPause.addEventListener('click', Nebyoodle._handlePlayButton, false)
 
-  // audio play/pause control
+  // guesses
+  Nebyoodle.dom.mainUI.guessInput.addEventListener('keyup', Nebyoodle._handleGuessInput, false)
+
+  // skip/submit
   Nebyoodle.dom.mainUI.btnSkip.addEventListener('click', Nebyoodle._handleSkipButton, false)
+  Nebyoodle.dom.mainUI.btnSubmit.addEventListener('click', Nebyoodle._handleSubmitButton, false)
+
+
 
   // local debug buttons
   if (Nebyoodle.env == 'local') {
@@ -1474,6 +1435,20 @@ Nebyoodle._getNebyooApps = async function() {
 /************************************************************************
  * _private __helper methods *
  ************************************************************************/
+
+Nebyoodle.__autocompleteMatch = function(input) {
+  if (input == '') {
+    return []
+  }
+
+  const reg = new RegExp(input, 'i')
+
+  return Nebyoodle.allSongData.filter(function(term) {
+    if (term.match(reg)) {
+      return term
+    }
+  })
+}
 
 // timestamp to display date
 Nebyoodle.__getFormattedDate = function(date) {
