@@ -108,20 +108,12 @@
               <button id="button-show-state" class="icon" title="Show State">
                 <i class="fa-solid fa-sliders"></i>
               </button>
-              <!--
-              <button id="button-show-solution" class="icon" title="Show Solution">
-                <i class="fa-solid fa-list-check"></i>
-              </button>
               <button id="button-win-game" class="icon" title="Win Game">
                 <i class="fa-solid fa-trophy"></i>
-              </button>
-              <button id="button-win-game-almost" class="icon" title="Win Game (Almost)">
-                <i class="fa-solid fa-award"></i>
               </button>
               <button id="button-win-animation" class="icon" title="Win Animation">
                 <i class="fa-solid fa-flag-checkered"></i>
               </button>
-              -->
             </div>
           </div>
         </nav>
@@ -152,11 +144,18 @@
 
       <div id="mode-container">
         <div id="gamemode-container" class="setting-row">
-          <a href="#" id="gamemode-0"
+          <!--
+          <a href="#" id="gamemode-0" class="disabled"
             data-active="false"
             date-gamemodeid="daily"
             onclick="Nebyoodle._changeSetting('gameMode', 'daily', event)"
-          >Daily</a>
+            disabled
+          >
+            Daily
+          </a>
+          -->
+
+          <span class="disabled">Daily</span>
 
           &nbsp;/&nbsp;
 

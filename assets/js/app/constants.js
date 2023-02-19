@@ -27,28 +27,38 @@ const NEBYOODLE_SKP_VAL = [1, 2, 4, 7, 11, 16]
 const NEBYOODLE_DEFAULTS = {
   'allSongData': [],
   'config': {
-    'daily': {},
-    'free': {}
-  },
-  'state': {
     'daily': {
-      durationMax: 1,
-      gameState: 'IN_PROGRESS',
-      lastCompletedTime: null,
-      lastPlayedTime: null,
-      skips: 0,
-      skipsVal: NEBYOODLE_SKP_VAL[0],
-      statistics: []
+      'solution': null
     },
     'free': {
-      durationMax: 1,
-      gameState: 'IN_PROGRESS',
-      lastCompletedTime: null,
-      lastPlayedTime: null,
-      skips: 0,
-      skipsVal: NEBYOODLE_SKP_VAL[0],
-      statistics: []
+      'solution': null
     }
+  },
+  'state': {
+    'daily': [
+      {
+        durationMax: 1,
+        gameState: 'IN_PROGRESS',
+        guesses: [],
+        lastCompletedTime: null,
+        lastPlayedTime: null,
+        skips: 0,
+        skipsVal: NEBYOODLE_SKP_VAL[0],
+        statistics: []
+      }
+    ],
+    'free': [
+      {
+        durationMax: 1,
+        gameState: 'IN_PROGRESS',
+        guesses: [],
+        lastCompletedTime: null,
+        lastPlayedTime: null,
+        skips: 0,
+        skipsVal: NEBYOODLE_SKP_VAL[0],
+        statistics: []
+      }
+    ]
   },
   'settings': {
     darkMode: false,

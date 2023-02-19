@@ -69,6 +69,10 @@ class Modal {
       this.modal.classList.add('temp');
     }
 
+    if (modalType == 'temp-api') {
+      this.modal.classList.add('temp-api');
+    }
+
     // Message window
     const window = document.createElement('div');
     window.classList.add('modal-window');
@@ -80,7 +84,7 @@ class Modal {
     this.modal.appendChild(window);
 
     // if not a temporary modal, add a title and close button
-    if (modalType != 'temp') {
+    if (modalType != 'temp' && modalType != 'temp-api') {
       // Title
       const title = document.createElement('div');
       title.classList.add('modal-title');
