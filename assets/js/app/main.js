@@ -700,6 +700,7 @@ Nebyoodle._resetFreeProgress = async function() {
 // submit a guess
 Nebyoodle._submitGuess = function() {
   const guess = Nebyoodle.dom.mainUI.guessInput.value
+  const state = Nebyoodle.state[Nebyoodle.__getGameMode()].gameState
 
   console.log('submitting guess...', guess)
 
@@ -866,31 +867,41 @@ Nebyoodle._getSongs = async function() {
       null
     )
 
+    Nebyoodle.allSongData = []
+
     const response = await fetch(NEBYOODLE_SONGS_SCRIPT)
     const songs = await response.json()
 
-    if (songs) {
-      songs.data.forEach(song => {
+    if (songs && songs.status != 'error') {
+      songs.data.forEach((song, index) => {
         const songName = song.title
         const albumName = song.field_album_id.name
 
         Nebyoodle.allSongData.push({ song: songName, album: albumName })
       })
 
+
+
       localStorage.setItem(NEBYOODLE_SONG_DATA_KEY, JSON.stringify(Nebyoodle.allSongData))
+
+      this.myModal._destroyModal()
     } else {
+      this.myModal._destroyModal()
+
+      this.myModal = new Modal('temp', null,
+        'Could not load songs!',
+        null,
+        null
+      )
+
       console.error('could not fetch songs from remote source')
     }
-
-    this.myModal._destroyModal()
   } else {
     this.myModal = new Modal('temp', null,
       'Song data already loaded',
       null,
       null
     )
-
-    console.log('allSongData already downloaded')
 
     Nebyoodle.allSongData = JSON.parse(lsSongData)
   }
@@ -975,63 +986,54 @@ Nebyoodle._displayGameConfig = function() {
 // modal: debug: display Nebyoodle.state
 Nebyoodle._displayGameState = function() {
   let states = Nebyoodle.state
-
-  var html = ''
+  let html = ''
 
   html += '<dl>'
 
   Object.keys(states).forEach(state => {
     html += `<h4>STATE: ${state}</h4>`
 
-    Object.keys(states[state]).forEach(key => {
-      if (typeof states[state][key] == 'object'
-        && !Array.isArray(states[state][key])
-        && states[state][key] != null
+    Object.keys(states[state][0]).forEach(key => {
+      let value = states[state][0][key]
+
+      if (typeof value == 'object'
+        && !Array.isArray(value)
+        && value != null
       ) {
         html += `<dd><code>${key}: {</code><dl>`
 
         if (key == 'statistics') {
           Object.keys(states[state][key]).forEach(subkey => {
-            var label = subkey
-            var value = states[state][key][subkey]
+            value = states[state][key][subkey]
 
-            html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+            html += `<dd><code>${subkey}:</code></dd><dt>${value}</dt>`
           })
 
           html += '</dl><code>}</code></dd>'
         }
         else {
-          Object.keys(states[state][key]).forEach(k => {
-            var label = k
-            var value = states[state][key][k]
+          Object.keys(states[state][key]).forEach(subkey => {
+            value = states[state][key][subkey]
 
-            if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
+            if (subkey == 'lastCompletedTime' || subkey == 'lastPlayedTime') {
               value = Nebyoodle.__getFormattedDate(new Date(value))
             }
 
             if (value) {
-              html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
+              html += `<dd><code>${subkey}:</code></dd><dt>${value.join(', ')}</dt>`
             }
           })
 
           html += '</dl><code>}</code></dd>'
         }
       } else {
-        var label = key
-        var value = states[state][key]
-
         // special cases
-        if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
+        if (key == 'lastCompletedTime' || key == 'lastPlayedTime') {
           if (value) {
             value = Nebyoodle.__getFormattedDate(new Date(value))
           }
-        } else if (label == 'guessedWords') {
-          html += `<dd><code>${label}:</code></dd><dt>`
-          html += `${value ? value.map(v => v.toUpperCase()).join(', ') : value}</dt>`
-        } else if (label == 'seedWord') {
-          html += `<dd><code>${label}:</code></dd><dt>${value ? value.toUpperCase() : value}</dt>`
         } else {
-          html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+          html += `<dd><code>${key}:</code></dd><dt>${value}</dt>`
         }
       }
     })
