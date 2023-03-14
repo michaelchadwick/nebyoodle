@@ -39,24 +39,14 @@ const NEBYOODLE_DEFAULTS = {
       {
         durationMax: 1,
         gameState: 'IN_PROGRESS',
-        guesses: [],
-        lastCompletedTime: null,
-        lastPlayedTime: null,
-        skips: 0,
-        skipsVal: NEBYOODLE_SKP_VAL[0],
-        statistics: []
+        guesses: []
       }
     ],
     'free': [
       {
         durationMax: 1,
         gameState: 'IN_PROGRESS',
-        guesses: [],
-        lastCompletedTime: null,
-        lastPlayedTime: null,
-        skips: 0,
-        skipsVal: NEBYOODLE_SKP_VAL[0],
-        statistics: []
+        guesses: []
       }
     ]
   },

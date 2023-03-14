@@ -55,106 +55,93 @@ async function modalOpen(type) {
 
     case 'stats':
     case 'win':
-      let dailyWins = 0
-      let dailyTotal = 0
-      let dailyStreakCur = 0
-      let dailyStreakBroken = false
-      let dailyStreakMax = 0
-      let dailyStreakMaxBest = 0
+      // let dailyWins = 0
+      // let dailyTotal = 0
+      // let dailyStreakCur = 0
+      // let dailyStreakBroken = false
+      // let dailyStreakMax = 0
+      // let dailyStreakMaxBest = 0
 
-      Nebyoodle.state.daily.statistics.map(stat => {
-        if (stat.score > 0) {
-          dailyWins += 1
-        }
+      // Nebyoodle.state.daily[Nebyoodle.__getLastPlayIndex()].statistics.map(stat => {
+      //   if (stat.score > 0) {
+      //     dailyWins += 1
+      //   }
 
-        dailyTotal += 1
-      })
+      //   dailyTotal += 1
+      // })
 
-      Nebyoodle.state.daily.statistics.slice(0).reverse().map(stat => {
-        if (stat.score > 0) {
-          if (!dailyStreakBroken) {
-            dailyStreakCur += 1
-          }
-          dailyStreakMax += 1
-          dailyStreakMaxBest = dailyStreakMax
-        } else {
-          dailyStreakCur = 0
-          dailyStreakBroken = true
-          dailyStreakMax = 0
-        }
-      })
+      // Nebyoodle.state.daily[Nebyoodle.__getLastPlayIndex()].statistics.slice(0).reverse().map(stat => {
+      //   if (stat.score > 0) {
+      //     if (!dailyStreakBroken) {
+      //       dailyStreakCur += 1
+      //     }
+      //     dailyStreakMax += 1
+      //     dailyStreakMaxBest = dailyStreakMax
+      //   } else {
+      //     dailyStreakCur = 0
+      //     dailyStreakBroken = true
+      //     dailyStreakMax = 0
+      //   }
+      // })
 
-      let freeWins = 0
-      let freeTotal = 0
-      let freeStreakCur = 0
-      let freeStreakBroken = false
-      let freeStreakMax = 0
-      let freeStreakMaxBest = 0
+      // let freeWins = 0
+      // let freeTotal = 0
+      // let freeStreakCur = 0
+      // let freeStreakBroken = false
+      // let freeStreakMax = 0
+      // let freeStreakMaxBest = 0
 
-      Nebyoodle.state.free.statistics.map(stat => {
-        if (stat.score > 0) {
-          freeWins += 1
-        }
+      // Nebyoodle.state.free[Nebyoodle.__getLastPlayIndex()].statistics.map(stat => {
+      //   if (stat.score > 0) {
+      //     freeWins += 1
+      //   }
 
-        freeTotal += 1
-      })
+      //   freeTotal += 1
+      // })
 
-      Nebyoodle.state.free.statistics.slice(0).reverse().map(stat => {
-        if (stat.score > 0) {
-          if (!freeStreakBroken) {
-            freeStreakCur += 1
-          }
+      // Nebyoodle.state.free[Nebyoodle.__getLastPlayIndex()].statistics.slice(0).reverse().map(stat => {
+      //   if (stat.score > 0) {
+      //     if (!freeStreakBroken) {
+      //       freeStreakCur += 1
+      //     }
 
-          freeStreakMax += 1
-          freeStreakMaxBest = freeStreakMax
-        } else {
-          freeStreakCur = 0
-          freeStreakBroken = true
-          freeStreakMax = 0
-        }
-      })
+      //     freeStreakMax += 1
+      //     freeStreakMaxBest = freeStreakMax
+      //   } else {
+      //     freeStreakCur = 0
+      //     freeStreakBroken = true
+      //     freeStreakMax = 0
+      //   }
+      // })
 
       let modalText = `
         <div class="container">
 
           <div class="statistic-header">Daily</div>
+      `
+      /*
           <div class="statistic-subheader">
             (<small>New puzzle available at 12am PST</small>)
           </div>
+      */
+      modalText += `
           <div class="statistics">
             <div class="statistic-container">
-              <div class="statistic">${dailyWins}/${dailyTotal}</div>
-              <div class="statistic-label">Correct</div>
-            </div>
-            <div class="statistic-container">
-              <div class="statistic">${Math.round(dailyWins / dailyTotal)}%</div>
-              <div class="statistic-label">Correct %</div>
-            </div>
-            <div class="statistic-container">
-              <div class="statistic">${dailyStreakCur} : ${dailyStreakMaxBest}</div>
-              <div class="statistic-label">Current : Max Streak</div>
+              <div class="statistic">N/A</div>
+              <div class="statistic-label"></div>
             </div>
           </div>
 
           <div class="statistic-header">Free Play</div>
           <div class="statistics">
             <div class="statistic-container">
-              <div class="statistic">${freeWins}/${freeTotal}</div>
-              <div class="statistic-label">Correct</div>
+              <div class="statistic">N/A</div>
+              <div class="statistic-label"></div>
             </div>
-            <div class="statistic-container">
-              <div class="statistic">${Math.round(freeWins / freeTotal)}%</div>
-              <div class="statistic-label">Correct %</div>
-            </div>
-            <div class="statistic-container">
-              <div class="statistic">${freeStreakCur} : ${freeStreakMaxBest}</div>
-              <div class="statistic-label">Current : Max Streak</div>
-            </div>
-
           </div>
       `
 
-      if (Nebyoodle.state[Nebyoodle.__getGameMode()].gameState == 'GAME_OVER') {
+      if (Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState == 'GAME_OVER') {
         modalText += `
           <div class="share">
             <button class="share" onclick="Nebyoodle._shareResults()">Share <i class="fa-solid fa-share-nodes"></i></button>
@@ -165,7 +152,7 @@ async function modalOpen(type) {
       modalText += `
         </div>
       `
-      this.myModal = new Modal('perm', 'Statistics',
+      this.myModal = new Modal('perm', 'Statistics (TODO)',
         modalText,
         null,
         null,
@@ -679,19 +666,9 @@ Nebyoodle._confirmFreeCreateNew = async function() {
 Nebyoodle._resetFreeProgress = async function() {
   // console.log('resetting free play progress...')
 
-  // save previous stats
-  const prevGamesPlayed = Nebyoodle.state.free.statistics.gamesPlayed
-  const prevWordsFound = Nebyoodle.state.free.statistics.wordsFound
-
   // set config and state to defaults
   Nebyoodle.config.free = NEBYOODLE_DEFAULTS.config.free
   Nebyoodle.state.free = NEBYOODLE_DEFAULTS.state.free
-
-  // re-add previous stats
-  Nebyoodle.state.free.statistics = {
-    "gamesPlayed": prevGamesPlayed,
-    "wordsFound": prevWordsFound
-  }
 
   // save those defaults to localStorage
   Nebyoodle._saveGame()
@@ -700,17 +677,33 @@ Nebyoodle._resetFreeProgress = async function() {
 // submit a guess
 Nebyoodle._submitGuess = function() {
   const guess = Nebyoodle.dom.mainUI.guessInput.value
-  const state = Nebyoodle.state[Nebyoodle.__getGameMode()].gameState
 
-  console.log('submitting guess...', guess)
+  console.log(`guess: '${guess}'`)
 
-  if (Nebyoodle.state[Nebyoodle.__getGameMode()].gameState == 'IN_PROGRESS') {
+  if (Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState == 'IN_PROGRESS') {
     console.log('game still in progresss, so guess submitted')
 
-    Nebyoodle.state[Nebyoodle.__getGameMode()].guesses.push
-    // TODO...
+    Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.push(
+      {
+        answer: guess,
+        isCorrect: false,
+        isSkipped: false
+      }
+    )
+
+    // clear the lookup input
+    Nebyoodle._clearGuess()
+
+    // update skip button and audio file durationMax, if necessary
+    Nebyoodle._updateStatus()
+
+    // save to LS
+    Nebyoodle._saveGame()
+
+    // check if user has won
+    Nebyoodle._checkWinState()
   } else {
-    // game is over, so no more guessed allowed
+    // game is over, so no more guesses allowed
     console.error('current game is over -- no more guesses!')
   }
 }
@@ -720,28 +713,28 @@ Nebyoodle._checkWinState = function() {
 
   const solution = Nebyoodle.config[Nebyoodle.__getGameMode()].solution
 
-  console.log('solution', solution)
+  console.log(`solution: '${solution}'`)
 
   if (solution) {
-    // console.log('solution', solution)
+    let guesses = Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses
 
-    const guesses = Nebyoodle.state[Nebyoodle.__getGameMode()].map(state => state.guesses.answer)
+    guesses = guesses.map(guess => guess.answer)
 
-    console.log('guesses', guesses)
+    // console.log('guesses', guesses)
 
-    if (guesses.contains(solution)) {
+    if (guesses.includes(solution)) {
+      const guessLength = Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length
+
+      // set most recent guess to correct
+      Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses[guessLength - 1].isCorrect = true
+
       console.log('game won!')
 
       // set state stuff
-      if (Nebyoodle.state[Nebyoodle.__getGameMode()].gameState == 'IN_PROGRESS') {
+      if (Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState == 'IN_PROGRESS') {
         // make sure to only increment wins if we are going from
         // IN_PROGRESS -> GAME_OVER (ignores page refreshes)
-        Nebyoodle.state[Nebyoodle.__getGameMode()].statistics.gamesPlayed += 1
-        Nebyoodle.state[Nebyoodle.__getGameMode()].gameState = 'GAME_OVER'
-
-        const now = new Date().getTime()
-        Nebyoodle.state[Nebyoodle.__getGameMode()].lastCompletedTime = now
-        Nebyoodle.state[Nebyoodle.__getGameMode()].lastPlayedTime = now
+        Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState = 'GAME_OVER'
 
         Nebyoodle._saveGame()
       }
@@ -1049,19 +1042,19 @@ Nebyoodle._handleAudioDuration = function(event) {
   const currentTime = event.target.currentTime
   const durationMax = Nebyoodle.__getDurationMax()
 
-  // console.log('currentTime / durationMax', currentTime, durationMax)
+  console.log('currentTime / durationMax', currentTime, durationMax)
 
-  let durVal = NEBYOODLE_DUR_PCT[Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1].skips]
+  let durVal = NEBYOODLE_DUR_PCT[Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length]
   let fillVal = (currentTime / durationMax) * durVal
 
-  // console.log('_handleAudioDuration fillVal', fillVal)
+  console.log('_handleAudioDuration fillVal', fillVal)
 
   Nebyoodle.dom.timelinePlayed.setAttribute('fill', fillVal)
   Nebyoodle.dom.timelinePlayed.style.transform = `scaleX(${fillVal})`
   Nebyoodle.dom.playSeconds.innerText = Math.floor(currentTime).toString().padStart(2, '0')
 
   if (currentTime >= durationMax) {
-    // console.log('durationMax reached. stopping audio', this)
+    console.log('durationMax reached. stopping audio', this)
 
     // "stop" the audio, i.e. pause and reset back to beginning
     Nebyoodle.dom.audioElem.pause()
@@ -1109,26 +1102,18 @@ Nebyoodle._handleSkipButton = function() {
     5 skip(s) = 0:00-0:16 (Skip)      , fill=0.999
   */
 
-  // increase number of skips
-  Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1].skips++
+  // add blank guess to guesses
+  Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.push(
+    {
+      answer: '',
+      isCorrect: false,
+      isSkipped: true
+    }
+  )
 
-  // if we still have skips left, then update audio and UI
-  if (Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1].skips < NEBYOODLE_SKP_TXT.length) {
-    // set new duration
-    Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1].durationMax = NEBYOODLE_SKP_VAL[Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1].skips]
+  Nebyoodle._updateStatus()
 
-    // update timeline
-    const fillVal = NEBYOODLE_DUR_PCT[Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1].skips]
-
-    Nebyoodle.dom.timelineUnplayed.setAttribute('fill', fillVal)
-    Nebyoodle.dom.timelineUnplayed.style.transform = `scaleX(${fillVal})`
-
-    // update skip button
-    Nebyoodle.dom.mainUI.skipSeconds.innerText = NEBYOODLE_SKP_TXT[Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1].skips]
-  } else {
-    Nebyoodle.dom.mainUI.btnSkip.setAttribute('disabled', true)
-    Nebyoodle.dom.mainUI.btnSubmit.setAttribute('disabled', true)
-  }
+  Nebyoodle._saveGame()
 }
 
 Nebyoodle._handleSubmitButton = function() {
@@ -1182,6 +1167,7 @@ Nebyoodle._clearGuess = function() {
   Nebyoodle.dom.mainUI.guessInput.value = ''
   Nebyoodle.dom.mainUI.btnGuessClear.style.display = 'none'
   Nebyoodle.dom.mainUI.guessResult.style.display = 'none'
+  Nebyoodle.dom.mainUI.btnSubmit.setAttribute('disabled', true)
 }
 
 Nebyoodle._togglePlayPauseButton = function() {
@@ -1252,6 +1238,35 @@ Nebyoodle._playAudio = async function() {
   }
 }
 
+// on guesses or skips, update the status of the game
+Nebyoodle._updateStatus = function() {
+  // if we still have skips left, then update audio and UI
+  if (Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length < 6) {
+    // set new duration
+    Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].durationMax = NEBYOODLE_SKP_VAL[
+      Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length
+    ]
+
+    // update timeline
+    const fillVal = NEBYOODLE_DUR_PCT[
+      Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length
+    ]
+
+    Nebyoodle.dom.timelineUnplayed.setAttribute('fill', fillVal)
+    Nebyoodle.dom.timelineUnplayed.style.transform = `scaleX(${fillVal})`
+
+    // update skip button
+    Nebyoodle.dom.mainUI.skipSeconds.innerText = NEBYOODLE_SKP_TXT[
+      Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length
+    ]
+  } else {
+    Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState = 'GAME_OVER'
+
+    Nebyoodle.dom.mainUI.btnSkip.setAttribute('disabled', true)
+    Nebyoodle.dom.mainUI.btnSubmit.setAttribute('disabled', true)
+  }
+}
+
 // debug: beat game to check win state
 Nebyoodle._winGame = function(state = null) {
   const solution = Nebyoodle.config[Nebyoodle.__getGameMode()].solution
@@ -1313,7 +1328,9 @@ Nebyoodle._attachEventListeners = function() {
     // console.log('audioElem can now play again')
 
     // set durationMax back to 1
-    Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1].durationMax = NEBYOODLE_SKP_VAL[Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1].skips]
+    Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].durationMax = NEBYOODLE_SKP_VAL[
+      Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length
+    ]
 
     Nebyoodle._enableUI()
   })
@@ -1435,10 +1452,12 @@ Nebyoodle.__autocompleteMatch = function(input) {
   })
 }
 
-Nebyoodle.__getDurationMax = function() {
-  const lastPlayIndex = Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1
+Nebyoodle.__getLastPlayIndex = function() {
+  return Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1
+}
 
-  return Nebyoodle.state[Nebyoodle.__getGameMode()][lastPlayIndex].durationMax
+Nebyoodle.__getDurationMax = function() {
+  return Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].durationMax
 }
 
 // timestamp to display date
