@@ -1,87 +1,95 @@
 body.dark-mode {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--black);
+  color: var(--white);
 }
   body.dark-mode a {
-    color: #fff;
+    color: var(--white);
   }
 
   body.dark-mode code {
     background-color: #777777;
   }
 
-  body.dark-mode .invalid {
-    color: #fff;
-  }
-  body.dark-mode .valid {
-    color: #818181;
-  }
-    body.dark-mode .valid.first-guess {
-      color: #3f9f1f;
-    }
-
   body.dark-mode header,
   body.dark-mode button {
-    color: #fff;
+    color: var(--white);
   }
 
   body.dark-mode button.help {
     background-color: #111111;
-    border: 1px solid #fff;
+    border: 1px solid var(--white);
   }
 
   body.dark-mode header .menu-left #nav-overlay #nav-content {
-    background-color: #000;
+    background-color: var(--black);
   }
     body.dark-mode header .menu-left #nav-overlay #nav-content a {
-      color: #fff;
+      color: var(--white);
     }
       body.dark-mode header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
         background-color: #529952;
       }
 
-  body.dark-mode .tile[data-state='tbd'] {
-    border: 2px solid #fff;
-    color: #fff
+  body.dark-mode section#game #top-half #mode-container .setting-row a {
+    color: var(--white);
   }
 
-  body.dark-mode section#game #mode-container .setting-row a {
-    color: #fff;
+  body.dark-mode section#game #top-half #mode-container #daily-details {
+    color: var(--white);
   }
 
-  body.dark-mode section#game #mode-container #daily-details {
-    color: #ffffff;
+  body.dark-mode section#game #top-half #song-data {
+    background-color: var(--dark-color);
   }
 
-  body.dark-mode section#game #guess-container #guess {
-    color: #fff;
+  body.dark-mode section#game #top-half #guesses-container .guess {
+    color: var(--white);
   }
-
-  body.dark-mode section#game #hint-container #hint-arena button#button-hint.not-a-button {
-    color: #fff;
-  }
-
-  body.dark-mode section#game #keyboard-container button {
-    background-color: #000;
-    border: 1px solid #fff;
-    color: #fff;
-  }
-
-  body.dark-mode section#game #keyboard-container .row:last-of-type button {
-    background-color: #3a3a3a;
-    border: 1px solid #eaeaea;
-    color: #fff;
-  }
-    body.dark-mode section#game #keyboard-container .row:last-of-type button:disabled {
-      background-color: #7a7575;
-      border: 1px solid #b4b4b4;
-      color: #acacac;
+    body.dark-mode section#game #top-half #guesses-container .guess .symbol {
+      border-color: var(--white);
     }
-      body.dark-mode section#game #keyboard-container .row.sub button:hover:not([disabled]) {
-        background-color: #535353;
-        border: none;
-        color: #fff;
+
+  body.dark-mode section#game #bot-first-half #timeline-container {
+    border-bottom-color: var(--white);
+    border-top-color: var(--white);
+  }
+    body.dark-mode section#game #bot-first-half #timeline-container #timeline .marker {
+      background-color: var(--white);
+    }
+
+  body.dark-mode section#game #bot-second-half #search-container #guess-container input#guess-input {
+    color: var(--white);
+  }
+
+  body.dark-mode section#game #bot-second-half #search-container #guess-container #guess-result {
+    background: var(--black);
+  }
+    body.dark-mode section#game #bot-second-half #search-container #guess-container #guess-result ul#guess-result-list li {
+      border-bottom-color: var(--base-color);
+    }
+
+    @media (hover: hover) {
+      body.dark-mode section#game #bot-second-half #search-container #guess-container #guess-result ul#guess-result-list li:hover {
+        background: var(--dark-color);
       }
+    }
+
+  body.dark-mode section#game #bot-second-half #submit-container button#button-skip {
+    color: var(--gray-dark);
+  }
+    body.dark-mode section#game #bot-second-half #submit-container button#button-skip:not(:disabled) {
+      border: 2px solid var(--black);
+      color: var(--black);
+    }
+
+  body.dark-mode section#game #bot-second-half #submit-container button#button-submit {
+    color: var(--gray-dark);
+  }
+    body.dark-mode section#game #bot-second-half #submit-container button#button-submit:not(:disabled) {
+      background-color: var(--dark-color);
+      border-color: var(--black);
+      color: var(--white);
+    }
 
   body.dark-mode #settings .setting-row .text .description {
     color: #d2d2d2;
@@ -99,15 +107,15 @@ body.dark-mode {
   }
   body.dark-mode .modal-dialog.temp .modal-window {
     background-color: #111111;
-    color: #ffffff
+    color: var(--white);
   }
   body.dark-mode .modal-text {
     background-color: #111;
-    color: #fff;
+    color: var(--white);
   }
     body.dark-mode .modal-text ul li span.solution-category + ul {
       background-color: #222;
-      color: #fff;
+      color: var(--white);
     }
   body.dark-mode .modal-button-group {
     background-color: #111;

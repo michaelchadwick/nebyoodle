@@ -678,7 +678,7 @@ Nebyoodle._resetFreeProgress = async function() {
 Nebyoodle._submitGuess = function() {
   const guess = Nebyoodle.dom.mainUI.guessInput.value
 
-  console.log(`guess: '${guess}'`)
+  // console.log(`guess: '${guess}'`)
 
   if (Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState == 'IN_PROGRESS') {
     console.log('game still in progresss, so guess submitted')
@@ -695,7 +695,7 @@ Nebyoodle._submitGuess = function() {
     Nebyoodle._clearGuess()
 
     // update skip button and audio file durationMax, if necessary
-    Nebyoodle._updateStatus()
+    Nebyoodle._updateStatus(guess)
 
     // save to LS
     Nebyoodle._saveGame()
@@ -1111,8 +1111,10 @@ Nebyoodle._handleSkipButton = function() {
     }
   )
 
+  // update game status and UI
   Nebyoodle._updateStatus()
 
+  // save new status to local storage
   Nebyoodle._saveGame()
 }
 
@@ -1239,7 +1241,44 @@ Nebyoodle._playAudio = async function() {
 }
 
 // on guesses or skips, update the status of the game
-Nebyoodle._updateStatus = function() {
+Nebyoodle._updateStatus = function(guess = null) {
+  const selector = `#guesses-container div[data-guess-id='${Nebyoodle.__getLastGuessIndex()}']`
+  const guessDiv = document.querySelector(selector)
+  let symbol = null
+  let title = null
+
+  if (guess) {
+    symbol = document.createElement('div')
+    symbol.classList.add('symbol')
+
+    const svg = document.createElement('img')
+    svg.src = '/assets/images/cross.svg'
+    svg.setAttribute('width', '16')
+    svg.setAttribute('height', '16')
+
+    symbol.appendChild(svg)
+
+    title = document.createElement('span')
+    title.classList.add('title')
+    title.innerHTML = guess
+  } else {
+    symbol = document.createElement('div')
+    symbol.classList.add('symbol')
+
+    const svg = document.createElement('img')
+    svg.src = '/assets/images/square.svg'
+    svg.setAttribute('width', '16')
+    svg.setAttribute('height', '16')
+
+    symbol.appendChild(svg)
+
+    title = document.createElement('span')
+    title.innerHTML = 'SKIPPED'
+  }
+
+  guessDiv.appendChild(symbol)
+  guessDiv.appendChild(title)
+
   // if we still have skips left, then update audio and UI
   if (Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length < 6) {
     // set new duration
@@ -1450,6 +1489,10 @@ Nebyoodle.__autocompleteMatch = function(input) {
       return term
     }
   })
+}
+
+Nebyoodle.__getLastGuessIndex = function() {
+  return Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length - 1
 }
 
 Nebyoodle.__getLastPlayIndex = function() {

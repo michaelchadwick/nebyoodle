@@ -448,7 +448,7 @@ section#game {
     width: 100%;
   }
     section#game #top-half #mode-container {
-      height: 80px;
+      height: 40px;
       margin: 0 auto;
       text-transform: uppercase;
       text-underline-offset: 2px;
@@ -515,10 +515,21 @@ section#game {
       padding: 10px 0;
       width: 100%;
     }
-      section#game #top-half #guesses-container div {
+      section#game #top-half #guesses-container .guess {
+        align-items: center;
         border: 1px solid var(--gray-dark);
-        height: 40px;
+        display: flex;
+        font-size: 1.1rem;
+        font-weight: bold;
+        height: 24px;
+        line-height: 24px;
+        padding: 8px;
       }
+        section#game #top-half #guesses-container .guess .symbol {
+          align-items: center;
+          display: flex;
+          margin: 0 8px 0 2px;
+        }
 
   section#game #bot-first-half {
     align-items: center;

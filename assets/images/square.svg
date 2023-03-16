@@ -1,0 +1,13 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+  width="16" height="16"
+  fill="none"
+  stroke="#000"
+  stroke-width="2"
+>
+  <line x1="1" y1="1" x2="1" y2="16"></line>
+  <line x1="1" y1="2" x2="16" y2="2"></line>
+  <line x1="15" y1="1" x2="15" y2="16"></line>
+  <line x1="1" y1="15" x2="16" y2="15"></line>
+</svg>
