@@ -711,6 +711,7 @@ Nebyoodle._getSong = async function() {
       // const baseURL = Nebyoodle.env == 'prod' ? NEBYOOCOM_PROD_URL : NEBYOOCOM_LOCAL_URL
       const baseURL = NEBYOOCOM_PROD_URL
 
+      const songId = data.drupal_internal__nid
       const songName = data.title
       const songPath = data.path.alias
       const songLink = `${baseURL}${songPath}`
@@ -757,6 +758,10 @@ Nebyoodle._getSong = async function() {
 
       // add song to config.solution
       Nebyoodle.config[Nebyoodle.__getGameMode()].solution = `${songName} - ${albumName}`
+
+      // add song id to state.id
+      Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].id = songId
+      Nebyoodle._saveGame()
     } else {
       console.error('fetched song has invalid data')
 
