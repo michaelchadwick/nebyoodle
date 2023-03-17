@@ -83,6 +83,10 @@
   padding: 0 16px;
   width: 100%;
 }
+  .modal-text p {
+    margin-bottom: 1rem;
+  }
+
   .modal-text ul,
   .modal-text {
     line-height: 1.2;
