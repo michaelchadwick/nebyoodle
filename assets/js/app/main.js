@@ -638,7 +638,7 @@ Nebyoodle._createNewSolution = async function(gameMode) {
 
 // load existing solution, which retains past progress
 Nebyoodle._loadExistingSolution = async function(gameMode) {
-  console.log(`**** loadING existing '${gameMode}' solution ****`)
+  // console.log(`**** loadING existing '${gameMode}' solution ****`)
 }
 
 // ask to create new free gamemode puzzle
@@ -664,7 +664,7 @@ Nebyoodle._confirmFreeCreateNew = async function() {
 
 // reset config, state, and LS for free play
 Nebyoodle._resetFreeProgress = async function() {
-  // console.log('resetting free play progress...')
+  console.log('resetting free play progress...')
 
   // set config and state to defaults
   Nebyoodle.config.free = NEBYOODLE_DEFAULTS.config.free
@@ -672,94 +672,6 @@ Nebyoodle._resetFreeProgress = async function() {
 
   // save those defaults to localStorage
   Nebyoodle._saveGame()
-}
-
-// submit a guess
-Nebyoodle._submitGuess = function() {
-  const guess = Nebyoodle.dom.mainUI.guessInput.value
-
-  // console.log(`guess: '${guess}'`)
-
-  if (Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState == 'IN_PROGRESS') {
-    console.log('game still in progresss, so guess submitted')
-
-    Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.push(
-      {
-        answer: guess,
-        isCorrect: false,
-        isSkipped: false
-      }
-    )
-
-    // clear the lookup input
-    Nebyoodle._clearGuess()
-
-    // update skip button and audio file durationMax, if necessary
-    Nebyoodle._updateStatus(guess)
-
-    // save to LS
-    Nebyoodle._saveGame()
-
-    // check if user has won
-    Nebyoodle._checkWinState()
-  } else {
-    // game is over, so no more guesses allowed
-    console.error('current game is over -- no more guesses!')
-  }
-}
-
-Nebyoodle._checkWinState = function() {
-  console.log('checking for win state...', Nebyoodle.__getGameMode())
-
-  const solution = Nebyoodle.config[Nebyoodle.__getGameMode()].solution
-
-  console.log(`solution: '${solution}'`)
-
-  if (solution) {
-    let guesses = Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses
-
-    guesses = guesses.map(guess => guess.answer)
-
-    // console.log('guesses', guesses)
-
-    if (guesses.includes(solution)) {
-      const guessLength = Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length
-
-      // set most recent guess to correct
-      Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses[guessLength - 1].isCorrect = true
-
-      console.log('game won!')
-
-      // set state stuff
-      if (Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState == 'IN_PROGRESS') {
-        // make sure to only increment wins if we are going from
-        // IN_PROGRESS -> GAME_OVER (ignores page refreshes)
-        Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState = 'GAME_OVER'
-
-        Nebyoodle._saveGame()
-      }
-
-      modalOpen('win-game')
-
-      Nebyoodle.__winAnimation().then(() => {
-        // disable inputs (until future re-enabling)
-        Nebyoodle._disableUI()
-
-        // display modal win thingy
-        modalOpen('win')
-
-        return true
-      })
-    } else {
-      console.log('game not yet won')
-
-      return false
-    }
-  } else {
-    console.error('solution not found')
-
-    return false
-  }
 }
 
 Nebyoodle._disableUI = function() {
@@ -783,6 +695,7 @@ Nebyoodle._enableUI = function() {
 Nebyoodle._getSong = async function() {
   // add loading animation until fetch is done
   Nebyoodle.dom.songData.innerHTML = ''
+  Nebyoodle.dom.songData.classList.add('show')
   Nebyoodle.dom.songData.classList.add('lds-dual-ring')
 
   const response = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}`)
@@ -793,9 +706,8 @@ Nebyoodle._getSong = async function() {
     if (song.data[0]) {
       Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
 
-      // console.log('data', song.data[0])
-
       const data = song.data[0]
+
       // const baseURL = Nebyoodle.env == 'prod' ? NEBYOOCOM_PROD_URL : NEBYOOCOM_LOCAL_URL
       const baseURL = NEBYOOCOM_PROD_URL
 
@@ -822,13 +734,21 @@ Nebyoodle._getSong = async function() {
 
       // html markup to display
       let html = ''
-      html += `<strong>Title</strong>: <a href="${songLink}" target="_blank">${songName}</a><br />`
-      html += `<strong>Artist</strong>: ${artistName}<br />`
-      html += `<strong>Album</strong>: <a href="${albumLink}" target="_blank">${albumName}</a><br />`
-      html += `<a href="${albumLink}" target="_blank"><img src="${albumCoverSmall}" /></a><br />`
-      html += `<strong>Duration</strong>: ${duration}<br />`
-      html += `<strong>Released</strong>: ${released}<br />`
-      html += `<strong>Description</strong>: ${description}`
+      html += `<div class='song-main'>`
+      html += `\t<a href="${albumLink}" target="_blank"><img src="${albumCoverSmall}" /></a>`
+      html += `\t<div class='song-main-text'>`
+      html += `\t\t<div><strong>Title</strong>: <a href="${songLink}" target="_blank">${songName}</a></div>`
+      html += `\t\t<div><strong>Artist</strong>: ${artistName}</div>`
+      html += `\t\t<div><strong>Album</strong>: <a href="${albumLink}" target="_blank">${albumName}</a></div>`
+      html += `\t\t<div><strong>Duration</strong>: ${duration}</div>`
+      html += `\t\t<div><strong>Released</strong>: ${released}</div>`
+
+      html += `\t</div>`
+      html += `</div>`
+      html += `<div class='song-misc'>`
+      html += `\t${description}`
+      html += `</div>`
+
       Nebyoodle.dom.songData.innerHTML = html
 
       // load song into audio-element
@@ -839,11 +759,13 @@ Nebyoodle._getSong = async function() {
       Nebyoodle.config[Nebyoodle.__getGameMode()].solution = `${songName} - ${albumName}`
     } else {
       console.error('fetched song has invalid data')
+
       Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
       Nebyoodle.dom.songData.innerHTML = `got song, but it's wonky :(`
     }
   } else {
     console.error('could not fetch song from remote source')
+
     Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
     Nebyoodle.dom.songData.innerHTML = 'could not get song :('
   }
@@ -1042,12 +964,12 @@ Nebyoodle._handleAudioDuration = function(event) {
   const currentTime = event.target.currentTime
   const durationMax = Nebyoodle.__getDurationMax()
 
-  console.log('currentTime / durationMax', currentTime, durationMax)
+  // console.log('currentTime / durationMax', currentTime, durationMax)
 
   let durVal = NEBYOODLE_DUR_PCT[Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length]
   let fillVal = (currentTime / durationMax) * durVal
 
-  console.log('_handleAudioDuration fillVal', fillVal)
+  // console.log('_handleAudioDuration fillVal', fillVal)
 
   Nebyoodle.dom.timelinePlayed.setAttribute('fill', fillVal)
   Nebyoodle.dom.timelinePlayed.style.transform = `scaleX(${fillVal})`
@@ -1090,36 +1012,6 @@ Nebyoodle._handlePlayButton = function() {
     Nebyoodle.dom.audioElem.currentTime = 0
     Nebyoodle._togglePlayPauseButton()
   }
-}
-
-Nebyoodle._handleSkipButton = function() {
-  /*
-    0 skip(s) = 0:00-0:01 (Skip (+1s)), fill=0.0625
-    1 skip(s) = 0:00-0:02 (Skip (+2s)), fill=0.1250
-    2 skip(s) = 0:00-0:04 (Skip (+3s)), fill=0.2500
-    3 skip(s) = 0:00-0:07 (Skip (+4s)), fill=0.4375
-    4 skip(s) = 0:00-0:11 (Skip (+5s)), fill=0.6875
-    5 skip(s) = 0:00-0:16 (Skip)      , fill=0.999
-  */
-
-  // add blank guess to guesses
-  Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.push(
-    {
-      answer: '',
-      isCorrect: false,
-      isSkipped: true
-    }
-  )
-
-  // update game status and UI
-  Nebyoodle._updateStatus()
-
-  // save new status to local storage
-  Nebyoodle._saveGame()
-}
-
-Nebyoodle._handleSubmitButton = function() {
-  Nebyoodle._submitGuess()
 }
 
 Nebyoodle._handleGuessInput = function(event) {
@@ -1240,72 +1132,6 @@ Nebyoodle._playAudio = async function() {
   }
 }
 
-// on guesses or skips, update the status of the game
-Nebyoodle._updateStatus = function(guess = null) {
-  const selector = `#guesses-container div[data-guess-id='${Nebyoodle.__getLastGuessIndex()}']`
-  const guessDiv = document.querySelector(selector)
-  let symbol = null
-  let title = null
-
-  if (guess) {
-    symbol = document.createElement('div')
-    symbol.classList.add('symbol')
-
-    const svg = document.createElement('img')
-    svg.src = '/assets/images/cross.svg'
-    svg.setAttribute('width', '16')
-    svg.setAttribute('height', '16')
-
-    symbol.appendChild(svg)
-
-    title = document.createElement('span')
-    title.classList.add('title')
-    title.innerHTML = guess
-  } else {
-    symbol = document.createElement('div')
-    symbol.classList.add('symbol')
-
-    const svg = document.createElement('img')
-    svg.src = '/assets/images/square.svg'
-    svg.setAttribute('width', '16')
-    svg.setAttribute('height', '16')
-
-    symbol.appendChild(svg)
-
-    title = document.createElement('span')
-    title.innerHTML = 'SKIPPED'
-  }
-
-  guessDiv.appendChild(symbol)
-  guessDiv.appendChild(title)
-
-  // if we still have skips left, then update audio and UI
-  if (Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length < 6) {
-    // set new duration
-    Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].durationMax = NEBYOODLE_SKP_VAL[
-      Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length
-    ]
-
-    // update timeline
-    const fillVal = NEBYOODLE_DUR_PCT[
-      Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length
-    ]
-
-    Nebyoodle.dom.timelineUnplayed.setAttribute('fill', fillVal)
-    Nebyoodle.dom.timelineUnplayed.style.transform = `scaleX(${fillVal})`
-
-    // update skip button
-    Nebyoodle.dom.mainUI.skipSeconds.innerText = NEBYOODLE_SKP_TXT[
-      Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length
-    ]
-  } else {
-    Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState = 'GAME_OVER'
-
-    Nebyoodle.dom.mainUI.btnSkip.setAttribute('disabled', true)
-    Nebyoodle.dom.mainUI.btnSubmit.setAttribute('disabled', true)
-  }
-}
-
 // debug: beat game to check win state
 Nebyoodle._winGame = function(state = null) {
   const solution = Nebyoodle.config[Nebyoodle.__getGameMode()].solution
@@ -1318,16 +1144,14 @@ Nebyoodle._winGame = function(state = null) {
   const now = new Date().getTime()
   Nebyoodle.state[Nebyoodle.__getGameMode()] = [
     {
+      gameState: 'GAME_OVER',
       guesses: [
         {
           answer: solution,
           isCorrect: true,
-          isSkipped: false,
-          playCount: 1
+          isSkipped: false
         }
-      ],
-      lastCompletedTime: now,
-      lastPlayedTime: now
+      ]
     }
   ]
 
@@ -1355,8 +1179,7 @@ Nebyoodle._attachEventListeners = function() {
     modalOpen('settings')
   })
 
-  // audio-element events
-  // listen for when it empties
+  // listen for when audio empties
   Nebyoodle.dom.audioElem.addEventListener('emptied', () => {
     // console.log('audioElem got emptied')
 
@@ -1367,9 +1190,9 @@ Nebyoodle._attachEventListeners = function() {
     // console.log('audioElem can now play again')
 
     // set durationMax back to 1
-    Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].durationMax = NEBYOODLE_SKP_VAL[
-      Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length
-    ]
+    Nebyoodle.__setDurationMax(NEBYOODLE_SKP_VAL[
+      Nebyoodle.__getGuesses().length
+    ])
 
     Nebyoodle._enableUI()
   })
@@ -1388,8 +1211,6 @@ Nebyoodle._attachEventListeners = function() {
   Nebyoodle.dom.mainUI.btnSkip.addEventListener('click', Nebyoodle._handleSkipButton, false)
   Nebyoodle.dom.mainUI.btnSubmit.addEventListener('click', Nebyoodle._handleSubmitButton, false)
 
-
-
   // local debug buttons
   if (Nebyoodle.env == 'local') {
     if (Nebyoodle.dom.interactive.debug.all) {
@@ -1406,10 +1227,10 @@ Nebyoodle._attachEventListeners = function() {
         })
       }
 
-      // 🪣 show master word list
-      if (Nebyoodle.dom.interactive.debug.btnShowList) {
-        Nebyoodle.dom.interactive.debug.btnShowList.addEventListener('click', () => {
-          modalOpen('show-solution')
+      // 🪣 reset free progress
+      if (Nebyoodle.dom.interactive.debug.btnResetFree) {
+        Nebyoodle.dom.interactive.debug.btnResetFree.addEventListener('click', () => {
+          Nebyoodle._resetFreeProgress()
         })
       }
 
@@ -1470,6 +1291,199 @@ Nebyoodle._getNebyooApps = async function() {
   })
 }
 
+// submit guess with blank
+Nebyoodle._handleSkipButton = function() {
+  // submit blank guess
+  Nebyoodle._submitGuess()
+}
+
+// submit guess with text
+Nebyoodle._handleSubmitButton = function() {
+  const guess = Nebyoodle.dom.mainUI.guessInput.value
+
+  // submit actual guess
+  Nebyoodle._submitGuess(guess)
+}
+
+// submit a guess if game still IN_PROGRESS
+Nebyoodle._submitGuess = function(guess = '') {
+  if (Nebyoodle.__getGameState() == 'IN_PROGRESS') {
+    // console.log('game still in progresss, so guess submitted')
+
+    // check if user has won
+    Nebyoodle._checkWinState(guess)
+  } else {
+    // game is over, so no more guesses allowed
+    console.error('current game is over -- no more guesses!')
+  }
+}
+
+// check latest guess to see if correct and if game is won
+Nebyoodle._checkWinState = function(guess = null) {
+  const solution = Nebyoodle.config[Nebyoodle.__getGameMode()].solution
+
+  // console.log(`_checkWinState: guess: '${guess}', solution: '${solution}'`)
+
+  if (solution) {
+    let guesses = Nebyoodle.__getGuesses().map(guess => guess.answer)
+
+    // console.log('guesses', guesses)
+
+    // guess was skipped
+    if (!guess) {
+      // console.log('_checkWinState: SKIP')
+
+      // add blank guess for skip
+      Nebyoodle.__addGuess({
+        answer: '',
+        isCorrect: false,
+        isSkipped: true
+      })
+
+      // update skip button and audio file durationMax, if necessary
+      Nebyoodle._updateStatus(null, 'skipped')
+
+      // save to local storage
+      Nebyoodle._saveGame()
+
+      return false
+    }
+    // guess is correct and game has been won
+    else if (guess == solution) {
+      // console.log('_checkWinState: CORRECT')
+
+      // add guess (actual guess if submit, '' if skip)
+      Nebyoodle.__addGuess({
+        answer: guess,
+        isCorrect: true,
+        isSkipped: false
+      })
+
+      console.log('game won!')
+
+      // set state stuff
+      if (Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState == 'IN_PROGRESS') {
+        // make sure to only increment wins if we are going from
+        // IN_PROGRESS -> GAME_OVER (ignores page refreshes)
+        Nebyoodle.__setGameState('GAME_OVER')
+
+        // clear the lookup input
+        Nebyoodle._clearGuess()
+
+        // update skip button and audio file durationMax, if necessary
+        Nebyoodle._updateStatus(guess, 'correct')
+
+        // save to local storage
+        Nebyoodle._saveGame()
+      }
+
+      modalOpen('win-game')
+
+      Nebyoodle.__winAnimation().then(() => {
+        // disable inputs (until future re-enabling)
+        Nebyoodle._disableUI()
+
+        // display modal win thingy
+        modalOpen('win')
+
+        return true
+      })
+    }
+    // guess is not correct and game is still going
+    else {
+      // console.log('_checkWinState: WRONG')
+
+      // add guess (actual guess if submit, '' if skip)
+      Nebyoodle.__addGuess(
+        {
+          answer: guess,
+          isCorrect: false,
+          isSkipped: false
+        }
+      )
+
+      // clear the lookup input
+      Nebyoodle._clearGuess()
+
+      // update skip button and audio file durationMax, if necessary
+      Nebyoodle._updateStatus(guess, 'wrong')
+
+      // save to local storage
+      Nebyoodle._saveGame()
+
+      return false
+    }
+  } else {
+    console.error('game is broken! solution not found')
+
+    return false
+  }
+}
+
+// on guesses or skips, update the status of the game
+Nebyoodle._updateStatus = function(lastGuess = null, type) {
+  const selector = `#guesses-container div[data-guess-id='${Nebyoodle.__getLastGuessIndex()}']`
+  // console.log('selector', selector)
+  const guessDiv = document.querySelector(selector)
+  // console.log('guessDiv', guessDiv)
+
+  let symbol = document.createElement('div')
+  symbol.classList.add('symbol')
+
+  let svg = document.createElement('img')
+  svg.setAttribute('width', '16')
+  svg.setAttribute('height', '16')
+
+  let title = document.createElement('span')
+  title.classList.add('title')
+
+  switch (type) {
+    case 'skipped':
+      svg.src = '/assets/images/square.svg'
+      title.innerHTML = 'SKIPPED'
+
+      break
+    case 'wrong':
+      svg.src = '/assets/images/cross.svg'
+      title.innerHTML = lastGuess
+
+      break
+    case 'correct':
+      svg.src = '/assets/images/checkmark.svg'
+      title.innerHTML = lastGuess
+
+      break
+  }
+
+  symbol.appendChild(svg)
+  guessDiv.appendChild(symbol)
+  guessDiv.appendChild(title)
+
+  // if game is not yet won, AND we still have skips left, then update audio and UI
+  if (Nebyoodle.__getGameState() == 'IN_PROGRESS' && Nebyoodle.__getGuesses().length < 6) {
+    // set new duration
+    Nebyoodle.__setDurationMax(NEBYOODLE_SKP_VAL[
+      Nebyoodle.__getGuesses().length - 1
+    ])
+
+    // update timeline
+    const fillVal = NEBYOODLE_DUR_PCT[Nebyoodle.__getGuesses().length]
+
+    Nebyoodle.dom.timelineUnplayed.setAttribute('fill', fillVal)
+    Nebyoodle.dom.timelineUnplayed.style.transform = `scaleX(${fillVal})`
+
+    // update skip button
+    Nebyoodle.dom.mainUI.skipSeconds.innerText = NEBYOODLE_SKP_TXT[
+      Nebyoodle.__getGuesses().length - 1
+    ]
+  } else {
+    Nebyoodle.__setGameState('GAME_OVER')
+
+    Nebyoodle.dom.mainUI.btnSkip.setAttribute('disabled', true)
+    Nebyoodle.dom.mainUI.btnSubmit.setAttribute('disabled', true)
+  }
+}
+
 /************************************************************************
  * _private __helper methods *
  ************************************************************************/
@@ -1491,16 +1505,35 @@ Nebyoodle.__autocompleteMatch = function(input) {
   })
 }
 
+Nebyoodle.__getDurationMax = function() {
+  return Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].durationMax
+}
+Nebyoodle.__setDurationMax = function(durationMax) {
+  Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].durationMax = durationMax
+}
+
+Nebyoodle.__getGameState = function() {
+  return Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState
+}
+Nebyoodle.__setGameState = function(gameState) {
+  Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].gameState = gameState
+}
+
+Nebyoodle.__getGuesses = function() {
+  return Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses
+}
+Nebyoodle.__addGuess = function(guess) {
+  Nebyoodle
+    .state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
+    .guesses.push(guess)
+}
+
 Nebyoodle.__getLastGuessIndex = function() {
   return Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].guesses.length - 1
 }
 
 Nebyoodle.__getLastPlayIndex = function() {
   return Nebyoodle.state[Nebyoodle.__getGameMode()].length - 1
-}
-
-Nebyoodle.__getDurationMax = function() {
-  return Nebyoodle.state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()].durationMax
 }
 
 // timestamp to display date
@@ -1537,6 +1570,7 @@ Nebyoodle.__updateDailyDetails = function(index) {
 }
 
 Nebyoodle.__winAnimation = async function() {
+  console.log('TODO: add win animation')
 }
 
 /************************************************************************

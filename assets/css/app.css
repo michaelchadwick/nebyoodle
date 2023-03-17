@@ -7,6 +7,7 @@
   --unplayed-color: #8d8d8d;
   --white: #ffffff;
   --black: #111111;
+  --shadow: #11111105;
   --off-white: #f1f1f1;
   --gray: #e1e1e1;
   --gray-medium: #a7a7a7;
@@ -500,12 +501,29 @@ section#game {
 
     section#game #top-half #song-data {
       background-color: var(--light-color);
+      display: none;
       padding: 1rem;
     }
+      section#game #top-half #song-data.show {
+        display: block;
+      }
       section#game #top-half #song-data.lds-dual-ring {
         padding: 1rem 0;
         width: 100%;
       }
+      section#game #top-half #song-data .song-main {
+        display: flex;
+      }
+        section#game #top-half #song-data .song-main {
+          margin-bottom: 10px;
+        }
+          section#game #top-half #song-data .song-main a {
+            margin-right: 10px;
+          }
+        section#game #top-half #song-data .song-misc {
+          background: var(--off-white);
+          padding: 10px;
+        }
 
     section#game #top-half #guesses-container {
       display: flex;
