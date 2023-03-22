@@ -511,19 +511,24 @@ section#game {
         padding: 1rem 0;
         width: 100%;
       }
-      section#game #top-half #song-data .song-main {
-        display: flex;
+
+      .song-win-block {
+        background-color: var(--off-white);
+        margin-bottom: 10px;
       }
-        section#game #top-half #song-data .song-main {
-          margin-bottom: 10px;
+        .song-win-block .song-main {
+          display: flex;
         }
-          section#game #top-half #song-data .song-main a {
-            margin-right: 10px;
+          .song-win-block .song-main {
+            padding: 10px;
           }
-        section#game #top-half #song-data .song-misc {
-          background: var(--off-white);
-          padding: 10px;
-        }
+            .song-win-block .song-main a {
+              margin-right: 10px;
+            }
+          .song-win-block .song-misc {
+            background: var(--off-white);
+            padding: 10px;
+          }
 
     section#game #top-half #guesses-container {
       display: flex;

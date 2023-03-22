@@ -16,23 +16,32 @@ const NEBYOODLE_ENV_PROD_URL = [
   'nebyoodle.fun',
   'guess.nebyoolae.com'
 ]
+const NEBYOODLE_SHARE_URL = 'https://guess.nebyoolae.com/?r=share'
 const NEBYOODLE_DAILY_SCRIPT = './assets/scripts/daily.php'
 const NEBYOODLE_SONG_SCRIPT = './assets/scripts/song.php'
+const NEBYOODLE_SONGID_SCRIPT = './assets/scripts/songid.php'
 const NEBYOODLE_SONGS_SCRIPT = './assets/scripts/songs.php'
 
 const NEBYOODLE_DUR_PCT = [0.0625, 0.1250, 0.25, 0.4375, 0.6875, 0.999]
 const NEBYOODLE_SKP_TXT = ['(+1s)', '(+2s)', '(+3s)', '(+4s)', '(+5s)', '']
 const NEBYOODLE_SKP_VAL = [1, 2, 4, 7, 11, 16]
+const NEBYOODLE_CHANCE_MAX = 6
 
 const NEBYOODLE_DEFAULTS = {
   'allSongData': [],
   'config': {
-    'daily': {
-      'solution': null
-    },
-    'free': {
-      'solution': null
-    }
+    'daily': [
+      {
+        'solution': null,
+        'songData': null
+      }
+    ],
+    'free': [
+      {
+        'solution': null,
+        'songData': null
+      }
+    ]
   },
   'state': {
     'daily': [
@@ -40,7 +49,7 @@ const NEBYOODLE_DEFAULTS = {
         durationMax: 1,
         gameState: 'IN_PROGRESS',
         guesses: [],
-        id: null
+        songId: null
       }
     ],
     'free': [
@@ -48,7 +57,7 @@ const NEBYOODLE_DEFAULTS = {
         durationMax: 1,
         gameState: 'IN_PROGRESS',
         guesses: [],
-        id: null
+        songId: null
       }
     ]
   },
