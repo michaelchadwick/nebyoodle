@@ -1410,16 +1410,19 @@ Nebyoodle._updateStatus = function(type, guessText = null, guessIndex = null) {
   switch (type) {
     case 'skipped':
       svg.src = '/assets/images/square.svg'
+      svg.classList.add('skipped')
       title.innerHTML = 'SKIPPED'
 
       break
     case 'wrong':
       svg.src = '/assets/images/cross.svg'
+      svg.classList.add('wrong')
       title.innerHTML = guessText
 
       break
     case 'correct':
       svg.src = '/assets/images/checkmark.svg'
+      svg.classList.add('correct')
       title.innerHTML = guessText
 
       break

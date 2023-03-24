@@ -55,6 +55,9 @@ body.dark-mode {
     body.dark-mode section#game #top-half #guesses-container .guess .symbol {
       border-color: var(--white);
     }
+      body.dark-mode section#game #top-half #guesses-container .guess .symbol img.skipped {
+        filter: invert(100%) sepia(98%) saturate(0%) hue-rotate(7deg) brightness(103%) contrast(106%);
+      }
 
   body.dark-mode section#game #bot-first-half #timeline-container {
     border-bottom-color: var(--white);
