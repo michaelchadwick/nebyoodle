@@ -8,7 +8,7 @@ Nebyoodle.dom = {
   'navContent': document.getElementById('nav-content'),
   'dailyDetails': document.getElementById('daily-details'),
   'songData': document.getElementById('song-data'),
-  'guesses': document.getElementById('guesses-container'),
+  'guessesContainer': document.getElementById('guesses-container'),
   'audioContainer': document.getElementById('audio-container'),
   'audioElem': document.getElementById('audio-element'),
   'playContainer': document.getElementById('play-container'),
