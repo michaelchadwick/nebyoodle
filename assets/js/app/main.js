@@ -445,8 +445,8 @@ Nebyoodle._loadGame = async function() {
   else {
     Nebyoodle.state.free = NEBYOODLE_DEFAULTS.state.free
 
-    console.log('FREE localStorage state key NOT found; defaults set')
-    console.log('FREE solution to be randomly chosen')
+    // console.log('FREE localStorage state key NOT found; defaults set')
+    // console.log('FREE solution to be randomly chosen')
 
     freeCreateOrLoad = 'create'
   }
@@ -726,25 +726,32 @@ Nebyoodle._createNewSolution = async function(gameMode, reset = null) {
   console.log(`**** creatING new '${gameMode}' solution ****`)
 
   if (reset) {
-    console.log('setting state to default', gameMode)
+    // console.log('setting state to default', gameMode)
 
     Nebyoodle.state[gameMode] = NEBYOODLE_DEFAULTS.state[gameMode]
   } else {
-    console.log('adding default play to state', gameMode)
+    // console.log('adding another default config, state', gameMode)
 
-    Nebyoodle.state[gameMode].push(NEBYOODLE_DEFAULT_PLAY)
+    Nebyoodle.config[gameMode].push({
+      'solution': null,
+      'songData': null
+    })
+    Nebyoodle.state[gameMode].push({
+      durationMax: 1,
+      gameState: 'IN_PROGRESS',
+      guesses: [],
+      songId: null
+    })
   }
 
-  console.log('SAVE: update state after creating new solution')
+  console.log('SAVE: after creating new solution')
   Nebyoodle._saveGame()
-
-  console.log(`Nebyoodle.state[${gameMode}]`, Nebyoodle.state[gameMode])
 
   // reset guesses UI
   Nebyoodle._refreshUI()
 
   // get random song
-  Nebyoodle._getSong()
+  await Nebyoodle._getSong()
 }
 
 // load existing solution, which retains past progress

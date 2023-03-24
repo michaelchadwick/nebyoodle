@@ -27,7 +27,11 @@ const NEBYOODLE_SKP_TXT = ['(+1s)', '(+2s)', '(+3s)', '(+4s)', '(+5s)', '']
 const NEBYOODLE_SKP_VAL = [1, 2, 4, 7, 11, 16]
 const NEBYOODLE_CHANCE_MAX = 6
 
-const NEBYOODLE_DEFAULT_PLAY = {
+const NEBYOODLE_DEFAULT_CONFIG = {
+  'solution': null,
+  'songData': null
+}
+const NEBYOODLE_DEFAULT_STATE = {
   durationMax: 1,
   gameState: 'IN_PROGRESS',
   guesses: [],
@@ -37,22 +41,12 @@ const NEBYOODLE_DEFAULT_PLAY = {
 const NEBYOODLE_DEFAULTS = {
   'allSongData': [],
   'config': {
-    'daily': [
-      {
-        'solution': null,
-        'songData': null
-      }
-    ],
-    'free': [
-      {
-        'solution': null,
-        'songData': null
-      }
-    ]
+    'daily': [NEBYOODLE_DEFAULT_CONFIG],
+    'free': [NEBYOODLE_DEFAULT_CONFIG]
   },
   'state': {
-    'daily': [NEBYOODLE_DEFAULT_PLAY],
-    'free': [NEBYOODLE_DEFAULT_PLAY]
+    'daily': [NEBYOODLE_DEFAULT_STATE],
+    'free': [NEBYOODLE_DEFAULT_STATE]
   },
   'settings': {
     darkMode: false,
