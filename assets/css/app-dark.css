@@ -45,7 +45,7 @@ body.dark-mode {
   body.dark-mode .song-win-block {
     background-color: var(--black);
   }
-    .song-win-block .song-misc {
+    body.dark-mode .song-win-block .song-misc {
       background-color: var(--marker-color);
     }
 
