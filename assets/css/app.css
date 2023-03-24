@@ -111,6 +111,17 @@ button {
       bottom: 1px;
       position: relative;
     }
+  button.new-free {
+    background-color: var(--dark-color);
+    color: var(--white);
+    height: 30px;
+    margin-bottom: 5px;
+    padding: 5px;
+    width: 200px;
+  }
+    button.new-free i {
+      margin-left: 6px;
+    }
   button.share {
     background-color: var(--base-color);
     color: var(--white);
