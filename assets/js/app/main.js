@@ -781,7 +781,6 @@ Nebyoodle._getSong = async function(songId = null) {
   Nebyoodle.dom.songData.classList.add('show')
   Nebyoodle.dom.songData.classList.add('lds-dual-ring')
 
-  let temp = null
   let response = null
 
   if (songId) {
@@ -791,6 +790,8 @@ Nebyoodle._getSong = async function(songId = null) {
   }
 
   if (response) {
+    // console.log('_getSong: got initial response, so converting to json...')
+
     const song = await response.json()
 
     if (song.data[0]) {
@@ -811,7 +812,7 @@ Nebyoodle._getSong = async function(songId = null) {
         ? `${baseURL}${data.field_local_link.uri.split('internal:')[1]}`
         : ''
 
-      Nebyoodle.dom.songData.innerHTML = Nebyoodle._getWinMarkup(data)
+      Nebyoodle.dom.songData.innerHTML = await Nebyoodle._getWinMarkup(data)
 
       // load song into audio-element
       Nebyoodle.dom.audioElem.src = randomAudioUrl
