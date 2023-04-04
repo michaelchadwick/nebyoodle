@@ -48,6 +48,12 @@
   .modal-window.debug {
     border-color: #715ec7;
   }
+  .modal-window.game-over-win {
+    border-color: #5ec767;
+  }
+  .modal-window.game-over-lose {
+    border-color: #c75e5e;
+  }
 
 .modal-title {
   align-items: center;
@@ -61,6 +67,12 @@
 }
   .modal-title.debug {
     background-color: #715ec7;
+  }
+  .modal-window.game-over-win .modal-title {
+    background-color: #51ac59;
+  }
+  .modal-window.game-over-lose .modal-title {
+    background-color: #ad5151;
   }
 
 .modal-close {
@@ -120,6 +132,13 @@
   }
   .modal-text dl dl {
     margin-left: 1em;
+  }
+
+  .modal-window.game-over-win .modal-text {
+    background-color: #d8e4d9;
+  }
+  .modal-window.game-over-lose .modal-text {
+    background-color: #e9dddd;
   }
 
 .modal-button-group {

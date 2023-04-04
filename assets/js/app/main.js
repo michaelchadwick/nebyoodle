@@ -146,9 +146,9 @@ async function modalOpen(type, data = null) {
       )
       break
 
-    case 'win':
+    case 'game-over-win':
       modalText = `
-        <div class="container">
+        <div class="container game-over-win">
       `
       modalText += await Nebyoodle._getWinMarkup(data)
 
@@ -166,11 +166,39 @@ async function modalOpen(type, data = null) {
         </div>
       `
 
-      Nebyoodle.myModal = new Modal('perm', 'Win',
+      Nebyoodle.myModal = new Modal('perm', 'Congratulations! You guessed the song!',
         modalText,
         null,
         null,
-        false
+        'game-over-win'
+      )
+      break
+
+    case 'game-over-lose':
+      modalText = `
+        <div class="container game-over-lose">
+      `
+      modalText += await Nebyoodle._getWinMarkup(data)
+
+      if (Nebyoodle.__getGameMode() == 'free') {
+        modalText += `<button class="new-free" onclick="Nebyoodle._createAnotherFree()" title="Try another song?">Try another song? <i class="fa-solid fa-music"></i></button>`
+      }
+
+      modalText += `
+          <div class="share">
+            <button class="share" onclick="Nebyoodle._shareResults()" title="Share Nebyoodle result">Share <i class="fa-solid fa-share-nodes"></i></button>
+          </div>
+      `
+
+      modalText += `
+        </div>
+      `
+
+      Nebyoodle.myModal = new Modal('perm', 'Bummer! You didn\'t guess the song!',
+        modalText,
+        null,
+        null,
+        'game-over-lose'
       )
       break
 
@@ -231,14 +259,6 @@ async function modalOpen(type, data = null) {
       )
       break
 
-    case 'show-solution':
-      Nebyoodle.myModal = new Modal('perm-debug', 'Correct Solution',
-        Nebyoodle._displayGameSolution(),
-        null,
-        null
-      )
-      break
-
     case 'shared':
       Nebyoodle.myModal = new Modal('temp', null,
         'Results copied to clipboard',
@@ -249,14 +269,6 @@ async function modalOpen(type, data = null) {
     case 'no-clipboard-access':
       Nebyoodle.myModal = new Modal('temp', null,
         'Sorry, but access to clipboard not available',
-        null,
-        null
-      )
-      break
-
-    case 'win-game':
-      Nebyoodle.myModal = new Modal('temp', null,
-        'Congratulations!',
         null,
         null
       )
@@ -312,70 +324,73 @@ Nebyoodle._loadGame = async function() {
   /* ************************* */
   /* allSongData from LS       */
   /* ************************* */
-  const lsSongData = localStorage.getItem(NEBYOODLE_SONG_DATA_KEY)
-
-  if (lsSongData) {
-    Nebyoodle.allSongData = JSON.parse(lsSongData)
-  }
-
-  let dailyCreateOrLoad = ''
-  let freeCreateOrLoad = ''
+  await Nebyoodle._loadAllSongData()
 
   /* ************************* */
-  /* TODO: daily state LS -> code    */
+  /* TODO:                     */
+  /* daily state LS -> code    */
   /* ************************* */
 
   const lsStateDaily = JSON.parse(localStorage.getItem(NEBYOODLE_STATE_DAILY_KEY))
+  let dailyCreateOrLoad = ''
 
   // if we have previous daily LS values, sync them to code model
   if (lsStateDaily) {
     Nebyoodle.state.daily = lsStateDaily
 
-    const dailySolution = Nebyoodle.config.daily[Nebyoodle.__getLastPlayIndex('daily')].solution
+    console.log('DAILY state loaded from LS')
 
-    // console.log('DAILY state loaded from LS')
+    const dailySolution = Nebyoodle.config.daily.solution
 
-  //   // special case for daily song: need to check
-  //   // to make sure time hasn't elapsed on saved progress
-  //   try {
-  //     console.log('_loadGame->fetching NEBYOODLE_DAILY_SCRIPT')
+    // special case for daily song: need to check
+    // to make sure time hasn't elapsed on saved progress
+    try {
+      console.log('_loadGame(); fetching NEBYOODLE_DAILY_SCRIPT')
 
-  //     const response = await fetch(NEBYOODLE_DAILY_SCRIPT)
-  //     const data = await response.json()
-  //     const dailySong = data['song']
+      const response = await fetch(NEBYOODLE_DAILY_SCRIPT)
+      const data = await response.json()
 
-  //     // saved song and daily song are the same? still working on it
-  //     if (dailySong == lsStateDaily.songId) {
-  //       Nebyoodle.state.daily = lsStateDaily
-  //       Nebyoodle.state.daily[Nebyoodle.__getLastPlayIndex()].guesses = lsStateDaily.guesses
-  //       Nebyoodle.state.daily[Nebyoodle.__getLastPlayIndex()].songId = lsStateDaily.songId
+      console.log('_loadGame(daily) data', data)
 
-  //       console.log(`Song for ${Nebyoodle.__getTodaysDate()}:`, dailySong)
+      const dailySongId = data['drupal_internal__nid']
 
-  //       dailyCreateOrLoad = 'load'
-  //     }
-  //     // time has elapsed on daily puzzle, and new one is needed
-  //     else {
-  //       console.log('LS song and dailySong do not match, so create new puzzle')
+      // daily songId and saved songId are the same? still working on it
+      if (dailySongId == lsStateDaily.songId) {
+        Nebyoodle.state.daily = lsStateDaily
+        // Nebyoodle.state.daily[Nebyoodle.__getLastPlayIndex('daily')].guesses = lsStateDaily.guesses
+        // Nebyoodle.state.daily[Nebyoodle.__getLastPlayIndex('daily')].songId = lsStateDaily.songId
 
-  //       Nebyoodle.state.daily.gameState = 'IN_PROGRESS'
-  //       Nebyoodle.state.daily.guesses = []
+        console.log(`Song for ${Nebyoodle.__getTodaysDate()}:`, dailySongId)
 
-  //       console.log('SAVE: _loadGame() after checking on dailySong')
-  //       Nebyoodle._saveGame()
+        dailyCreateOrLoad = 'load'
+      }
+      // time has elapsed on daily puzzle, and new one is needed
+      else {
+        console.log('daily songId and saved songId do not match, so create new puzzle')
 
-  //       dailyCreateOrLoad = 'create'
-  //     }
+        Nebyoodle.state.daily[Nebyoodle.__getLastPlayIndex('daily')].gameState = 'IN_PROGRESS'
+        Nebyoodle.state.daily[Nebyoodle.__getLastPlayIndex('daily')].guesses = []
+        Nebyoodle.state.daily[Nebyoodle.__getLastPlayIndex('daily')].songId = null
 
-  //     Nebyoodle.__updateDailyDetails(data['index'])
-  //   } catch (e) {
-  //     console.error('could not get daily song', e)
-  //   }
-  } else {
+        console.log('SAVE: _loadGame() after checking on dailySong')
+        Nebyoodle._saveGame()
+
+        dailyCreateOrLoad = 'create'
+      }
+
+      Nebyoodle.__updateDailyDetails(data['index'])
+    } catch (e) {
+      console.error('could not get daily song', e)
+
+      Nebyoodle.state.daily[Nebyoodle.__getLastPlayIndex('daily')].guesses = []
+      Nebyoodle.state.daily[Nebyoodle.__getLastPlayIndex('daily')].songId = null
+    }
+  }
+  // no existing daily state found, so create with defaults
+  else {
     Nebyoodle.state.daily = NEBYOODLE_DEFAULTS.state.daily
 
-    // console.log('DAILY localStorage state key NOT found; defaults set')
-    // console.log('DAILY solution to be created with daily song')
+    console.log('DAILY: LS state NOT found; defaults set; solution to be created with daily song', Nebyoodle.state.daily)
 
     dailyCreateOrLoad = 'create'
   }
@@ -385,6 +400,7 @@ Nebyoodle._loadGame = async function() {
   /* ************************* */
 
   const lsStateFree = JSON.parse(localStorage.getItem(NEBYOODLE_STATE_FREE_KEY))
+  let freeCreateOrLoad = ''
 
   // if we have previous free LS values, sync them to code model
   if (lsStateFree) {
@@ -396,7 +412,7 @@ Nebyoodle._loadGame = async function() {
     // if we already have a chosen songId, then we need
     // to check if we have the correct answer already
     if (lsFreeSongId) {
-      // console.log('FREE solution already chosen', lsFreeSongId)
+      // console.log('FREE solution songId already chosen; loading', lsFreeSongId)
 
       // load answer from songId and set to solution
       await Nebyoodle.__setSolution('songId', lsFreeSongId)
@@ -405,48 +421,31 @@ Nebyoodle._loadGame = async function() {
       if (lsFreeGuesses.length) {
         // console.log('FREE existing guesses found')
 
-        const answers = lsFreeGuesses.map(g => g.answer)
+        const hasWon = Nebyoodle._checkWinState()
 
-        // console.log('answers', answers)
-
-        // grab solution as title
-        const freeSolution = Nebyoodle.__getSolution('free')
-
-        console.log('freeSolution', freeSolution)
-
-        // if answer has already been found, skip to win animation
-        if (answers.includes(freeSolution)) {
-          Nebyoodle._refreshUI(lsFreeGuesses)
-
-          modalOpen('win')
-        }
-        // otherwise, populate UI with current guesses
-        else {
-          console.log('correct answer not found, so keep playing')
-
+        if (!hasWon) {
           Nebyoodle._refreshUI(lsFreeGuesses)
 
           freeCreateOrLoad = 'load'
         }
       } else {
-        console.log('FREE no previous guesses found')
+        // console.log('FREE no previous guesses found')
 
         freeCreateOrLoad = 'load'
       }
     }
     // no chosen song yet, so create new puzzle
     else {
-      console.log('FREE solution not yet chosen; CREATE')
+      // console.log('FREE solution not yet chosen; CREATE')
 
       freeCreateOrLoad = 'create'
     }
   }
-  // no existing state found, so create with defaults
+  // no existing free state found, so create with defaults
   else {
     Nebyoodle.state.free = NEBYOODLE_DEFAULTS.state.free
 
-    // console.log('FREE localStorage state key NOT found; defaults set')
-    // console.log('FREE solution to be randomly chosen')
+    console.log('FREE: LS state NOT found; defaults set; solution to be randomly chosen', Nebyoodle.state.free)
 
     freeCreateOrLoad = 'create'
   }
@@ -457,29 +456,54 @@ Nebyoodle._loadGame = async function() {
 
   // daily mode
   if (Nebyoodle.__getGameMode() == 'daily') {
-    console.log('TODO: create/load daily solution')
+    console.log('TODO: creating/loading DAILY solution')
 
-    // Nebyoodle.dom.dailyDetails.classList.add('show')
+    Nebyoodle.dom.dailyDetails.classList.add('show')
 
-    // if (dailyCreateOrLoad == 'load') {
-    //   await Nebyoodle._loadExistingSolution('daily', Nebyoodle.__getSongId('daily'))
-    // } else {
-    //   await Nebyoodle._createNewSolution('daily')
-    // }
-
-    // console.log('DAILY solution loaded!', Nebyoodle.__getSongId('daily'))
+    switch (dailyCreateOrLoad) {
+      case 'create':
+        await Nebyoodle._createNewSolution('daily')
+        console.log('DAILY solution created!', Nebyoodle.__getSongId('daily'))
+        break
+      case 'load':
+        await Nebyoodle._loadExistingSolution('daily', Nebyoodle.__getSongId('daily'))
+        console.log('DAILY solution loaded!', Nebyoodle.__getSongId('daily'))
+        break
+      default:
+        break
+    }
   }
   // free mode
-  else {
-    if (freeCreateOrLoad == 'load') {
-      await Nebyoodle._loadExistingSolution('free', Nebyoodle.__getSongId('free'))
-    } else if (freeCreateOrLoad == 'create') {
-      await Nebyoodle._createNewSolution('free', true)
+  if (Nebyoodle.__getGameMode() == 'free') {
+    console.log('creating/loading FREE solution')
+
+    switch (freeCreateOrLoad) {
+      case 'create':
+        await Nebyoodle._createNewSolution('free', true)
+        // console.log('FREE solution created!', Nebyoodle.__getSongId('free'))
+        break
+      case 'load':
+        await Nebyoodle._loadExistingSolution('free', Nebyoodle.__getSongId('free'))
+        // console.log('FREE solution loaded!', Nebyoodle.__getSongId('free'))
+        break
+      default:
+        break
     }
   }
 
   console.log('SAVE: end of _loadGame()')
   Nebyoodle._saveGame()
+}
+
+// check for song data, and load it appropriately
+Nebyoodle._loadAllSongData = async function() {
+  const lsSongData = localStorage.getItem(NEBYOODLE_SONG_DATA_KEY)
+
+  if (lsSongData) {
+    Nebyoodle.allSongData = JSON.parse(lsSongData)
+  } else {
+    await Nebyoodle._getSongs()
+  }
 }
 
 // on refresh of site and saved data found, refresh UI
@@ -507,6 +531,8 @@ Nebyoodle._refreshUI = function(guesses = null) {
           break
       }
     })
+
+    Nebyoodle._checkWinState()
   } else {
     // no guesses? must be a new puzzle, so blank out guesses
     Object.values(Nebyoodle.dom.guessesContainer.children).forEach(guess => {
@@ -521,6 +547,8 @@ Nebyoodle._saveGame = function() {
 
   // save daily game state
   try {
+    // console.log('DAILY localStorage state being saved with', JSON.stringify(Nebyoodle.state.daily))
+
     localStorage.setItem(NEBYOODLE_STATE_DAILY_KEY, JSON.stringify(Nebyoodle.state.daily))
 
     // console.log('DAILY localStorage state saved!', JSON.parse(localStorage.getItem(NEBYOODLE_STATE_DAILY_KEY)))
@@ -530,6 +558,8 @@ Nebyoodle._saveGame = function() {
 
   // save free game state
   try {
+    // console.log('FREE localStorage state being saved with', JSON.stringify(Nebyoodle.state.free))
+
     localStorage.setItem(NEBYOODLE_STATE_FREE_KEY, JSON.stringify(Nebyoodle.state.free))
 
     // console.log('FREE localStorage state saved!', JSON.parse(localStorage.getItem(NEBYOODLE_STATE_FREE_KEY)))
@@ -625,7 +655,7 @@ Nebyoodle._changeSetting = async function(setting, value, event) {
 
           await Nebyoodle._loadExistingSolution('daily', Nebyoodle.__getSongId('daily'))
 
-          console.log('SAVE: _changeSetting() after switching gameMode to daily')
+          // console.log('SAVE: _changeSetting() after switching gameMode to daily')
           Nebyoodle._saveGame()
 
          //  console.log('**** switchED game mode to DAILY ****')
@@ -646,7 +676,7 @@ Nebyoodle._changeSetting = async function(setting, value, event) {
 
           await Nebyoodle._loadExistingSolution('free', Nebyoodle.__getSongId('free'))
 
-          console.log('SAVE: _changeSetting() after switching gameMode to free')
+          // console.log('SAVE: _changeSetting() after switching gameMode to free')
           Nebyoodle._saveGame()
 
           // console.log('**** switched game mode to FREE ****')
@@ -726,18 +756,17 @@ Nebyoodle._createNewSolution = async function(gameMode, reset = null) {
   console.log(`**** creatING new '${gameMode}' solution ****`)
 
   if (reset) {
-    // console.log('setting state to default', gameMode)
+    console.log(`setting '${gameMode}' state to default`)
 
     Nebyoodle.state[gameMode] = NEBYOODLE_DEFAULTS.state[gameMode]
   } else {
-    // console.log('adding another default config, state', gameMode)
+    console.log(`adding another '${gameMode}' default config/state`)
 
-    Nebyoodle.config[gameMode].push({
+    Nebyoodle.config[gameMode] = {
       'solution': null,
       'songData': null
-    })
+    }
     Nebyoodle.state[gameMode].push({
-      durationMax: 1,
       gameState: 'IN_PROGRESS',
       guesses: [],
       songId: null
@@ -805,7 +834,7 @@ Nebyoodle._resetFreeProgress = async function() {
   Nebyoodle._refreshUI(Nebyoodle.__getGuesses())
 
   // save those defaults to localStorage
-  console.log('SAVE: _resetFreeProgress()')
+  // console.log('SAVE: _resetFreeProgress()')
   Nebyoodle._saveGame()
 }
 
@@ -828,8 +857,10 @@ Nebyoodle._enableUI = function() {
 
 // get a single random valid song from music.nebyoolae.com
 Nebyoodle._getSong = async function(songId = null) {
+  console.log(`_getSong with songId: ${songId}`)
+
+  // if local, add songData to visible div, and add loading animation while fetching
   if (Nebyoodle.env == 'local') {
-    // add loading animation until fetch is done
     Nebyoodle.dom.songData.innerHTML = ''
     Nebyoodle.dom.songData.classList.add('show')
     Nebyoodle.dom.songData.classList.add('lds-dual-ring')
@@ -857,8 +888,7 @@ Nebyoodle._getSong = async function(songId = null) {
       const baseURL = NEBYOOCOM_PROD_URL
       const data = song.data[0]
 
-      // console.log('data', data)
-
+      // set song data (id, name, album, etc.) for current gameMode
       Nebyoodle.__setSongData(data)
 
       const randomSongId = data.drupal_internal__nid
@@ -876,12 +906,19 @@ Nebyoodle._getSong = async function(songId = null) {
       Nebyoodle.dom.audioElem.src = randomAudioUrl
       Nebyoodle.dom.audioElem.load()
 
-      // add song to config.solution
-      Nebyoodle.__setSolution('string', `${randomSongName} - ${randomAlbumName}`)
+      const title = `${randomSongName} - ${randomAlbumName}`
 
-      // add randomSongId to state.songId
+      // set config.solution
+      const solution = await Nebyoodle.__setSolution('string', title)
+
+      if (solution) {
+        // set state.songId
+        Nebyoodle.__setSongId(randomSongId)
+      } else {
+        console.error('not able to set config.solution')
+      }
+
       console.log('SAVE: end of _getSong()')
-      Nebyoodle.__setSongId(randomSongId)
       Nebyoodle._saveGame()
     } else {
       console.error('fetched song has invalid data')
@@ -966,20 +1003,12 @@ Nebyoodle._displayGameConfig = function() {
   Object.keys(configs).forEach(config => {
     html += `<h4>CONFIG: ${config}</h4>`
 
-    configs[config].forEach(configObject => {
-      html += `<dd><code>${config}: {</code><dl>`
+    Object.keys(configs[config]).forEach(key => {
+      const label = key
+      const value = configs[config][key]
 
-      Object.keys(configObject).forEach(key => {
-        const label = key
-        const value = configObject[key]
-
-        html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
-      })
-
-      html += '</dl><code>}</code></dd>'
+      html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
     })
-
-    // console.log(`Nebyoodle.__getSolution()`, Nebyoodle.__getSolution())
   })
 
   html += '</dl>'
@@ -1111,23 +1140,25 @@ Nebyoodle._getWinMarkup = async function() {
 
 // handle duration of audio element
 Nebyoodle._handleAudioDuration = function(event) {
+  // console.log('handleAudioDuration event')
+
   const currentTime = event.target.currentTime
   const durationMax = Nebyoodle.__getDurationMax()
-  const durVal = NEBYOODLE_DUR_PCT[Nebyoodle.__getGuesses().length]
-  const fillVal = (currentTime / durationMax) * durVal
+  const durationVal = NEBYOODLE_DUR_PCT[Nebyoodle.__getGuesses().length]
+  const fillVal = (currentTime / durationMax) * durationVal
 
   Nebyoodle.dom.timelinePlayed.setAttribute('fill', fillVal)
   Nebyoodle.dom.timelinePlayed.style.transform = `scaleX(${fillVal})`
   Nebyoodle.dom.playSeconds.innerText = Math.floor(currentTime).toString().padStart(2, '0')
 
   if (currentTime >= durationMax) {
-    // console.log('durationMax reached. stopping audio', this)
-
     // "stop" the audio, i.e. pause and reset back to beginning
     Nebyoodle.dom.audioElem.pause()
     Nebyoodle.dom.audioElem.currentTime = 0
     Nebyoodle._togglePlayPauseButton()
   }
+
+  Nebyoodle._updateStatus()
 }
 
 // handle both clicks and touches outside of modals
@@ -1303,7 +1334,7 @@ Nebyoodle._winGame = function(state = null) {
     }
   ]
 
-  console.log('SAVE: _winGame() debuggery')
+  // console.log('SAVE: _winGame() debuggery')
   Nebyoodle._saveGame()
 
   Nebyoodle._checkWinState()
@@ -1326,38 +1357,19 @@ Nebyoodle._getNebyooApps = async function() {
 
 // submit guess with blank
 Nebyoodle._handleSkipButton = function() {
-  // submit blank guess
   Nebyoodle._submitGuess()
 }
 
 // submit guess with text
 Nebyoodle._handleSubmitButton = function() {
-  const guess = Nebyoodle.dom.mainUI.guessInput.value
-
-  // submit actual guess
-  Nebyoodle._submitGuess(guess)
+  Nebyoodle._submitGuess(Nebyoodle.dom.mainUI.guessInput.value)
 }
 
 // submit a guess if game still IN_PROGRESS
-Nebyoodle._submitGuess = function(guess = '') {
+Nebyoodle._submitGuess = function(guess = null) {
   if (Nebyoodle.__getGameState() == 'IN_PROGRESS') {
-    Nebyoodle._checkWinState(guess)
-  } else {
-    console.error('current game is over -- no more guesses!')
-  }
-}
-
-// check latest guess to see if correct and if game is won
-Nebyoodle._checkWinState = function(guess = null) {
-  const solution = Nebyoodle.__getSolution()
-
-  // console.log(`_checkWinState: guess: '${guess}', solution: '${solution}'`)
-
-  if (solution) {
     // guess was skipped
     if (!guess) {
-      // console.log('_checkWinState: SKIP')
-
       // add blank guess for skip
       Nebyoodle.__addGuess({
         answer: '',
@@ -1365,32 +1377,29 @@ Nebyoodle._checkWinState = function(guess = null) {
         isSkipped: true
       })
 
+      // clear the lookup input
+      Nebyoodle._clearGuess()
+
       // update skip button and audio file durationMax, if necessary
       Nebyoodle._updateStatus('skipped', null)
 
       // save to local storage
-      console.log('SAVE: _checkWinState() adding skip')
+      // console.log('SAVE: _checkWinState() adding skip')
       Nebyoodle._saveGame()
-
-      return false
     }
-    // guess is correct and game has been won
-    else if (guess == solution) {
-      // console.log('_checkWinState: CORRECT')
-
-      // add guess (actual guess if submit, '' if skip)
+    // guess was entered
+    else {
+      // add guess
       Nebyoodle.__addGuess({
         answer: guess,
-        isCorrect: true,
+        isCorrect: false,
         isSkipped: false
       })
-
-      console.log('game won!')
 
       // set state stuff
       if (Nebyoodle.__getGameState() == 'IN_PROGRESS') {
         // make sure to only increment wins if we are going from
-        // IN_PROGRESS -> GAME_OVER (ignores page refreshes)
+        // IN_PROGRESS -> GAME_OVER (ignores page refreshes)`
         Nebyoodle.__setGameState('GAME_OVER')
 
         // clear the lookup input
@@ -1400,47 +1409,56 @@ Nebyoodle._checkWinState = function(guess = null) {
         Nebyoodle._updateStatus('correct', guess)
 
         // save to local storage
-        console.log('SAVE: _checkWinState() guess is correct')
+        // console.log('SAVE: _checkWinState() guess is correct')
         Nebyoodle._saveGame()
       }
-
-      Nebyoodle.__winAnimation().then(() => {
-        // disable inputs (until future re-enabling)
-        Nebyoodle._disableUI()
-
-        // display modal win thingy
-        modalOpen('win')
-
-        return true
-      })
     }
-    // guess is not correct and game is still going
-    else {
-      // console.log('_checkWinState: WRONG')
 
-      // add guess (actual guess if submit, '' if skip)
-      Nebyoodle.__addGuess(
-        {
-          answer: guess,
-          isCorrect: false,
-          isSkipped: false
-        }
-      )
+    // check if a guess has won the game or not
+    Nebyoodle._checkWinState()
+  } else {
+    console.error('current game is over -- no more guesses!')
+  }
+}
+
+// check latest guess to see if correct and if game is won
+Nebyoodle._checkWinState = function() {
+  const solution = Nebyoodle.__getSolution()
+  const guesses = Nebyoodle.__getGuesses()
+
+  // if we have won, set state and display win modal
+  if (Object.values(guesses).map(g => g.answer).includes(solution)) {
+    // set state stuff
+    if (Nebyoodle.__getGameState() == 'IN_PROGRESS') {
+      // make sure to only increment wins if we are going from
+      // IN_PROGRESS -> GAME_OVER (ignores page refreshes)`
+      Nebyoodle.__setGameState('GAME_OVER')
 
       // clear the lookup input
       Nebyoodle._clearGuess()
 
       // update skip button and audio file durationMax, if necessary
-      Nebyoodle._updateStatus('wrong', guess)
+      Nebyoodle._updateStatus('correct', guess)
 
       // save to local storage
-      console.log('SAVE: _checkWinState() guess is wrong')
+      // console.log('SAVE: _checkWinState() guess is correct')
       Nebyoodle._saveGame()
-
-      return false
     }
-  } else {
-    console.error('game is broken! solution not found')
+
+    // disable inputs (until future re-enabling)
+    Nebyoodle._disableUI()
+
+    // display modal win thingy
+    modalOpen('game-over-win')
+
+    return true
+  }
+  // we have not won, so check if we've reached the max guesses
+  else if (Nebyoodle.__getGuesses().length >= NEBYOODLE_CHANCE_MAX) {
+    // disable inputs (until future re-enabling)
+    Nebyoodle._disableUI()
+
+    modalOpen('game-over-lose')
 
     return false
   }
@@ -1474,11 +1492,19 @@ Nebyoodle._updateStatus = function(type, guessText = null, guessIndex = null) {
       svg.classList.add('skipped')
       title.innerHTML = 'SKIPPED'
 
+      symbol.appendChild(svg)
+      guessDiv.appendChild(symbol)
+      guessDiv.appendChild(title)
+
       break
     case 'wrong':
       svg.src = '/assets/images/cross.svg'
       svg.classList.add('wrong')
       title.innerHTML = guessText
+
+      symbol.appendChild(svg)
+      guessDiv.appendChild(symbol)
+      guessDiv.appendChild(title)
 
       break
     case 'correct':
@@ -1486,20 +1512,19 @@ Nebyoodle._updateStatus = function(type, guessText = null, guessIndex = null) {
       svg.classList.add('correct')
       title.innerHTML = guessText
 
+      symbol.appendChild(svg)
+      guessDiv.appendChild(symbol)
+      guessDiv.appendChild(title)
+
+      break
+    default:
       break
   }
 
-  symbol.appendChild(svg)
-  guessDiv.appendChild(symbol)
-  guessDiv.appendChild(title)
-
   // if game is not yet won, AND we still have skips left, then update audio and UI
-  if (Nebyoodle.__getGameState() == 'IN_PROGRESS' && Nebyoodle.__getGuesses().length < 6) {
-    // set new duration
-    Nebyoodle.__setDurationMax(NEBYOODLE_SKP_VAL[
-      Nebyoodle.__getGuesses().length - 1
-    ])
-
+  if (Nebyoodle.__getGameState() == 'IN_PROGRESS'
+    && Nebyoodle.__getGuesses().length < NEBYOODLE_CHANCE_MAX
+  ) {
     // update timeline
     const fillVal = NEBYOODLE_DUR_PCT[Nebyoodle.__getGuesses().length]
 
@@ -1508,7 +1533,7 @@ Nebyoodle._updateStatus = function(type, guessText = null, guessIndex = null) {
 
     // update skip button
     Nebyoodle.dom.mainUI.skipSeconds.innerText = NEBYOODLE_SKP_TXT[
-      Nebyoodle.__getGuesses().length - 1
+      Nebyoodle.__getGuesses().length
     ]
   } else {
     Nebyoodle.__setGameState('GAME_OVER')
@@ -1547,12 +1572,9 @@ Nebyoodle._attachEventListeners = function() {
   Nebyoodle.dom.audioElem.addEventListener('canplaythrough', () => {
     // console.log('audioElem can now play again')
 
-    // set durationMax back to 1
-    Nebyoodle.__setDurationMax(NEBYOODLE_SKP_VAL[
-      Nebyoodle.__getGuesses().length
-    ])
-
-    Nebyoodle._enableUI()
+    if (Nebyoodle.__getGameState() == 'IN_PROGRESS') {
+      Nebyoodle._enableUI()
+    }
   })
 
   // check for currentTime changes and update timeline accordingly
@@ -1691,25 +1713,28 @@ Nebyoodle.__getScoreCard = function() {
   return html
 }
 
-Nebyoodle.__getDurationMax = function() {
-  return Nebyoodle
-    .state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
-    .durationMax
+Nebyoodle.__getDurationMax = function(mode = null) {
+  const guessLength = Nebyoodle
+    .state[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
+    .guesses
+    .length
+
+  return NEBYOODLE_SKP_VAL[guessLength]
 }
-Nebyoodle.__setDurationMax = function(durationMax) {
+Nebyoodle.__setDurationMax = function(durationMax, mode = null) {
   Nebyoodle
-    .state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
+    .state[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
     .durationMax = durationMax
 }
 
-Nebyoodle.__getGameState = function() {
+Nebyoodle.__getGameState = function(mode = null) {
   return Nebyoodle
-    .state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
+    .state[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
     .gameState
 }
-Nebyoodle.__setGameState = function(gameState) {
+Nebyoodle.__setGameState = function(gameState, mode = null) {
   Nebyoodle
-    .state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
+    .state[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
     .gameState = gameState
 }
 
@@ -1730,39 +1755,55 @@ Nebyoodle.__getSongId = function(mode = null) {
     .state[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
     .songId
 }
-Nebyoodle.__setSongId = function(songId) {
+Nebyoodle.__setSongId = function(songId, mode = null) {
+  // console.log('__setSongId:', mode ? mode : Nebyoodle.__getGameMode())
+
   Nebyoodle
-    .state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
+    .state[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
     .songId = songId
 }
 
 Nebyoodle.__getSongData = function(mode = null) {
   return Nebyoodle
-    .config[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
+    .config[mode ? mode : Nebyoodle.__getGameMode()]
     .songData
 }
 Nebyoodle.__setSongData = function(data, mode = null) {
+  // console.log('__setSongData:', mode ? mode : Nebyoodle.__getGameMode())
+
   Nebyoodle
-    .config[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
+    .config[mode ? mode : Nebyoodle.__getGameMode()]
     .songData = data
 }
 
 Nebyoodle.__getSolution = function(mode = null) {
   return Nebyoodle
-    .config[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
+    .config[mode ? mode : Nebyoodle.__getGameMode()]
     .solution
 }
-Nebyoodle.__setSolution = async function(method, solution) {
+Nebyoodle.__setSolution = async function(method, solution, mode = null) {
+  // console.log(`__setSolution(${solution}) for '${mode ? mode : Nebyoodle.__getGameMode()}' state with '${method}'`)
+
+  // console.log('Nebyoodle.config', Nebyoodle.config)
+
   if (method == 'string') {
+    // console.log(`SETTING '${mode ? mode : Nebyoodle.__getGameMode()}' SOLUTION WITH STRING`, solution)
+
     Nebyoodle
-      .config[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
+      .config[mode ? mode : Nebyoodle.__getGameMode()]
       .solution = solution
+
+    // console.log('Nebyoodle.config(set by string)', Nebyoodle.config)
+
+    return Promise.resolve(true)
   } else {
-    // console.log('getting solution with fetch', solution)
+    // console.log(`SETTING '${mode ? mode : Nebyoodle.__getGameMode()}' SOLUTION WITH SONGID`, solution)
 
     const response = await fetch(`${NEBYOODLE_SONGID_SCRIPT}?songId=${solution}`)
     const json = await response.json()
     const data = json.data[0]
+
+    // console.log('__setSolution data:', data)
 
     const title = `${data.title} - ${data.field_album_id.name}`
 
@@ -1770,8 +1811,10 @@ Nebyoodle.__setSolution = async function(method, solution) {
 
     if (title) {
       Nebyoodle
-      .config[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
-      .solution = title
+        .config[mode ? mode : Nebyoodle.__getGameMode()]
+        .solution = title
+
+      // console.log('Nebyoodle.config(set by songId)', Nebyoodle.config)
     }
 
     return title
@@ -1786,9 +1829,13 @@ Nebyoodle.__getLastGuessIndex = function(mode = null) {
 }
 
 Nebyoodle.__getLastPlayIndex = function(mode = null) {
-  return Nebyoodle
+  const index = Nebyoodle
     .state[mode ? mode : Nebyoodle.__getGameMode()]
     .length - 1
+
+  // console.log('__getLastPlayIndex', index)
+
+  return index
 }
 
 // timestamp to display date
@@ -1841,7 +1888,11 @@ Nebyoodle.__getTodaysDate = function() {
 
 // shorter gameMode deducer
 Nebyoodle.__getGameMode = function() {
-  return Nebyoodle.settings.gameMode
+  const mode = Nebyoodle.settings.gameMode
+
+  // console.log('__getGameMode:', mode)
+
+  return mode
 }
 
 Nebyoodle.__updateDailyDetails = function(index) {

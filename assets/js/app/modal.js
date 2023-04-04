@@ -2,11 +2,12 @@
 
 class Modal {
 
-  constructor(modalType, modalTitle, modalText, acceptText, cancelText) {
+  constructor(modalType, modalTitle, modalText, acceptText, cancelText, modalClass) {
     this.modalDelay = 1500
     this.modalType = modalType || 'perm';
     this.modalTitle = modalTitle || 'Confirmation';
     this.modalText = modalText || 'Are you sure you want to do this?';
+    this.modalClass = modalClass || null
 
     if (acceptText) {
       this.acceptText = acceptText || 'Yes';
@@ -77,6 +78,10 @@ class Modal {
     const window = document.createElement('div');
     window.classList.add('modal-window');
     window.classList.add('animate__animated', 'animate__fadeInUp');
+
+    if (this.modalClass) {
+      window.classList.add(this.modalClass)
+    }
 
     if (modalType == 'perm-debug' || modalType == 'confirm-debug') {
       window.classList.add('debug');

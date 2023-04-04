@@ -525,6 +525,7 @@ section#game {
 
       .song-win-block {
         background-color: var(--off-white);
+        margin-bottom: 10px;
       }
         .song-win-block .song-main {
           display: flex;

@@ -32,7 +32,6 @@ const NEBYOODLE_DEFAULT_CONFIG = {
   'songData': null
 }
 const NEBYOODLE_DEFAULT_STATE = {
-  durationMax: 1,
   gameState: 'IN_PROGRESS',
   guesses: [],
   songId: null
@@ -41,8 +40,8 @@ const NEBYOODLE_DEFAULT_STATE = {
 const NEBYOODLE_DEFAULTS = {
   'allSongData': [],
   'config': {
-    'daily': [NEBYOODLE_DEFAULT_CONFIG],
-    'free': [NEBYOODLE_DEFAULT_CONFIG]
+    'daily': NEBYOODLE_DEFAULT_CONFIG,
+    'free': NEBYOODLE_DEFAULT_CONFIG
   },
   'state': {
     'daily': [NEBYOODLE_DEFAULT_STATE],
