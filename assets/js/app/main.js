@@ -456,7 +456,7 @@ Nebyoodle._loadGame = async function() {
 
   // daily mode
   if (Nebyoodle.__getGameMode() == 'daily') {
-    console.log('TODO: creating/loading DAILY solution')
+    console.log('creating/loading DAILY solution')
 
     Nebyoodle.dom.dailyDetails.classList.add('show')
 
@@ -860,7 +860,7 @@ Nebyoodle._getSong = async function(songId = null) {
   console.log(`_getSong with songId: ${songId}`)
 
   // if local, add songData to visible div, and add loading animation while fetching
-  if (Nebyoodle.env == 'local') {
+  if (Nebyoodle.env == NEBYOODLE_DEBUG_ENV) {
     Nebyoodle.dom.songData.innerHTML = ''
     Nebyoodle.dom.songData.classList.add('show')
     Nebyoodle.dom.songData.classList.add('lds-dual-ring')
@@ -880,7 +880,7 @@ Nebyoodle._getSong = async function(songId = null) {
     const song = await response.json()
 
     if (song.data[0]) {
-      if (Nebyoodle.env == 'local') {
+      if (Nebyoodle.env == NEBYOODLE_DEBUG_ENV) {
         Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
       }
 
@@ -898,7 +898,7 @@ Nebyoodle._getSong = async function(songId = null) {
         ? `${baseURL}${data.field_local_link.uri.split('internal:')[1]}`
         : ''
 
-      if (Nebyoodle.env == 'local') {
+      if (Nebyoodle.env == NEBYOODLE_DEBUG_ENV) {
         Nebyoodle.dom.songData.innerHTML = await Nebyoodle._getWinMarkup(data)
       }
 
@@ -923,7 +923,7 @@ Nebyoodle._getSong = async function(songId = null) {
     } else {
       console.error('fetched song has invalid data')
 
-      if (Nebyoodle.env == 'local') {
+      if (Nebyoodle.env == NEBYOODLE_DEBUG_ENV) {
         Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
         Nebyoodle.dom.songData.innerHTML = `got song, but it's wonky :(`
       }
@@ -931,7 +931,7 @@ Nebyoodle._getSong = async function(songId = null) {
   } else {
     console.error('could not fetch song from remote source')
 
-    if (Nebyoodle.env == 'local') {
+    if (Nebyoodle.env == NEBYOODLE_DEBUG_ENV) {
       Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
       Nebyoodle.dom.songData.innerHTML = 'could not get song :('
     }
@@ -1312,7 +1312,7 @@ Nebyoodle._playAudio = async function() {
 }
 
 // debug: beat game to check win state
-Nebyoodle._winGame = function(state = null) {
+Nebyoodle._debugWinGame = function(state = null) {
   const solution = Nebyoodle.__getSolution()
 
   modalOpen('win-game-hax')
@@ -1334,7 +1334,7 @@ Nebyoodle._winGame = function(state = null) {
     }
   ]
 
-  // console.log('SAVE: _winGame() debuggery')
+  // console.log('SAVE: _debugWinGame() debuggery')
   Nebyoodle._saveGame()
 
   Nebyoodle._checkWinState()
@@ -1591,7 +1591,7 @@ Nebyoodle._attachEventListeners = function() {
   Nebyoodle.dom.mainUI.btnSkip.addEventListener('click', Nebyoodle._handleSkipButton, false)
   Nebyoodle.dom.mainUI.btnSubmit.addEventListener('click', Nebyoodle._handleSubmitButton, false)
 
-  // local debug buttons
+  // if local dev, show debug buttons
   if (Nebyoodle.env == 'local') {
     if (Nebyoodle.dom.interactive.debug.all) {
       // 🪣 get single Nebyoolae song from music.nebyoolae.com
@@ -1631,13 +1631,13 @@ Nebyoodle._attachEventListeners = function() {
       // 🏆 win game immediately
       if (Nebyoodle.dom.interactive.debug.btnWinGame) {
         Nebyoodle.dom.interactive.debug.btnWinGame.addEventListener('click', () => {
-          Nebyoodle._winGame()
+          Nebyoodle._debugWinGame()
         })
       }
       // 🏅 almost win game (post-penultimate move)
       if (Nebyoodle.dom.interactive.debug.btnWinGameAlmost) {
         Nebyoodle.dom.interactive.debug.btnWinGameAlmost.addEventListener('click', () => {
-          Nebyoodle._winGame('almost')
+          Nebyoodle._debugWinGame('almost')
         })
       }
       // 🏁 display win tile animation
@@ -1744,8 +1744,12 @@ Nebyoodle.__getGuesses = function(mode = null) {
     .guesses
 }
 Nebyoodle.__addGuess = function(guess) {
+  const mode = Nebyoodle.__getGameMode()
+
+  console.log('__addGuess', mode)
+
   Nebyoodle
-    .state[Nebyoodle.__getGameMode()][Nebyoodle.__getLastPlayIndex()]
+    .state[mode][Nebyoodle.__getLastPlayIndex()]
     .guesses
     .push(guess)
 }

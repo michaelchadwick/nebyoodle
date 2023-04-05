@@ -26,6 +26,7 @@ const NEBYOODLE_DUR_PCT = [0.0625, 0.1250, 0.25, 0.4375, 0.6875, 0.999]
 const NEBYOODLE_SKP_TXT = ['(+1s)', '(+2s)', '(+3s)', '(+4s)', '(+5s)', '']
 const NEBYOODLE_SKP_VAL = [1, 2, 4, 7, 11, 16]
 const NEBYOODLE_CHANCE_MAX = 6
+const NEBYOODLE_DEBUG_ENV = 'local'
 
 const NEBYOODLE_DEFAULT_CONFIG = {
   'solution': null,
