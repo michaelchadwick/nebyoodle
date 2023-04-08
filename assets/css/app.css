@@ -3,6 +3,9 @@
   --light-color:  #a6c4ee;
   --dark-color: #244471;
   --debug-color: #715ec7;
+  --debug-color-light1: #e5e0ff;
+  --debug-color-light2: #e8e3ff;
+  --debug-color-light3: #ded8ff;
   --played-color: #1ebbd7;
   --unplayed-color: #8d8d8d;
   --white: #ffffff;
@@ -144,6 +147,9 @@ button {
     button.share i {
       margin-left: 6px;
     }
+  button.game-over {
+    margin-top: 10px;
+  }
 
 input:disabled,
 select:disabled {
@@ -537,7 +543,6 @@ section#game {
 
       .song-win-block {
         background-color: var(--off-white);
-        margin-bottom: 10px;
       }
         .song-win-block .song-main {
           display: flex;
@@ -823,6 +828,20 @@ section#game {
 .debug {
   color: var(--debug-color);
 }
+.debug-state {
+  background-color: var(--debug-color-light1);
+  border: 2px solid var(--debug-color);
+  margin-bottom: 5px;
+}
+  .debug-state .debug-session {
+    padding: 5px;
+  }
+    .debug-state .debug-session:nth-child(odd) {
+      background-color: var(--debug-color-light2);
+    }
+    .debug-state .debug-session:nth-child(even) {
+      background-color: var(--debug-color-light3);
+    }
 
 .disabled {
   color: var(--gray-dark) !important;

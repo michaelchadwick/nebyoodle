@@ -126,12 +126,24 @@
             margin-left: 0;
           }
 
+  .modal-text dl.centered {
+    text-align: center;
+  }
+    .modal-text dl.centered dt {
+      margin-left: 0;
+    }
   .modal-text dl dt {
     margin-left: 1em;
     min-height: 20px;
   }
   .modal-text dl dl {
     margin-left: 1em;
+  }
+  .modal-text h4:not(:first-child) {
+    margin-top: 10px;
+  }
+  .modal-text h5 {
+    margin-top: 5px;
   }
 
   .modal-window.game-over-win .modal-text {
