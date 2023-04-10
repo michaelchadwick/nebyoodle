@@ -20,7 +20,7 @@ const NEBYOODLE_SHARE_URL = 'https://guess.nebyoolae.com/?r=share'
 const NEBYOODLE_DAILY_SCRIPT = './assets/scripts/daily.php'
 const NEBYOODLE_SONG_SCRIPT = './assets/scripts/song.php'
 const NEBYOODLE_SONGID_SCRIPT = './assets/scripts/songid.php'
-const NEBYOODLE_SONGS_SCRIPT = './assets/scripts/songs.php'
+const NEBYOODLE_ALL_SONGS_SCRIPT = './assets/scripts/all-songs.php'
 
 const NEBYOODLE_DUR_PCT = [0.0625, 0.1250, 0.25, 0.4375, 0.6875, 0.999]
 const NEBYOODLE_SKP_TXT = ['(+1s)', '(+2s)', '(+3s)', '(+4s)', '(+5s)', '']
@@ -33,24 +33,24 @@ const NEBYOODLE_DEFAULT_CONFIG = {
   'songData': null
 }
 const NEBYOODLE_DEFAULT_STATE = {
-  gameState: 'IN_PROGRESS',
-  guesses: [],
-  songId: null
+  'gameState': 'IN_PROGRESS',
+  'guesses': [],
+  'songId': null
 }
 
 const NEBYOODLE_DEFAULTS = {
   'allSongData': [],
   'config': {
-    'daily': NEBYOODLE_DEFAULT_CONFIG,
-    'free': NEBYOODLE_DEFAULT_CONFIG
+    'daily': {...NEBYOODLE_DEFAULT_CONFIG},
+    'free': {...NEBYOODLE_DEFAULT_CONFIG}
   },
   'state': {
-    'daily': [NEBYOODLE_DEFAULT_STATE],
-    'free': [NEBYOODLE_DEFAULT_STATE]
+    'daily': [{...NEBYOODLE_DEFAULT_STATE}],
+    'free': [{...NEBYOODLE_DEFAULT_STATE}]
   },
   'settings': {
-    darkMode: false,
-    gameMode: 'free'
+    'darkMode': false,
+    'gameMode': 'daily'
   }
 }
 
