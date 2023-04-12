@@ -19,16 +19,23 @@
   .modal-dialog.temp {
     background-color: transparent;
   }
-  .modal-dialog.temp .modal-window {
-    background-color: var(--white);
-    border: 2px solid var(--black);
-    border-radius: 8px;
-    box-shadow: none;
-    color: var(--black);
-    pointer-events: none;
-    position: absolute;
-    top: 25%;
-    width: fit-content;
+    .modal-dialog.temp .modal-window {
+      background-color: var(--white);
+      border: 2px solid var(--black);
+      border-radius: 8px;
+      box-shadow: none;
+      color: var(--black);
+      pointer-events: none;
+      position: absolute;
+      top: 25%;
+      width: fit-content;
+    }
+  .modal-dialog.temp-api {
+    background-color: none;
+    height: 40px;
+    position: fixed;
+    top: 0;
+    width: 100%;
   }
 
 .modal-window {

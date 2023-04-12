@@ -2,11 +2,6 @@
 /* app entry point and main functions */
 /* global Nebyoodle */
 
-// global check to see if we've shown this already
-// once we show it, we toggle this until the next
-// time that the app is loaded
-Nebyoodle.showStartModal = true
-
 // settings: web app global settings saved between sessions in LOCAL STORAGE
 if (!Nebyoodle.settings) {
   Nebyoodle.settings = {}
@@ -570,6 +565,8 @@ Nebyoodle._loadSettings = function() {
 
     Nebyoodle.settings = NEBYOODLE_DEFAULTS.settings
 
+    modalOpen('start')
+
     localStorage.setItem(NEBYOODLE_SETTINGS_KEY, JSON.stringify(Nebyoodle.settings))
   }
 
@@ -909,7 +906,7 @@ Nebyoodle._getSongs = async function() {
 
   if (!lsSongData) {
     Nebyoodle.myModal = new Modal('temp-api', null,
-      'Please wait for song data from Nebyoolae Music to be loaded...',
+      'Please wait for a one-time data download from Nebyoolae Music...',
       null,
       null
     )
