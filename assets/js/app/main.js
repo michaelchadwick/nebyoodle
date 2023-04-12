@@ -272,7 +272,7 @@ Nebyoodle.initApp = async () => {
   Nebyoodle._disableUI()
 
   // set env
-  Nebyoodle.env = document.location.hostname == NEBYOODLE_ENV_PROD_URL ? 'prod' : 'local'
+  Nebyoodle.env = NEBYOODLE_ENV_PROD_URL.includes(document.location.hostname) ? 'prod' : 'local'
 
   // if local dev, show debug stuff
   if (Nebyoodle.env == 'local') {
