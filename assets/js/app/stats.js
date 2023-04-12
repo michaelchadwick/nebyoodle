@@ -6,12 +6,16 @@ Nebyoodle.__getSessionCount = function(mode) {
 }
 
 Nebyoodle.__getSuccessPerc = function(mode) {
-  const sessions = Nebyoodle.__getSessionCount(mode)
-  const wins = Nebyoodle.state[mode].filter(
+  const allCount = Nebyoodle.__getSessionCount(mode)
+  const winCount = Nebyoodle.state[mode].filter(
     session => Nebyoodle.___isDone(session) && Nebyoodle.___isWin(session)
   ).length
 
-  return Math.round((wins / sessions) * 100)
+  if (allCount > 0) {
+    return Math.round((wins / sessions) * 100)
+  } else {
+    return 0
+  }
 }
 
 Nebyoodle.__getStreak = function(mode, max = null) {
