@@ -2,7 +2,7 @@
 .modal-dialog {
   align-items: center;
   background-color: var(--black);
-  background-color: var(--shadow);
+  background-color: var(--shadow-dark);
   border: none;
   display: flex;
   height: 100%;

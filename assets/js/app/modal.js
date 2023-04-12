@@ -158,5 +158,6 @@ class Modal {
   _destroyModal() {
     this.parent.removeChild(this.modal);
     delete this;
+    Nebyoodle.myModal = null
   }
 }
