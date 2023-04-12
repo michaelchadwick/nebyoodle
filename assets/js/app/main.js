@@ -398,8 +398,6 @@ Nebyoodle._loadGame = async function(mode = null) {
               Nebyoodle._refreshUI(lsDailyGuesses)
 
               dailyCreateOrLoad = 'load'
-
-              // Nebyoodle._checkWinState()
             }
             //  no guesses to check, so just load
             else {
@@ -443,8 +441,6 @@ Nebyoodle._loadGame = async function(mode = null) {
 
     // console.log('creating/loading DAILY solution:', dailyCreateOrLoad)
 
-    Nebyoodle.dom.dailyDetails.classList.add('show')
-
     switch (dailyCreateOrLoad) {
       case 'create':
         await Nebyoodle._createNewSolution('daily', true)
@@ -457,6 +453,8 @@ Nebyoodle._loadGame = async function(mode = null) {
       default:
         break
     }
+
+    Nebyoodle.dom.dailyDetails.classList.add('show')
 
     console.log('SAVE: end of _loadGame(daily)')
     Nebyoodle._saveGame('daily')
@@ -1879,7 +1877,7 @@ Nebyoodle.__updateStatus = function(type, guessText = null, guessIndex = null) {
   const skipsRemain = Nebyoodle.__getGuesses().length < NEBYOODLE_CHANCE_MAX
 
   if (gameState == 'IN_PROGRESS' && skipsRemain) {
-    console.log('FUNC __updateStatus() game not won and skips remaining')
+    // console.log('FUNC __updateStatus() game not won and skips remaining')
 
     // update timeline
     const fillVal = NEBYOODLE_DUR_PCT[Nebyoodle.__getGuesses().length]
@@ -1894,7 +1892,7 @@ Nebyoodle.__updateStatus = function(type, guessText = null, guessIndex = null) {
   }
   // otherwise, game is over
   else {
-    console.log('FUNC __updateStatus() game is over or out of skips')
+    // console.log('FUNC __updateStatus() game is over or out of skips')
 
     Nebyoodle.__setGameState('GAME_OVER')
 
