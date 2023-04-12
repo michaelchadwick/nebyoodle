@@ -52,17 +52,18 @@ async function modalOpen(type, data = null) {
 
           <p>Skipped or incorrect attempts unlock more of the song.</p>
 
-          <p>Answer in as few tries as possible and share your score!</p>
+          <p>Answer in as few tries as possible, and then share your score!</p>
 
           <h4>Daily</h4>
           <p>One new song to guess each day.</p>
 
-          <h4>Free</h4>
+          <h4>Free Play</h4>
           <p>Keep guessing as many songs as you want! Go for the longest combo!</p>
 
           <hr />
 
-          <p><strong>Dev</strong>: <a href="https://michaelchadwick.info" target="_blank">Michael Chadwick</a>.</p>
+          <p><strong>Dev</strong>: <a href="https://michaelchadwick.info" target="_blank">Michael Chadwick</a>. Find all music at
+          <a href="https://music.nebyoolae.com">NebyooMusic</a>.</p>
         `,
         null,
         null
