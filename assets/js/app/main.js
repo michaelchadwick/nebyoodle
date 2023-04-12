@@ -75,86 +75,51 @@ async function modalOpen(type, data = null) {
       break
 
     case 'stats':
-      // let dailyWins = 0
-      // let dailyTotal = 0
-      // let dailyStreakCur = 0
-      // let dailyStreakBroken = false
-      // let dailyStreakMax = 0
-      // let dailyStreakMaxBest = 0
-
-      // Nebyoodle.state.daily[Nebyoodle.__getSessionIndex()].statistics.map(stat => {
-      //   if (stat.score > 0) {
-      //     dailyWins += 1
-      //   }
-
-      //   dailyTotal += 1
-      // })
-
-      // Nebyoodle.state.daily[Nebyoodle.__getSessionIndex()].statistics.slice(0).reverse().map(stat => {
-      //   if (stat.score > 0) {
-      //     if (!dailyStreakBroken) {
-      //       dailyStreakCur += 1
-      //     }
-      //     dailyStreakMax += 1
-      //     dailyStreakMaxBest = dailyStreakMax
-      //   } else {
-      //     dailyStreakCur = 0
-      //     dailyStreakBroken = true
-      //     dailyStreakMax = 0
-      //   }
-      // })
-
-      // let freeWins = 0
-      // let freeTotal = 0
-      // let freeStreakCur = 0
-      // let freeStreakBroken = false
-      // let freeStreakMax = 0
-      // let freeStreakMaxBest = 0
-
-      // Nebyoodle.state.free[Nebyoodle.__getSessionIndex()].statistics.map(stat => {
-      //   if (stat.score > 0) {
-      //     freeWins += 1
-      //   }
-
-      //   freeTotal += 1
-      // })
-
-      // Nebyoodle.state.free[Nebyoodle.__getSessionIndex()].statistics.slice(0).reverse().map(stat => {
-      //   if (stat.score > 0) {
-      //     if (!freeStreakBroken) {
-      //       freeStreakCur += 1
-      //     }
-
-      //     freeStreakMax += 1
-      //     freeStreakMaxBest = freeStreakMax
-      //   } else {
-      //     freeStreakCur = 0
-      //     freeStreakBroken = true
-      //     freeStreakMax = 0
-      //   }
-      // })
-
       modalText = `
         <div class="container">
 
           <div class="statistic-header">Daily</div>
           <div class="statistics">
             <div class="statistic-container">
-              <div class="statistic">N/A</div>
-              <div class="statistic-label"></div>
+              <div class="statistic">${Nebyoodle.__getSessionCount('daily')}</div>
+              <div class="statistic-label">Played</div>
+            </div>
+            <div class="statistic-container">
+              <div class="statistic">${Nebyoodle.__getSuccessPerc('daily')}</div>
+              <div class="statistic-label">Win %</div>
+            </div>
+            <div class="statistic-container">
+              <div class="statistic">${Nebyoodle.__getStreak('daily')}</div>
+              <div class="statistic-label">Current Streak</div>
+            </div>
+            <div class="statistic-container">
+              <div class="statistic">${Nebyoodle.__getStreak('daily', true)}</div>
+              <div class="statistic-label">Max Streak</div>
             </div>
           </div>
 
           <div class="statistic-header">Free Play</div>
           <div class="statistics">
-            <div class="statistic-container">
-              <div class="statistic">N/A</div>
-              <div class="statistic-label"></div>
-            </div>
+          <div class="statistic-container">
+          <div class="statistic">${Nebyoodle.__getSessionCount('free')}</div>
+          <div class="statistic-label">Played</div>
+        </div>
+        <div class="statistic-container">
+          <div class="statistic">${Nebyoodle.__getSuccessPerc('free')}</div>
+          <div class="statistic-label">Win %</div>
+        </div>
+        <div class="statistic-container">
+          <div class="statistic">${Nebyoodle.__getStreak('free')}</div>
+          <div class="statistic-label">Current Streak</div>
+        </div>
+        <div class="statistic-container">
+          <div class="statistic">${Nebyoodle.__getStreak('free', true)}</div>
+          <div class="statistic-label">Max Streak</div>
+        </div>
           </div>
         </div>
       `
-      Nebyoodle.myModal = new Modal('perm', 'Statistics (TODO)',
+      Nebyoodle.myModal = new Modal('perm', 'Statistics',
         modalText,
         null,
         null,
