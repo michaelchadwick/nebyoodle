@@ -274,14 +274,15 @@
       font-variant-numeric: proportional-nums;
       font-weight: 400;
       justify-content: center;
-      letter-spacing: 0.05em;
+      letter-spacing: 0;
       text-align: center;
     }
     .statistics .statistic-container .statistic-label {
       align-items: center;
       display: flex;
-      font-size: 1em;
+      font-size: 0.85em;
       justify-content: center;
+      line-height: 1;
       max-width: 85px;
       text-align: center;
     }
