@@ -324,7 +324,7 @@ Nebyoodle._loadGame = async function(mode = null) {
   if (gameMode == 'daily') {
     // if we have previous daily LS values, sync them to code
     if (lsStateDaily) {
-      console.log('FUNC _loadGame(): found previous DAILY data')
+      // console.log('FUNC _loadGame(): found previous DAILY data')
 
       /*
         special case for daily song:
@@ -333,13 +333,22 @@ Nebyoodle._loadGame = async function(mode = null) {
       try {
         // console.log('_loadGame(); fetching NEBYOODLE_DAILY_SCRIPT')
 
+        Nebyoodle.myModal = new Modal('temp-api', ' ',
+          ' ',
+          null,
+          null,
+          'lds-dual-ring'
+        )
+
         const response = await fetch(NEBYOODLE_DAILY_SCRIPT)
         const data = await response.json()
+
+        Nebyoodle.myModal._destroyModal()
 
         const dailySongId = data['songId']
         const savedSongId = lsStateDaily[Nebyoodle.__getSessionIndex()].songId
 
-        console.log(`dailySongId: ${dailySongId}, savedSongId: ${savedSongId}`)
+        // console.log(`dailySongId: ${dailySongId}, savedSongId: ${savedSongId}`)
 
         // daily songId == saved songId? still working on it
         if (dailySongId == savedSongId) {
@@ -405,11 +414,11 @@ Nebyoodle._loadGame = async function(mode = null) {
     switch (dailyCreateOrLoad) {
       case 'create':
         await Nebyoodle._createNewSolution('daily', true)
-        console.log('DAILY solution created!', Nebyoodle.__getSongId('daily'))
+        // console.log('DAILY solution created!', Nebyoodle.__getSongId('daily'))
         break
       case 'load':
         await Nebyoodle._loadExistingSolution('daily', Nebyoodle.__getSongId('daily'))
-        console.log('DAILY solution loaded!', Nebyoodle.__getSongId('daily'))
+        // console.log('DAILY solution loaded!', Nebyoodle.__getSongId('daily'))
         break
       default:
         break
@@ -417,7 +426,7 @@ Nebyoodle._loadGame = async function(mode = null) {
 
     Nebyoodle.dom.dailyDetails.classList.add('show')
 
-    console.log('SAVE: end of _loadGame(daily)')
+    // console.log('SAVE: end of _loadGame(daily)')
     Nebyoodle._saveGame('daily')
   }
 
@@ -685,7 +694,7 @@ Nebyoodle._initDebug = function() {
 
 // create new solution, which resets progress
 Nebyoodle._createNewSolution = async function(gameMode, reset = null) {
-  console.log(`**** creatING new '${gameMode}' solution ****`)
+  // console.log(`**** creatING new '${gameMode}' solution ****`)
 
   if (reset) {
     // console.log(`FUNC _createNewSolution: setting '${gameMode}' state to default`)
@@ -719,7 +728,7 @@ Nebyoodle._createNewSolution = async function(gameMode, reset = null) {
 Nebyoodle._loadExistingSolution = async function(gameMode) {
   const songId = Nebyoodle.__getSongId(gameMode)
 
-  console.log(`**** loadING existing '${gameMode}' solution ****`, songId)
+  // console.log(`**** loadING existing '${gameMode}' solution ****`, songId)
 
   await Nebyoodle._getSong(songId)
 }
@@ -813,14 +822,20 @@ Nebyoodle._getSong = async function(songId = null) {
     Nebyoodle.dom.songData.innerHTML = ''
     Nebyoodle.dom.songData.classList.add('show')
     Nebyoodle.dom.songData.classList.add('lds-dual-ring')
+  } else {
+    Nebyoodle.myModal = new Modal('temp-api', ' ',
+      'loading...',
+      null,
+      null,
+      'lds-dual-ring'
+    )
   }
 
-  let response = null
+  let getSongResponse = null
 
   if (Nebyoodle.__getGameMode() == 'daily') {
-    // console.log(`_getSong('daily')`)
-    response = await fetch(`${NEBYOODLE_DAILY_SCRIPT}?env=${Nebyoodle.env}`)
-    const json = await response.json()
+    getSongResponse = await fetch(`${NEBYOODLE_DAILY_SCRIPT}?env=${Nebyoodle.env}`)
+    const json = await getSongResponse.json()
 
     Nebyoodle.__updateDailyDetails(json.index)
 
@@ -829,18 +844,19 @@ Nebyoodle._getSong = async function(songId = null) {
 
   if (songIdToFetch) {
     // console.log(`_getSong('free') with songId: ${songIdToFetch}`)
-    response = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}&songId=${songIdToFetch}`)
+    getSongResponse = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}&songId=${songIdToFetch}`)
   } else {
-    // console.log(`_getSong('free') without songId`)
-    response = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}`)
+    getSongResponse = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}`)
   }
 
-  if (response) {
-    const song = await response.json()
+  if (getSongResponse) {
+    const song = await getSongResponse.json()
 
     if (song.data[0]) {
       if (Nebyoodle.env == NEBYOODLE_DEBUG_ENV) {
         Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
+      } else {
+        Nebyoodle.myModal._destroyModal()
       }
 
       // const baseURL = Nebyoodle.env == 'prod' ? NEBYOOCOM_PROD_URL : NEBYOOCOM_LOCAL_URL
@@ -889,6 +905,15 @@ Nebyoodle._getSong = async function(songId = null) {
       if (Nebyoodle.env == NEBYOODLE_DEBUG_ENV) {
         Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
         Nebyoodle.dom.songData.innerHTML = `got song, but it's wonky :(`
+      } else {
+        Nebyoodle.myModal._destroyModal()
+
+        Nebyoodle.myModal = new Modal('temp', null,
+          'Could not load song!',
+          null,
+          null
+        )
+
       }
     }
   } else {
@@ -907,15 +932,15 @@ Nebyoodle._getSongs = async function() {
 
   if (!lsSongData) {
     Nebyoodle.myModal = new Modal('temp-api', null,
-      'Please wait for a one-time data download from Nebyoolae Music...',
+      'loading...',
       null,
       null
     )
 
     Nebyoodle.allSongData = []
 
-    const response = await fetch(NEBYOODLE_ALL_SONGS_SCRIPT)
-    const songs = await response.json()
+    const getSongsResponse = await fetch(NEBYOODLE_ALL_SONGS_SCRIPT)
+    const songs = await getSongsResponse.json()
 
     if (songs && songs.status != 'error') {
       songs.data.forEach((song, index) => {
@@ -924,8 +949,6 @@ Nebyoodle._getSongs = async function() {
 
         Nebyoodle.allSongData.push({ song: songName, album: albumName })
       })
-
-
 
       localStorage.setItem(NEBYOODLE_SONG_DATA_KEY, JSON.stringify(Nebyoodle.allSongData))
 

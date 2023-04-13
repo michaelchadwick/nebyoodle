@@ -31,12 +31,27 @@
       width: fit-content;
     }
   .modal-dialog.temp-api {
-    background-color: none;
-    height: 40px;
-    position: fixed;
-    top: 0;
-    width: 100%;
+    background-color: var(--shadow);
   }
+    .modal-dialog.temp-api .modal-window {
+      border: none;
+      box-shadow: none;
+    }
+      .modal-dialog.temp-api .modal-window.lds-dual-ring {
+        background: none;
+        display: block;
+        font-weight: 700;
+        text-align: center;
+      }
+        .modal-dialog.temp-api .modal-window.lds-dual-ring::after {
+          border: 12px solid #000;
+          border-color: #000 transparent #000 transparent;
+          bottom: 16px;
+          height: 24px;
+          margin-top: 12px;
+          position: relative;
+          width: 24px;
+        }
 
 .modal-window {
   --animate-duration: 100ms;
