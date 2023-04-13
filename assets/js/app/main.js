@@ -34,6 +34,7 @@ if (!Nebyoodle.state) {
 
 Nebyoodle.myModal = null
 Nebyoodle.myConfirm = null
+Nebyoodle.showDebugMenu = false
 
 /*************************************************************************
  * public methods *
@@ -433,7 +434,7 @@ Nebyoodle._loadGame = async function(mode = null) {
   if (gameMode == 'free') {
     // if we have previous free LS values, sync them to code
     if (lsStateFree) {
-      console.log('FUNC _loadGame(): found previous FREE data')
+      // console.log('FUNC _loadGame(): found previous FREE data')
 
       Nebyoodle.state.free = lsStateFree
 
@@ -482,17 +483,17 @@ Nebyoodle._loadGame = async function(mode = null) {
     switch (freeCreateOrLoad) {
       case 'create':
         await Nebyoodle._createNewSolution('free', true)
-        console.log('FREE solution created!', Nebyoodle.__getSongId('free'))
+        // console.log('FREE solution created!', Nebyoodle.__getSongId('free'))
         break
       case 'load':
         await Nebyoodle._loadExistingSolution('free', Nebyoodle.__getSongId('free'))
-        console.log('FREE solution loaded!', Nebyoodle.__getSongId('free'))
+        // console.log('FREE solution loaded!', Nebyoodle.__getSongId('free'))
         break
       default:
         break
     }
 
-    console.log('SAVE: end of _loadGame(free)')
+    // console.log('SAVE: end of _loadGame(free)')
     Nebyoodle._saveGame('free')
   }
 }
@@ -636,7 +637,7 @@ Nebyoodle._saveSetting = function(setting, value) {
 
   if (setting == 'gameMode') {
     if (value == 'daily') {
-      console.log('**** switchING game mode to DAILY ****')
+      // console.log('**** switchING game mode to DAILY ****')
 
       // set dom status
       Nebyoodle.dom.interactive.gameModeDailyLink.dataset.active = true
@@ -645,7 +646,7 @@ Nebyoodle._saveSetting = function(setting, value) {
     }
 
     if (value == 'free') {
-      console.log('**** switchING game mode to FREE ****')
+      // console.log('**** switchING game mode to FREE ****')
 
       // set dom status
       Nebyoodle.dom.interactive.gameModeDailyLink.dataset.active = false
@@ -664,9 +665,9 @@ Nebyoodle._saveSetting = function(setting, value) {
 // add debug stuff if local
 Nebyoodle._initDebug = function() {
   // if debug buttons are in template
-  if (Nebyoodle.dom.interactive.debug.all) {
+  if (Nebyoodle.dom.interactive.debug.debugButtons && Nebyoodle.showDebugMenu) {
     // show debug buttons
-    Nebyoodle.dom.interactive.debug.all.style.display = 'flex'
+    Nebyoodle.dom.interactive.debug.debugButtons.style.display = 'flex'
     // make header buttons smaller to fit in debug buttons
     document.querySelectorAll('button.icon').forEach((btn) => {
       btn.style.fontSize = '16px'
@@ -778,7 +779,7 @@ Nebyoodle._refreshUI = function(guesses = null) {
   })
 
   if (guesses) {
-    console.log('FUNC _refreshUI() with guesses')
+    // console.log('FUNC _refreshUI() with guesses')
 
     guesses.forEach((guessObject, index) => {
       const guess = guessObject.answer
@@ -1372,7 +1373,7 @@ Nebyoodle._submitGuess = function(guess = null) {
 
 // check latest guess to see if correct and if game is won
 Nebyoodle._checkWinState = function() {
-  console.log('FUNC _checkWinState()')
+  // console.log('FUNC _checkWinState()')
 
   const gameMode = Nebyoodle.__getGameMode()
   const solution = Nebyoodle.__getSolution()
@@ -1440,7 +1441,7 @@ Nebyoodle._checkWinState = function() {
   }
   // game not won, and skips remain
   else {
-    console.log('SAVE: _checkWinState() solution not found yet, skips remain')
+    // console.log('SAVE: _checkWinState() solution not found yet, skips remain')
     Nebyoodle._saveGame(gameMode)
 
     return false
@@ -1512,7 +1513,7 @@ Nebyoodle._attachEventListeners = function() {
 
   // if local dev, show debug buttons
   if (Nebyoodle.env == 'local') {
-    if (Nebyoodle.dom.interactive.debug.all) {
+    if (Nebyoodle.dom.interactive.debug.debugButtons && Nebyoodle.showDebugMenu) {
       // 🪣 get single Nebyoolae song from music.nebyoolae.com
       if (Nebyoodle.dom.interactive.debug.btnGetSong) {
         Nebyoodle.dom.interactive.debug.btnGetSong.addEventListener('click', () => {

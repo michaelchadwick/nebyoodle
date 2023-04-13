@@ -44,13 +44,9 @@ Nebyoodle.dom.mainUI = {
 }
 // DOM > interactive elements (debug)
 Nebyoodle.dom.interactive.debug = {
-  'all': document.getElementById('debug-buttons'),
   'btnGetSong': document.getElementById('button-get-song'),
   'btnGetSongs': document.getElementById('button-get-songs'),
-  'btnResetFree': document.getElementById('button-reset-free'),
   'btnShowConfig': document.getElementById('button-show-config'),
   'btnShowState': document.getElementById('button-show-state'),
-  'btnWinGame': document.getElementById('button-win-game'),
-  'btnWinGameAlmost': document.getElementById('button-win-game-almost'),
-  'btnWinAnimation': document.getElementById('button-win-animation')
+  'debugButtons': document.getElementById('debug-buttons'),
 }
