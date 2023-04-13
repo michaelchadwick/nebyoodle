@@ -335,7 +335,7 @@ Nebyoodle._loadGame = async function(mode = null) {
         // console.log('_loadGame(); fetching NEBYOODLE_DAILY_SCRIPT')
 
         Nebyoodle.myModal = new Modal('temp-api', ' ',
-          ' ',
+          'loading saved daily info...',
           null,
           null,
           'lds-dual-ring'
@@ -364,7 +364,7 @@ Nebyoodle._loadGame = async function(mode = null) {
 
             // if we already have previous guesses, check for correct answer
             if (lsDailyGuesses.length) {
-              console.log('DAILY existing guesses found')
+              // console.log('DAILY existing guesses found')
 
               Nebyoodle._refreshUI(lsDailyGuesses)
 
@@ -816,6 +816,8 @@ Nebyoodle._enableUI = function() {
 
 // get a single random valid song from music.nebyoolae.com
 Nebyoodle._getSong = async function(songId = null) {
+  // console.log('FUNC _getSong()')
+
   let songIdToFetch = songId
 
   // if local, add songData to visible div, and add loading animation while fetching
@@ -823,41 +825,58 @@ Nebyoodle._getSong = async function(songId = null) {
     Nebyoodle.dom.songData.innerHTML = ''
     Nebyoodle.dom.songData.classList.add('show')
     Nebyoodle.dom.songData.classList.add('lds-dual-ring')
-  } else {
-    Nebyoodle.myModal = new Modal('temp-api', ' ',
-      'loading...',
-      null,
-      null,
-      'lds-dual-ring'
-    )
   }
 
   let getSongResponse = null
 
   if (Nebyoodle.__getGameMode() == 'daily') {
+    // Nebyoodle.myModal = new Modal('temp-api', ' ',
+    //   'loading daily script...',
+    //   null,
+    //   null,
+    //   'lds-dual-ring'
+    // )
+
     getSongResponse = await fetch(`${NEBYOODLE_DAILY_SCRIPT}?env=${Nebyoodle.env}`)
     const json = await getSongResponse.json()
+
+    // Nebyoodle.myModal._destroyModal()
 
     Nebyoodle.__updateDailyDetails(json.index)
 
     songIdToFetch = json.songId
   }
 
+  Nebyoodle.myModal = new Modal('temp-api', ' ',
+    'loading song script...',
+    null,
+    null,
+    'lds-dual-ring'
+  )
+
   if (songIdToFetch) {
-    // console.log(`_getSong('free') with songId: ${songIdToFetch}`)
     getSongResponse = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}&songId=${songIdToFetch}`)
   } else {
     getSongResponse = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}`)
   }
 
+  Nebyoodle.myModal._destroyModal()
+
   if (getSongResponse) {
+    Nebyoodle.myModal = new Modal('temp-api', ' ',
+      'loading song script response...',
+      null,
+      null,
+      'lds-dual-ring'
+    )
+
     const song = await getSongResponse.json()
+
+    Nebyoodle.myModal._destroyModal()
 
     if (song.data[0]) {
       if (Nebyoodle.env == NEBYOODLE_DEBUG_ENV) {
         Nebyoodle.dom.songData.classList.remove('lds-dual-ring')
-      } else {
-        Nebyoodle.myModal._destroyModal()
       }
 
       // const baseURL = Nebyoodle.env == 'prod' ? NEBYOOCOM_PROD_URL : NEBYOOCOM_LOCAL_URL
@@ -932,16 +951,18 @@ Nebyoodle._getSongs = async function() {
   const lsSongData = localStorage.getItem(NEBYOODLE_SONG_DATA_KEY)
 
   if (!lsSongData) {
+    Nebyoodle.allSongData = []
+
     Nebyoodle.myModal = new Modal('temp-api', null,
       'loading...',
       null,
       null
     )
 
-    Nebyoodle.allSongData = []
-
     const getSongsResponse = await fetch(NEBYOODLE_ALL_SONGS_SCRIPT)
     const songs = await getSongsResponse.json()
+
+    Nebyoodle.myModal._destroyModal()
 
     if (songs && songs.status != 'error') {
       songs.data.forEach((song, index) => {
@@ -952,11 +973,7 @@ Nebyoodle._getSongs = async function() {
       })
 
       localStorage.setItem(NEBYOODLE_SONG_DATA_KEY, JSON.stringify(Nebyoodle.allSongData))
-
-      Nebyoodle.myModal._destroyModal()
     } else {
-      Nebyoodle.myModal._destroyModal()
-
       Nebyoodle.myModal = new Modal('temp', null,
         'Could not load songs!',
         null,
@@ -1322,7 +1339,7 @@ Nebyoodle._handleSubmitButton = function() {
 
 // submit a guess if game still IN_PROGRESS
 Nebyoodle._submitGuess = function(guess = null) {
-  console.log('FUNC _submitGuess()')
+  // console.log('FUNC _submitGuess()')
 
   if (Nebyoodle.__getGameState() == 'IN_PROGRESS') {
     // guess was skipped
@@ -1425,12 +1442,12 @@ Nebyoodle._checkWinState = function() {
   }
   // game not won, so check if we've reached the max guesses
   else if (Nebyoodle.__getGuesses().length >= NEBYOODLE_CHANCE_MAX || Nebyoodle.__getGameState() == 'GAME_OVER') {
-    console.log('game not won, and max skips reached')
+    // console.log('game not won, and max skips reached')
 
     // disable inputs (until future re-enabling)
     Nebyoodle._disableUI()
 
-    console.log('SAVE: _checkWinState() solution not found yet, no more skips')
+    // console.log('SAVE: _checkWinState() solution not found yet, no more skips')
     Nebyoodle._saveGame(gameMode)
 
     if (!Nebyoodle.myModal) {
@@ -1649,7 +1666,7 @@ Nebyoodle.__getGuesses = function(mode = null) {
 Nebyoodle.__addGuess = function(guess) {
   const mode = Nebyoodle.__getGameMode()
 
-  console.log('__addGuess', mode)
+  // console.log('__addGuess', mode)
 
   Nebyoodle
     .state[mode][Nebyoodle.__getSessionIndex()]
@@ -1882,10 +1899,6 @@ Nebyoodle.__updateStatus = function(type, guessText = null, guessIndex = null) {
     // console.log('FUNC __updateStatus() game is over or out of skips')
 
     Nebyoodle.__setGameState('GAME_OVER')
-
-    // Nebyoodle._disableUI()
-
-    // modalOpen('game-over-lose')
   }
 }
 

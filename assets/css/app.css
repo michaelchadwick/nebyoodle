@@ -24,6 +24,10 @@
   padding: 0;
 }
 
+*, ::before, ::after {
+  box-sizing: border-box;
+}
+
 html {
   height: 100%;
 }
@@ -108,7 +112,7 @@ button {
     border: none;
     cursor: pointer;
     font-size: 24px;
-    padding: 0 4px;
+    padding: 0;
   }
     button.icon:hover {
       color: var(--base-color);
@@ -142,6 +146,7 @@ button {
     background-color: var(--base-color);
     color: var(--white);
     height: 30px;
+    margin-top: 5px;
     padding: 5px;
     width: 100px;
   }
@@ -268,7 +273,7 @@ header {
   flex-wrap: nowrap;
   justify-content: space-evenly;
   height: 50px;
-  padding: 0 16px;
+  padding: 0;
 }
   header .menu-left {
     align-items: center;
@@ -474,8 +479,8 @@ section#game {
     flex-grow: 1;
     gap: 8px;
     margin: 0 auto;
-    max-width: 720px;
-    overflow-y: scroll;
+    max-width: 640px;
+    padding: 0 12px 12px;
     width: 100%;
   }
     section#game #top-half #mode-container {
@@ -511,14 +516,14 @@ section#game {
             margin-right: 5px;
           }
       section#game #top-half #mode-container #gamemode-container {
-        height: 20px;
+        height: 30px;
       }
 
       section#game #top-half #mode-container #daily-details {
         color: var(--marker-color);
         display: none;
         font-size: 0.9rem;
-        height: 20px;
+        padding: 0 4px;
         transform: scale(0);
       }
         section#game #top-half #mode-container #daily-details.show {
@@ -556,25 +561,31 @@ section#game {
             }
           .song-win-block .song-misc {
             background: var(--white);
+            line-height: 1;
             padding: 10px;
           }
 
     section#game #top-half #guesses-container {
       display: flex;
       flex-direction: column;
+      flex-grow: 1;
       gap: 8px;
       justify-content: center;
-      padding: 10px 0;
+      margin: 0 auto;
+      max-width: 640px;
+      overflow-y: scroll;
+      padding: 0;
       width: 100%;
     }
       section#game #top-half #guesses-container .guess {
         align-items: center;
         border: 1px solid var(--gray-dark);
         display: flex;
+        flex-shrink: 0;
         font-size: 1.1rem;
         font-weight: bold;
-        height: 24px;
-        line-height: 24px;
+        height: 38px;
+        line-height: 0.9;
         padding: 8px;
       }
         section#game #top-half #guesses-container .guess .symbol {
@@ -606,7 +617,7 @@ section#game {
     }
       section#game #bot-first-half #timeline-container #timeline {
         height: 100%;
-        max-width: 720px;
+        max-width: 640px;
         overflow: hidden;
         position: relative;
         width: 100%;
@@ -640,11 +651,10 @@ section#game {
 
     section#game #bot-first-half #play-container {
       align-items: center;
-      /* background-color: lightgreen; */
       display: flex;
       justify-content: space-between;
       margin: 0 auto;
-      max-width: 720px;
+      max-width: 640px;
       padding: 3px;
       width: 100%;
     }
@@ -694,7 +704,7 @@ section#game {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    max-width: 720px;
+    max-width: 640px;
     padding: 0 12px 20px;
     width: 100%;
   }
@@ -798,7 +808,7 @@ section#game {
         flex-basis: 0%;
         flex-grow: 1;
         flex-shrink: 1;
-        max-width: 250px;
+        max-width: 200px;
         padding: 0 35px;
         position: relative;
       }

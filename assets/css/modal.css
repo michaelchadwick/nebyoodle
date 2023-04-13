@@ -39,9 +39,12 @@
     }
       .modal-dialog.temp-api .modal-window.lds-dual-ring {
         background: none;
+        bottom: 10%;
         display: block;
         font-weight: 700;
+        position: relative;
         text-align: center;
+        width: 100%;
       }
         .modal-dialog.temp-api .modal-window.lds-dual-ring::after {
           border: 12px solid #000;
