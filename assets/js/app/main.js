@@ -140,6 +140,10 @@ async function modalOpen(type, data = null) {
           </div>
       `
 
+      if (Nebyoodle.__getGameMode() == 'daily') {
+        modalText += `<div>A new daily song will be available at 12 am PST</div>`
+      }
+
       modalText += `
         </div>
       `
@@ -167,6 +171,10 @@ async function modalOpen(type, data = null) {
             <button class="share" onclick="Nebyoodle._shareResults()" title="Share Nebyoodle result">Share <i class="fa-solid fa-share-nodes"></i></button>
           </div>
       `
+
+      if (Nebyoodle.__getGameMode() == 'daily') {
+        modalText += `<div>A new daily song will be available at 12 am PST</div>`
+      }
 
       modalText += `
         </div>
@@ -847,12 +855,12 @@ Nebyoodle._getSong = async function(songId = null) {
     songIdToFetch = json.songId
   }
 
-  Nebyoodle.myModal = new Modal('temp-api', ' ',
-    'loading song script...',
-    null,
-    null,
-    'lds-dual-ring'
-  )
+  // Nebyoodle.myModal = new Modal('temp-api', ' ',
+  //   'loading song script...',
+  //   null,
+  //   null,
+  //   'lds-dual-ring'
+  // )
 
   if (songIdToFetch) {
     getSongResponse = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}&songId=${songIdToFetch}`)
@@ -860,19 +868,19 @@ Nebyoodle._getSong = async function(songId = null) {
     getSongResponse = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}`)
   }
 
-  Nebyoodle.myModal._destroyModal()
+  // Nebyoodle.myModal._destroyModal()
 
   if (getSongResponse) {
-    Nebyoodle.myModal = new Modal('temp-api', ' ',
-      'loading song script response...',
-      null,
-      null,
-      'lds-dual-ring'
-    )
+    // Nebyoodle.myModal = new Modal('temp-api', ' ',
+    //   'loading song script response...',
+    //   null,
+    //   null,
+    //   'lds-dual-ring'
+    // )
 
     const song = await getSongResponse.json()
 
-    Nebyoodle.myModal._destroyModal()
+    // Nebyoodle.myModal._destroyModal()
 
     if (song.data[0]) {
       if (Nebyoodle.env == NEBYOODLE_DEBUG_ENV) {
@@ -953,10 +961,11 @@ Nebyoodle._getSongs = async function() {
   if (!lsSongData) {
     Nebyoodle.allSongData = []
 
-    Nebyoodle.myModal = new Modal('temp-api', null,
+    Nebyoodle.myModal = new Modal('temp-api', ' ',
       'loading...',
       null,
-      null
+      null,
+      'lds-dual-ring'
     )
 
     const getSongsResponse = await fetch(NEBYOODLE_ALL_SONGS_SCRIPT)
