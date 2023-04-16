@@ -1268,6 +1268,11 @@ Nebyoodle._clearGuess = function() {
   Nebyoodle.dom.mainUI.btnSubmit.setAttribute('disabled', true)
 }
 
+Nebyoodle._resetPlayPauseButton = function() {
+  Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-pause')
+  Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-play')
+}
+
 Nebyoodle._togglePlayPauseButton = function() {
   if (Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.contains('fa-pause')) {
     Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-pause')
@@ -1439,6 +1444,10 @@ Nebyoodle._checkWinState = function() {
       Nebyoodle._saveGame(gameMode)
     }
 
+    // stop audio
+    Nebyoodle._resetPlayPauseButton()
+    Nebyoodle.dom.audioElem.pause()
+
     // disable inputs (until future re-enabling)
     Nebyoodle._disableUI()
 
@@ -1452,6 +1461,10 @@ Nebyoodle._checkWinState = function() {
   // game not won, so check if we've reached the max guesses
   else if (Nebyoodle.__getGuesses().length >= NEBYOODLE_CHANCE_MAX || Nebyoodle.__getGameState() == 'GAME_OVER') {
     // console.log('game not won, and max skips reached')
+
+    // stop audio
+    Nebyoodle._resetPlayPauseButton()
+    Nebyoodle.dom.audioElem.pause()
 
     // disable inputs (until future re-enabling)
     Nebyoodle._disableUI()
