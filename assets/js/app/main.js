@@ -710,7 +710,7 @@ Nebyoodle._createNewSolution = async function(gameMode, reset = null) {
 
     // Nebyoodle.state[gameMode] = NEBYOODLE_DEFAULTS.state[gameMode]
   } else {
-    console.log(`FUNC _createNewSolution: adding another '${gameMode}' default config/state`)
+    // console.log(`FUNC _createNewSolution: adding another '${gameMode}' default config/state`)
 
     Nebyoodle.config[gameMode] = {
       'solution': null,
@@ -1423,7 +1423,7 @@ Nebyoodle._checkWinState = function() {
 
     // set state stuff
     if (Nebyoodle.__getGameState() == 'IN_PROGRESS') {
-      console.log('FUNC _checkWinState(): IN_PROGRESS -> GAME_OVER')
+      // console.log('FUNC _checkWinState(): IN_PROGRESS -> GAME_OVER')
 
       // make sure to only increment wins if we are going from
       // IN_PROGRESS -> GAME_OVER (ignores page refreshes)`
@@ -1435,7 +1435,7 @@ Nebyoodle._checkWinState = function() {
       // update skip button and audio file durationMax, if necessary
       Nebyoodle.__updateStatus('correct-fix', solution)
 
-      console.log('SAVE: _checkWinState() guesses contain solution')
+      // console.log('SAVE: _checkWinState() guesses contain solution')
       Nebyoodle._saveGame(gameMode)
     }
 
