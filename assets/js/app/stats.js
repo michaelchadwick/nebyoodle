@@ -1,8 +1,14 @@
 Nebyoodle.__getSessionCount = function(mode) {
-  return Nebyoodle
-    .state[mode]
-    .filter(session => Nebyoodle.___isDone(session))
-    .length
+  const state = Nebyoodle.state[mode]
+
+  if (state) {
+    return Nebyoodle
+      .state[mode]
+      .filter(session => Nebyoodle.___isDone(session))
+      .length
+  } else {
+    return 0
+  }
 }
 
 Nebyoodle.__getSuccessPerc = function(mode) {
