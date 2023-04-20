@@ -1119,6 +1119,8 @@ Nebyoodle._handleAudioDuration = function(event) {
     Nebyoodle.dom.audioElem.pause()
     Nebyoodle.dom.audioElem.currentTime = 0
     Nebyoodle._togglePlayPauseButton()
+  } else {
+    Nebyoodle.dom.audioElem.duration = durationMax
   }
 
   Nebyoodle.__updateStatus()
@@ -1589,7 +1591,7 @@ Nebyoodle.__getDurationMax = function(mode = null) {
   const state = Nebyoodle.__getState(mode)
 
   if (state) {
-    const guesses = state.guesses
+    const guesses = Nebyoodle.__getGuesses(mode)
 
     if (guesses) {
       return NEBYOODLE_SKP_VAL[guesses.length]
@@ -1599,11 +1601,6 @@ Nebyoodle.__getDurationMax = function(mode = null) {
   } else {
     return NEBYOODLE_SKP_VAL[0]
   }
-}
-Nebyoodle.__setDurationMax = function(durationMax, mode = null) {
-  Nebyoodle
-    .state[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getSessionIndex()]
-    .durationMax = durationMax
 }
 
 Nebyoodle.__getGuesses = function(mode = null) {
