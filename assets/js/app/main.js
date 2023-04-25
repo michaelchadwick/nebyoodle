@@ -388,7 +388,7 @@ Nebyoodle._loadGame = async function(mode = null) {
 
     switch (dailyCreateOrLoad) {
       case 'create':
-        await Nebyoodle._createNewSolution('daily', true)
+        await Nebyoodle._createNewSolution('daily')
         // console.log('DAILY solution created!', Nebyoodle.__getSongId('daily'))
         break
       case 'load':
@@ -1477,6 +1477,8 @@ Nebyoodle._attachEventListeners = function() {
 
     if (Nebyoodle.__getGameState() == 'IN_PROGRESS') {
       Nebyoodle._enableUI()
+    } else {
+      // console.log('cannot enableUI because current game is over')
     }
   })
 
@@ -1759,7 +1761,7 @@ Nebyoodle.__getGameState = function(mode = null) {
     .state[mode ? mode : Nebyoodle.__getGameMode()]
 
   if (state) {
-    const session = state[Nebyoodle.__getSessionCount()]
+    const session = state[Nebyoodle.__getSessionIndex()]
 
     if (session) {
       return session.gameState
