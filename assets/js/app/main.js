@@ -1558,10 +1558,6 @@ Nebyoodle.__autocompleteMatch = function(input) {
 Nebyoodle.__getDailyIndex = function() {
   return parseInt(Nebyoodle.config.daily.index) + 1
 }
-// TODO: return the longest free streak of songs guessed
-Nebyoodle.__getFreeStreak = function() {
-  return 1
-}
 // get most recent emoji block for sharing
 Nebyoodle.__getScoreCard = function() {
   const guesses = Nebyoodle.__getGuesses()
@@ -1793,7 +1789,7 @@ Nebyoodle.__getShareText = function(mode = null) {
   }
   // free mode
   else {
-    const streak = Nebyoodle.__getFreeStreak()
+    const streak = Nebyoodle.__getStreak('free', true)
 
     html = `My longest streak at Nebyoodle is ${streak} song(s) in a row. Can you beat that?\n\n`
     html += NEBYOODLE_SHARE_URL
