@@ -101,9 +101,9 @@ async function modalOpen(type, data = null) {
       }
 
       modalText += `
-          <div class="share">
-            <button class="game-over share" onclick="Nebyoodle._shareResults()" title="Share Nebyoodle result">Share <i class="fa-solid fa-share-nodes"></i></button>
-          </div>
+        <div class="share">
+          <button class="game-over share" onclick="Nebyoodle._shareResults()" title="Share Nebyoodle result">Share <i class="fa-solid fa-share-nodes"></i></button>
+        </div>
       `
 
       if (Nebyoodle.__getGameMode() == 'daily') {
@@ -133,9 +133,9 @@ async function modalOpen(type, data = null) {
       }
 
       modalText += `
-          <div class="share">
-            <button class="share" onclick="Nebyoodle._shareResults()" title="Share Nebyoodle result">Share <i class="fa-solid fa-share-nodes"></i></button>
-          </div>
+        <div class="share">
+          <button class="share" onclick="Nebyoodle._shareResults()" title="Share Nebyoodle result">Share <i class="fa-solid fa-share-nodes"></i></button>
+        </div>
       `
 
       if (Nebyoodle.__getGameMode() == 'daily') {
@@ -1231,8 +1231,6 @@ Nebyoodle._shareResults = async function() {
 
   if (navigator.canShare) {
     navigator.share({ text: shareText })
-
-    modalOpen('shared')
   } else {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(shareText).then(() => {
@@ -1244,18 +1242,6 @@ Nebyoodle._shareResults = async function() {
 
         return
       })
-
-      // const canWrite = await navigator.permissions.query({ name: 'clipboard-write' })
-
-      // if (canWrite.state == 'granted') {
-      //   navigator.clipboard.writeText(shareText).then(() => {
-      //     modalOpen('shared')
-      //   }).catch(() => console.error('could not copy text to clipboard'))
-      // } else {
-      //   console.warn('clipboard access was denied')
-
-      //   modalOpen('no-clipboard-access')
-      // }
     } else {
       console.warn('no sharing or clipboard access available')
 
