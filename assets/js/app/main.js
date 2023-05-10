@@ -25,12 +25,12 @@ async function modalOpen(type, data = null) {
           <p>One new song to guess each day.</p>
 
           <h4>Free Play</h4>
-          <p>Keep guessing as many songs as you want! Go for the longest combo!</p>
+          <p>Guess as many songs as you want! Go for the longest combo!</p>
 
           <hr />
 
-          <p><strong>Dev</strong>: <a href="https://michaelchadwick.info" target="_blank">Michael Chadwick</a>. Find all music at
-          <a href="https://music.nebyoolae.com" target="_blank">NebyooMusic</a>.</p>
+          <strong>Dev</strong>: <a href="https://michaelchadwick.info" target="_blank">Michael Chadwick</a>. Find all music at
+          <a href="https://music.nebyoolae.com" target="_blank">NebyooMusic</a>.
         `,
         null,
         null
@@ -285,6 +285,8 @@ Nebyoodle._loadGame = async function(mode = null) {
     await Nebyoodle._loadAllSongData()
   }
 
+  // console.log('daily state', Nebyoodle.state.daily)
+
   const gameMode = mode ? mode : Nebyoodle.__getGameMode()
   const lsStateDaily = JSON.parse(localStorage.getItem(NEBYOODLE_STATE_DAILY_KEY))
   const lsStateFree = JSON.parse(localStorage.getItem(NEBYOODLE_STATE_FREE_KEY))
@@ -297,8 +299,16 @@ Nebyoodle._loadGame = async function(mode = null) {
   }
 
   if (gameMode == 'daily') {
+    // no existing daily state found, so create with defaults
+    if (!lsStateDaily) {
+      Nebyoodle.state.daily = NEBYOODLE_DEFAULTS.state.daily
+
+      // console.log('DAILY: LS state NOT found; defaults set; solution to be created with daily song', Nebyoodle.state.daily)
+
+      dailyCreateOrLoad = 'create'
+    }
     // if we have previous daily LS values, sync them to code
-    if (lsStateDaily) {
+    else {
       // console.log('FUNC _loadGame(): found previous DAILY data')
 
       /*
@@ -306,7 +316,7 @@ Nebyoodle._loadGame = async function(mode = null) {
         need to check to make sure time hasn't elapsed on saved progress
       */
       try {
-        // console.log('_loadGame(); fetching NEBYOODLE_DAILY_SCRIPT')
+        // console.log('FUNC _loadGame(); fetching NEBYOODLE_DAILY_SCRIPT')
 
         Nebyoodle.myModal = new Modal('temp-api', ' ',
           'loading saved daily info...',
@@ -325,8 +335,10 @@ Nebyoodle._loadGame = async function(mode = null) {
 
         // console.log(`dailySongId: ${dailySongId}, savedSongId: ${savedSongId}`)
 
-        // daily songId == saved songId? still working on it
+        // still working on same day
         if (dailySongId == savedSongId) {
+          // console.log('FUNC _loadGame(); dailySongId is same as savedSongId')
+
           const lsDailyGuesses = Nebyoodle.__getGuesses('daily')
           const lsDailySongId = Nebyoodle.__getSongId('daily')
 
@@ -354,34 +366,18 @@ Nebyoodle._loadGame = async function(mode = null) {
         }
         // time has elapsed on daily puzzle, and new one is needed
         else {
-          console.log('dailySongId and savedSongId do not match; creating new puzzle')
-
-          // Nebyoodle.state.daily[Nebyoodle.__getSessionIndex('daily')].gameState = 'IN_PROGRESS'
-          // Nebyoodle.state.daily[Nebyoodle.__getSessionIndex('daily')].guesses = []
-          // Nebyoodle.state.daily[Nebyoodle.__getSessionIndex('daily')].songId = null
-
-          // console.log('SAVE: _loadGame() after checking on dailySong')
-          // Nebyoodle._saveGame()
+          // console.log('FUNC _loadGame(); dailySongId and savedSongId do not match; creating new puzzle')
 
           dailyCreateOrLoad = 'create'
         }
 
         Nebyoodle.__updateDailyDetails(data['index'])
-        // Nebyoodle._refreshUI()
       } catch (e) {
         console.error('could not get daily song', e)
 
         Nebyoodle.state.daily[Nebyoodle.__getSessionIndex('daily')].guesses = []
         Nebyoodle.state.daily[Nebyoodle.__getSessionIndex('daily')].songId = null
       }
-    }
-    // no existing daily state found, so create with defaults
-    else {
-      Nebyoodle.state.daily = NEBYOODLE_DEFAULTS.state.daily
-
-      // console.log('DAILY: LS state NOT found; defaults set; solution to be created with daily song', Nebyoodle.state.daily)
-
-      dailyCreateOrLoad = 'create'
     }
 
     // console.log('creating/loading DAILY solution:', dailyCreateOrLoad)
@@ -406,8 +402,16 @@ Nebyoodle._loadGame = async function(mode = null) {
   }
 
   if (gameMode == 'free') {
+    // no existing free state found, so create with defaults
+    if (!lsStateFree) {
+      Nebyoodle.state.free = NEBYOODLE_DEFAULTS.state.free
+
+      // console.log('FREE: LS state NOT found; defaults set; solution to be randomly chosen', Nebyoodle.state.free)
+
+      freeCreateOrLoad = 'create'
+    }
     // if we have previous free LS values, sync them to code
-    if (lsStateFree) {
+    else {
       // console.log('FUNC _loadGame(): found previous FREE data')
 
       Nebyoodle.state.free = lsStateFree
@@ -442,14 +446,6 @@ Nebyoodle._loadGame = async function(mode = null) {
 
         freeCreateOrLoad = 'create'
       }
-    }
-    // no existing free state found, so create with defaults
-    else {
-      // Nebyoodle.state.free = NEBYOODLE_DEFAULTS.state.free
-
-      // console.log('FREE: LS state NOT found; defaults set; solution to be randomly chosen', Nebyoodle.state.free)
-
-      freeCreateOrLoad = 'create'
     }
 
     // console.log('creating/loading FREE solution:', freeCreateOrLoad)
@@ -572,11 +568,15 @@ Nebyoodle._loadSettings = function() {
 Nebyoodle._changeSetting = async function(setting, value, event) {
   switch (setting) {
     case 'gameMode':
-      Nebyoodle._disableUI()
+      const currentGameMode = Nebyoodle.__getGameMode()
 
-      Nebyoodle._saveSetting('gameMode', value)
+      if (currentGameMode != value) {
+        Nebyoodle._disableUI()
 
-      Nebyoodle._loadGame(value)
+        Nebyoodle._saveSetting('gameMode', value)
+
+        Nebyoodle._loadGame(value)
+      }
 
       break
 
@@ -780,6 +780,8 @@ Nebyoodle._refreshUI = function(guesses = null) {
   Nebyoodle._checkWinState()
 }
 Nebyoodle._enableUI = function() {
+  // console.log('FUNC enableUI()')
+
   Object.values(Nebyoodle.dom.mainUI).forEach(elem => {
     if (elem.id !== 'button-play-pause-icon' && elem.id !== 'button-submit') {
       elem.removeAttribute('disabled')
@@ -862,8 +864,13 @@ Nebyoodle._getSong = async function(songId = null) {
       const title = `${randomSongName} - ${randomAlbumName}`
 
       // set config.solution
-      let solution
-      solution = await Nebyoodle.__setSolution('string', title)
+      let solution = false
+
+      if (!Nebyoodle.__getSolution()) {
+        solution = await Nebyoodle.__setSolution('string', title)
+      } else {
+        solution = true
+      }
 
       if (solution) {
         Nebyoodle.__setSongId(randomSongId)
@@ -1645,7 +1652,7 @@ Nebyoodle.__setSongId = function(id, mode = null) {
         .state[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getSessionIndex()]
         .songId = id
     } else {
-      console.log('FUNC __setSongId(): no session to update', session)
+      // console.log('FUNC __setSongId(): no session to update', session)
     }
   }
 }
@@ -1674,6 +1681,8 @@ Nebyoodle.__setSolution = async function(method, answer, mode = null) {
       .config[mode ? mode : Nebyoodle.__getGameMode()]
       .solution = answer
 
+    // console.log('FUNC __setSolution(string):', answer)
+
     return Promise.resolve(true)
   } else {
     const response = await fetch(`${NEBYOODLE_SONGID_SCRIPT}?songId=${answer}`)
@@ -1687,11 +1696,13 @@ Nebyoodle.__setSolution = async function(method, answer, mode = null) {
         .config[mode ? mode : Nebyoodle.__getGameMode()]
         .solution = title_album
 
+      // console.log('FUNC __setSolution(songId):', answer)
+
       return title_album
     } else {
-      console.error('could not fetch song title from songId')
+      console.error('could not set solution, because could not fetch song title from songId')
 
-      return false
+      return Promise.resolve(false)
     }
   }
 }
