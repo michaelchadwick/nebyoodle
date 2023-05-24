@@ -1538,11 +1538,12 @@ Nebyoodle.__autocompleteMatch = function(input) {
 
   const reg = new RegExp(input, 'i')
   const songs = Nebyoodle.allSongData
+  const guesses = Nebyoodle.__getGuesses().map(g => g.answer)
 
   return Object.values(songs).filter(song => {
     const term = `${song.song} - ${song.album}`
 
-    if (term.match(reg)) {
+    if (term.match(reg) && !guesses.includes(term)) {
       return term
     }
   })
