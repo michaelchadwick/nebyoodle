@@ -71,13 +71,13 @@
   width: 90%;
 }
   .modal-window.debug {
-    border-color: #715ec7;
+    border-color: var(--debug-color);
   }
   .modal-window.game-over-win {
-    border-color: #5ec767;
+    border-color: var(--window-win1);
   }
   .modal-window.game-over-lose {
-    border-color: #c75e5e;
+    border-color: var(--window-lose1);
   }
 
 .modal-title {
@@ -91,13 +91,13 @@
   width: 100%;
 }
   .modal-title.debug {
-    background-color: #715ec7;
+    background-color: var(--debug-color);
   }
   .modal-window.game-over-win .modal-title {
-    background-color: #51ac59;
+    background-color: var(--window-win2);
   }
   .modal-window.game-over-lose .modal-title {
-    background-color: #ad5151;
+    background-color: var(--window-lose2);
   }
 
 .modal-close {
@@ -142,8 +142,8 @@
         font-weight: 700;
       }
         .modal-text ul li span.solution-category + ul {
-          background-color: #f8f8f8;
-          border: 1px solid #222;
+          background-color: var(--off-white);
+          border: 1px solid var(--marker-color);
           margin-bottom: 10px;
           padding: 10px;
         }
@@ -172,10 +172,10 @@
   }
 
   .modal-window.game-over-win .modal-text {
-    background-color: #d8e4d9;
+    background-color: var(--window-game-over-win);
   }
   .modal-window.game-over-lose .modal-text {
-    background-color: #e9dddd;
+    background-color: var(--window-game-over-lose);
   }
 
 .modal-button-group {
@@ -254,11 +254,11 @@
 }
 
 .modal-button-group.debug button.button-primary {
-  background-color: #715ec7;
+  background-color: var(--debug-color);
   color: var(--white);
 }
 .modal-button-group.debug button.button-secondary {
-  background-color: #dbbce2;
+  background-color: var(--debug-color-secondary);
   color: var(--black);
 }
 

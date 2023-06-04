@@ -3,9 +3,13 @@
   --light-color:  #a6c4ee;
   --dark-color: #244471;
   --debug-color: #715ec7;
+  --debug-color-secondary: #dbbce2;
+  --debug-color-medium: #8c85ae;
   --debug-color-light1: #e5e0ff;
   --debug-color-light2: #e8e3ff;
   --debug-color-light3: #ded8ff;
+  --debug-color-light4: #e3e0f3;
+  --debug-color-light5: #e1ddf7;
   --played-color: #1ebbd7;
   --unplayed-color: #8d8d8d;
   --white: #ffffff;
@@ -17,6 +21,13 @@
   --gray-medium: #a7a7a7;
   --gray-dark: #787878;
   --marker-color: #222222;
+
+  --window-win1: #5ec767;
+  --window-win2: #51ac59;
+  --window-lose1: #c75e5e;
+  --window-lose2: #ad5151;
+  --window-game-over-win: #d8e4d9;
+  --window-game-over-lose: #e9dddd;
 }
 
 * {
@@ -135,7 +146,7 @@ button {
     background-color: var(--dark-color);
     color: var(--white);
     height: 30px;
-    margin-bottom: 5px;
+    margin: 10px 0 0;
     padding: 5px;
     width: 200px;
   }
@@ -146,7 +157,7 @@ button {
     background-color: var(--base-color);
     color: var(--white);
     height: 30px;
-    margin-top: 5px;
+    margin: 5px 0;
     padding: 5px;
     width: 100px;
   }
@@ -187,8 +198,8 @@ select:disabled {
       color: var(--unplayed-color);
     }
     .radio input[type=radio] + .radio-label:before {
-      background: #f4f4f4;
-      border: 1px solid #b4b4b4;
+      background: var(--off-white);
+      border: 1px solid var(--gray-medium);
       border-radius: 100%;
       content: "";
       cursor: pointer;
@@ -204,16 +215,16 @@ select:disabled {
     }
     .radio input[type=radio]:checked + .radio-label:before {
       background-color: var(--base-color);
-      box-shadow: inset 0 0 0 4px #f4f4f4;
+      box-shadow: inset 0 0 0 4px var(--off-white);
     }
     .radio input[type=radio]:focus + .radio-label:before {
       outline: none;
       border-color: var(--base-color);
     }
     .radio input[type=radio]:disabled + .radio-label:before {
-      box-shadow: inset 0 0 0 4px #f4f4f4;
-      border-color: #b4b4b4;
-      background: #b4b4b4;
+      box-shadow: inset 0 0 0 4px var(--off-white);
+      border-color: var(--gray-medium);
+      background: var(--gray-medium);
     }
     .radio input[type=radio] + .radio-label:empty:before {
       margin-right: 0;
@@ -379,7 +390,7 @@ header {
     display: none;
   }
   header #debug-buttons button {
-    color: #715ec7;
+    color: var(--debug-color);
   }
   header #debug-buttons .ddmenu {
     align-items: center;
@@ -396,8 +407,8 @@ header {
         margin-right: 0;
       }
       header #debug-buttons .ddmenu .ddgroup:hover {
-        background: #d8d2f5;
-        border: 1px solid #8c85ae;
+        background: var(--debug-color-light3);
+        border: 1px solid var(--debug-color-medium);
         cursor: pointer;
       }
         header #debug-buttons .ddmenu .ddgroup .ddsub {
@@ -412,7 +423,7 @@ header {
             display: block;
           }
           header #debug-buttons .ddmenu .ddgroup .ddsub button {
-            background-color: #e3e0f3;
+            background-color: var(--debug-color-light4);
             border: 1px solid transparent;
             border-radius: 0;
             height: 20px;
@@ -420,8 +431,8 @@ header {
             width: 26px;
           }
           header #debug-buttons .ddmenu .ddgroup .ddsub button:hover {
-            background: #e1ddf7;
-            border: 1px solid #8c85ae;
+            background: var(--debug-color-light5);
+            border: 1px solid var(--debug-color-medium);
           }
           header #debug-buttons .ddmenu .ddgroup:hover .ddsub {
             display: flex;

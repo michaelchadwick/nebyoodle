@@ -7,7 +7,7 @@ body.dark-mode {
   }
 
   body.dark-mode code {
-    background-color: #777777;
+    background-color: var(--gray-dark);
   }
 
   body.dark-mode header,
@@ -16,7 +16,7 @@ body.dark-mode {
   }
 
   body.dark-mode button.help {
-    background-color: #111111;
+    background-color: var(--black);
     border: 1px solid var(--white);
   }
 
@@ -27,7 +27,7 @@ body.dark-mode {
       color: var(--white);
     }
       body.dark-mode header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
-        background-color: #529952;
+        background-color: var(--base-color);
       }
 
   body.dark-mode section#game #top-half #mode-container .setting-row a {
@@ -102,31 +102,35 @@ body.dark-mode {
     }
 
   body.dark-mode #settings .setting-row .text .description {
-    color: #d2d2d2;
+    color: var(--gray);
   }
 
   body.dark-mode .switch {
-    background-color: #888;
+    background-color: var(--gray-dark);
   }
     body.dark-mode .switch[data-status='true'] {
-      background-color: #529952;
+      background-color: var(--base-color);
     }
 
   body.dark-mode .modal-window {
-    background-color: #111;
+    background-color: var(--black);
   }
   body.dark-mode .modal-dialog.temp .modal-window {
-    background-color: #111111;
+    background-color: var(--black);
     color: var(--white);
   }
   body.dark-mode .modal-text {
-    background-color: #111;
+    background-color: var(--black);
     color: var(--white);
   }
+    body.dark-mode .modal-window.game-over-win .modal-text,
+    body.dark-mode .modal-window.game-over-lose .modal-text {
+      background-color: var(--black);
+    }
     body.dark-mode .modal-text ul li span.solution-category + ul {
-      background-color: #222;
+      background-color: var(--marker-color);
       color: var(--white);
     }
   body.dark-mode .modal-button-group {
-    background-color: #111;
+    background-color: var(--black);
   }
