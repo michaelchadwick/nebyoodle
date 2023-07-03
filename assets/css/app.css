@@ -2,14 +2,16 @@
   --base-color: #527099;
   --light-color:  #a6c4ee;
   --dark-color: #244471;
+
   --debug-color: #715ec7;
   --debug-color-secondary: #dbbce2;
-  --debug-color-medium: #8c85ae;
   --debug-color-light1: #e5e0ff;
   --debug-color-light2: #e8e3ff;
   --debug-color-light3: #ded8ff;
   --debug-color-light4: #e3e0f3;
   --debug-color-light5: #e1ddf7;
+  --debug-color-medium: #8c85ae;
+
   --played-color: #1ebbd7;
   --unplayed-color: #8d8d8d;
   --white: #ffffff;
