@@ -114,7 +114,7 @@ async function modalOpen(type, data = null) {
         </div>
       `
 
-      Nebyoodle.myModal = new Modal('perm', 'Congratulations! You guessed the song!',
+      Nebyoodle.myModal = new Modal('end-state', 'Congratulations! You guessed the song!',
         modalText,
         null,
         null,
@@ -146,7 +146,7 @@ async function modalOpen(type, data = null) {
         </div>
       `
 
-      Nebyoodle.myModal = new Modal('perm', 'Bummer! You didn\'t guess the song!',
+      Nebyoodle.myModal = new Modal('end-state', 'Bummer! You didn\'t guess the song!',
         modalText,
         null,
         null,
@@ -1140,9 +1140,10 @@ Nebyoodle._handleClickTouch = function(event) {
   if (dialog) {
     const isConfirm = dialog.classList.contains('modal-confirm')
     const isTempApi = dialog.classList.contains('temp-api')
+    const isEndState = dialog.classList.contains('end-state')
 
-    // only close if not a confirmation (and not a special temp-api)!
-    if (event.target == dialog && !isConfirm && !isTempApi) {
+    // only close if not a confirmation (and not a special temp-api/end-state)!
+    if (event.target == dialog && !isConfirm && !isTempApi && !isEndState) {
       dialog.remove()
     }
   }

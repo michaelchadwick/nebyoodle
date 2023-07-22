@@ -74,6 +74,10 @@ class Modal {
       this.modal.classList.add('temp-api');
     }
 
+    if (modalType == 'end-state') {
+      this.modal.classList.add('end-state');
+    }
+
     // Message window
     const window = document.createElement('div');
     window.classList.add('modal-window');

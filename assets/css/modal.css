@@ -93,6 +93,10 @@
   .modal-title.debug {
     background-color: var(--debug-color);
   }
+  .modal-window.game-over-win .modal-title,
+  .modal-window.game-over-lose .modal-title {
+    height: 48px;
+  }
   .modal-window.game-over-win .modal-title {
     background-color: var(--window-win2);
   }
