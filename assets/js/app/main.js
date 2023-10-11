@@ -114,6 +114,8 @@ async function modalOpen(type, data = null) {
         </div>
       `
 
+      if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
+
       Nebyoodle.myModal = new Modal('end-state', 'Congratulations! You guessed the song!',
         modalText,
         null,
@@ -145,6 +147,8 @@ async function modalOpen(type, data = null) {
       modalText += `
         </div>
       `
+
+      if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
 
       Nebyoodle.myModal = new Modal('end-state', 'Bummer! You didn\'t guess the song!',
         modalText,
@@ -568,6 +572,10 @@ Nebyoodle._loadSettings = function() {
 Nebyoodle._changeSetting = async function(setting, value, event) {
   switch (setting) {
     case 'gameMode':
+      // if at end-state and a gameMode is clicked
+      // make sure to close the open modal
+      if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
+
       const currentGameMode = Nebyoodle.__getGameMode()
 
       if (currentGameMode != value) {
