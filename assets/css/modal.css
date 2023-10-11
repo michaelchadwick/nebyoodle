@@ -135,6 +135,9 @@
     margin: 0;
     padding: 10px;
   }
+    .modal-text h4 {
+      text-align: left;
+    }
     .modal-text ul ul {
       padding: 2px 10px;
     }
