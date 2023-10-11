@@ -288,6 +288,16 @@ header {
   height: 50px;
   padding: 0;
 }
+  /*
+    z-index 11 keeps it above <dialog>
+    z-index 10 so you can still interact
+    with header even when in an end state
+  */
+  header button,
+  header #nav-links,
+  #mode-container {
+    z-index: 11;
+  }
   header .menu-left {
     align-items: center;
     display: flex;
