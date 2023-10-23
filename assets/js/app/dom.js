@@ -30,8 +30,8 @@ Nebyoodle.dom.interactive = {
 }
 // DOM > main UI buttons
 Nebyoodle.dom.mainUI = {
-  'btnPlayPause': document.getElementById('button-play-pause'),
-  'btnPlayPauseIcon': document.getElementById('button-play-pause-icon'),
+  'btnPlayStop': document.getElementById('button-play-stop'),
+  'btnPlayStopIcon': document.getElementById('button-play-stop-icon'),
   'searchContainer': document.getElementById('search-container'),
   'guessInput': document.getElementById('guess-input'),
   'guessResult': document.getElementById('guess-result'),

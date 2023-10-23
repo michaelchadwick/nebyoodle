@@ -695,11 +695,11 @@ section#game {
         section#game #bot-first-half #play-container div#start-time {
           text-align: left;
         }
-        section#game #bot-first-half #play-container div#play-pause {
+        section#game #bot-first-half #play-container div#play-stop {
           display: flex;
           min-width: 50px;
         }
-          section#game #bot-first-half #play-container div#play-pause button {
+          section#game #bot-first-half #play-container div#play-stop button {
             background-color: var(--white);
             border: 2px solid var(--black);
             border-radius: 25px;
@@ -709,11 +709,11 @@ section#game {
             width: 48px;
           }
             @media (hover: hover) {
-              section#game #bot-first-half #play-container div#play-pause button:hover {
+              section#game #bot-first-half #play-container div#play-stop button:hover {
                 background-color: var(--light-color);
               }
             }
-            section#game #bot-first-half #play-container div#play-pause button:disabled {
+            section#game #bot-first-half #play-container div#play-stop button:disabled {
               background-color: var(--gray);
               border-color: var(--gray-medium);
               color: var(--gray-medium);

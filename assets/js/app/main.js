@@ -759,7 +759,7 @@ Nebyoodle._confirmFreeCreateNew = async function() {
 
 Nebyoodle._disableUI = function() {
   Object.values(Nebyoodle.dom.mainUI).forEach(elem => {
-    if (elem.id !== 'button-play-pause-icon') {
+    if (elem.id !== 'button-play-stop-icon') {
       elem.setAttribute('disabled', '')
     }
   })
@@ -801,7 +801,7 @@ Nebyoodle._enableUI = function() {
   // console.log('FUNC enableUI()')
 
   Object.values(Nebyoodle.dom.mainUI).forEach(elem => {
-    if (elem.id !== 'button-play-pause-icon' && elem.id !== 'button-submit') {
+    if (elem.id !== 'button-play-stop-icon' && elem.id !== 'button-submit') {
       elem.removeAttribute('disabled')
       elem.classList.remove('disabled')
     }
@@ -1235,17 +1235,17 @@ Nebyoodle._clearGuess = function() {
 }
 
 Nebyoodle._resetPlayStopButton = function() {
-  Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-stop')
-  Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-play')
+  Nebyoodle.dom.mainUI.btnPlayStopIcon.classList.remove('fa-stop')
+  Nebyoodle.dom.mainUI.btnPlayStopIcon.classList.add('fa-play')
 }
 
 Nebyoodle._togglePlayStopButton = function() {
-  if (Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.contains('fa-stop')) {
-    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-stop')
-    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-play')
+  if (Nebyoodle.dom.mainUI.btnPlayStopIcon.classList.contains('fa-stop')) {
+    Nebyoodle.dom.mainUI.btnPlayStopIcon.classList.remove('fa-stop')
+    Nebyoodle.dom.mainUI.btnPlayStopIcon.classList.add('fa-play')
   } else {
-    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-play')
-    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-stop')
+    Nebyoodle.dom.mainUI.btnPlayStopIcon.classList.remove('fa-play')
+    Nebyoodle.dom.mainUI.btnPlayStopIcon.classList.add('fa-stop')
   }
 }
 
@@ -1497,8 +1497,8 @@ Nebyoodle._attachEventListeners = function() {
   // check for currentTime changes and update timeline accordingly
   Nebyoodle.dom.audioElem.addEventListener('timeupdate', Nebyoodle._handleAudioDuration)
 
-  // audio play/pause control
-  Nebyoodle.dom.mainUI.btnPlayPause.addEventListener('click', Nebyoodle._handlePlayButton, false)
+  // audio play/stop control
+  Nebyoodle.dom.mainUI.btnPlayStop.addEventListener('click', Nebyoodle._handlePlayButton, false)
 
   // guesses
   Nebyoodle.dom.mainUI.guessInput.addEventListener('keyup', Nebyoodle._handleGuessInput, false)
