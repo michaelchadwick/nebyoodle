@@ -37,6 +37,14 @@ async function modalOpen(type, data = null) {
       )
       break
 
+    case 'readysetguess':
+      Nebyoodle.myModal = new Modal('temp', null,
+        'Ready, set, guess!',
+        null,
+        null
+      )
+      break
+
     case 'stats':
       modalText = `
         <div class="container">
@@ -470,6 +478,8 @@ Nebyoodle._loadGame = async function(mode = null) {
     // console.log('SAVE: end of _loadGame(free)')
     Nebyoodle._saveGame('free')
   }
+
+  modalOpen('readysetguess')
 }
 
 // check for song data, and load it appropriately
