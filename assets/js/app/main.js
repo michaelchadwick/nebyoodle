@@ -1143,7 +1143,7 @@ Nebyoodle._handleAudioDuration = function(event) {
     // "stop" the audio, i.e. pause and reset back to beginning
     Nebyoodle.dom.audioElem.pause()
     Nebyoodle.dom.audioElem.currentTime = 0
-    Nebyoodle._togglePlayPauseButton()
+    Nebyoodle._togglePlayStopButton()
   } else {
     Nebyoodle.dom.audioElem.duration = durationMax
   }
@@ -1177,7 +1177,7 @@ Nebyoodle._handlePlayButton = function() {
   } else {
     Nebyoodle.dom.audioElem.pause()
     Nebyoodle.dom.audioElem.currentTime = 0
-    Nebyoodle._togglePlayPauseButton()
+    Nebyoodle._togglePlayStopButton()
   }
 }
 
@@ -1234,18 +1234,18 @@ Nebyoodle._clearGuess = function() {
   Nebyoodle.dom.mainUI.btnSubmit.setAttribute('disabled', true)
 }
 
-Nebyoodle._resetPlayPauseButton = function() {
-  Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-pause')
+Nebyoodle._resetPlayStopButton = function() {
+  Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-stop')
   Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-play')
 }
 
-Nebyoodle._togglePlayPauseButton = function() {
-  if (Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.contains('fa-pause')) {
-    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-pause')
+Nebyoodle._togglePlayStopButton = function() {
+  if (Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.contains('fa-stop')) {
+    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-stop')
     Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-play')
   } else {
     Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.remove('fa-play')
-    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-pause')
+    Nebyoodle.dom.mainUI.btnPlayPauseIcon.classList.add('fa-stop')
   }
 }
 
@@ -1283,13 +1283,13 @@ Nebyoodle._playAudio = async function() {
   try {
     // console.log('trying to play audioElem', Nebyoodle.dom.audioElem.src)
 
-    Nebyoodle._togglePlayPauseButton()
+    Nebyoodle._togglePlayStopButton()
 
     Nebyoodle.dom.audioElem.play()
   } catch (err) {
     console.error('could not play audioElem')
 
-    Nebyoodle._togglePlayPauseButton()
+    Nebyoodle._togglePlayStopButton()
   }
 }
 
@@ -1398,7 +1398,7 @@ Nebyoodle._checkWinState = function() {
       }
 
       // stop audio
-      Nebyoodle._resetPlayPauseButton()
+      Nebyoodle._resetPlayStopButton()
       Nebyoodle.dom.audioElem.pause()
 
       // disable inputs (until future re-enabling)
@@ -1416,7 +1416,7 @@ Nebyoodle._checkWinState = function() {
       // console.log('game not won, and max skips reached')
 
       // stop audio
-      Nebyoodle._resetPlayPauseButton()
+      Nebyoodle._resetPlayStopButton()
       Nebyoodle.dom.audioElem.pause()
 
       // disable inputs (until future re-enabling)
