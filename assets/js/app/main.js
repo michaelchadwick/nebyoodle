@@ -1508,6 +1508,13 @@ Nebyoodle._attachEventListeners = function() {
   Nebyoodle.dom.mainUI.btnSkip.addEventListener('click', Nebyoodle._handleSkipButton, false)
   Nebyoodle.dom.mainUI.btnSubmit.addEventListener('click', Nebyoodle._handleSubmitButton, false)
 
+  // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
+  document.addEventListener('keydown', (event) => {
+    if (event.code == 'Space') {
+      Nebyoodle._handlePlayButton()
+    }
+  })
+
   // if local dev, show debug buttons
   if (Nebyoodle.env == 'local') {
     if (Nebyoodle.dom.interactive.debug.debugButtons && Nebyoodle.showDebugMenu) {
