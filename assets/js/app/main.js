@@ -1219,13 +1219,9 @@ Nebyoodle._handleGuessList = function(event) {
   const choiceText = new DOMParser().parseFromString(elem.innerHTML, 'text/html').body.textContent
 
   Nebyoodle.dom.mainUI.guessInput.value = choiceText
-
   Nebyoodle.dom.mainUI.guessResult.style.display = 'none'
-
   Nebyoodle.dom.mainUI.btnSubmit.removeAttribute('disabled')
 }
-
-
 
 Nebyoodle._clearGuess = function() {
   Nebyoodle.dom.mainUI.guessInput.value = ''
@@ -1361,6 +1357,10 @@ Nebyoodle._checkWinState = function() {
   const gameMode = Nebyoodle.__getGameMode()
   const solution = Nebyoodle.__getSolution()
   const guesses = Nebyoodle.__getGuesses()
+
+  // console.log('solution', solution)
+  // console.log('guesses', guesses)
+  // console.log(Object.values(guesses).map(g => g.answer).includes(solution))
 
   if (guesses) {
     // if game won, set state and display win modal
