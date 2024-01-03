@@ -479,7 +479,9 @@ Nebyoodle._loadGame = async function(mode = null) {
     Nebyoodle._saveGame('free')
   }
 
-  modalOpen('readysetguess')
+  if (Nebyoodle.__getGameState() != 'GAME_OVER') {
+    modalOpen('readysetguess')
+  }
 }
 
 // check for song data, and load it appropriately
@@ -584,6 +586,8 @@ Nebyoodle._changeSetting = async function(setting, value, event) {
     case 'gameMode':
       // if at end-state and a gameMode is clicked
       // make sure to close the open modal
+      const dialog = document.getElementsByClassName('modal-dialog')[0]
+      if (dialog) dialog.remove()
       if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
 
       const currentGameMode = Nebyoodle.__getGameMode()
@@ -1163,6 +1167,7 @@ Nebyoodle._handleClickTouch = function(event) {
     // only close if not a confirmation (and not a special temp-api/end-state)!
     if (event.target == dialog && !isConfirm && !isTempApi && !isEndState) {
       dialog.remove()
+      if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
     }
   }
 
@@ -1763,6 +1768,7 @@ Nebyoodle.__getSessionIndex = function(mode = null) {
   }
 }
 
+// shorter state getter
 Nebyoodle.__getState = function(mode = null) {
   const state = Nebyoodle.state[mode ? mode : Nebyoodle.__getGameMode()]
 
@@ -1772,10 +1778,13 @@ Nebyoodle.__getState = function(mode = null) {
     return undefined
   }
 }
+// shorter state setter
 Nebyoodle.__setState = function(state, mode = null) {
   return Nebyoodle
     .state[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getSessionIndex()] = state
 }
+
+// shorter gameState getter
 Nebyoodle.__getGameState = function(mode = null) {
   const state = Nebyoodle
     .state[mode ? mode : Nebyoodle.__getGameMode()]
@@ -1792,6 +1801,7 @@ Nebyoodle.__getGameState = function(mode = null) {
     return 'IN_PROGRESS'
   }
 }
+// shorter gameState setter
 Nebyoodle.__setGameState = function(gameState, mode = null) {
   Nebyoodle
     .state[mode ? mode : Nebyoodle.__getGameMode()][Nebyoodle.__getSessionIndex()]
@@ -1822,7 +1832,7 @@ Nebyoodle.__getShareText = function(mode = null) {
   return html
 }
 
-// shorter gameMode deducer
+// shorter gameMode getter
 Nebyoodle.__getGameMode = function() {
   const mode = Nebyoodle.settings.gameMode
 
@@ -1830,7 +1840,7 @@ Nebyoodle.__getGameMode = function() {
 
   return mode
 }
-// shorter gameMode deducer
+// shorter gameMode setter
 Nebyoodle.__setGameMode = function(mode) {
   Nebyoodle._saveSetting('gameMode', mode)
 }
