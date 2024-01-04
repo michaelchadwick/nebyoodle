@@ -1565,7 +1565,7 @@ Nebyoodle.__autocompleteMatch = function(input) {
     return []
   }
 
-  input = input.replace(/[^A-Za-z0-9\'\"\s]/g, '')
+  input = input.replace(/[^A-Za-z0-9\-\'\"\s]/g, '')
 
   const reg = new RegExp(input, 'i')
   const songs = Nebyoodle.allSongData
