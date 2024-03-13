@@ -27,7 +27,9 @@
   --window-win1:            #5ec767;
   --window-win2:            #51ac59;
   --window-skip1:           #cec514;
+  --window-skip1-light:     #f1f1db;
   --window-lose1:           #c75e5e;
+  --window-lose1-light:     #efdbdb;
   --window-lose2:           #ad5151;
   --window-game-over-win:   #d8e4d9;
   --window-game-over-lose:  #e9dddd;
@@ -613,9 +615,11 @@ section#game {
         padding: 8px;
       }
         section#game #top-half #guesses-container .guess.skipped {
+          background-color: var(--window-skip1-light);
           border-color: var(--window-skip1)
         }
         section#game #top-half #guesses-container .guess.wrong {
+          background-color: var(--window-lose1-light);
           border-color: var(--window-lose1)
         }
         section#game #top-half #guesses-container .guess .symbol {
