@@ -1,35 +1,36 @@
 :root {
-  --base-color: #527099;
-  --light-color:  #a6c4ee;
-  --dark-color: #244471;
+  --base-color:             #527099;
+  --light-color:            #a6c4ee;
+  --dark-color:             #244471;
 
-  --debug-color: #715ec7;
-  --debug-color-secondary: #dbbce2;
-  --debug-color-light1: #e5e0ff;
-  --debug-color-light2: #e8e3ff;
-  --debug-color-light3: #ded8ff;
-  --debug-color-light4: #e3e0f3;
-  --debug-color-light5: #e1ddf7;
-  --debug-color-medium: #8c85ae;
+  --debug-color:            #715ec7;
+  --debug-color-secondary:  #dbbce2;
+  --debug-color-light1:     #e5e0ff;
+  --debug-color-light2:     #e8e3ff;
+  --debug-color-light3:     #ded8ff;
+  --debug-color-light4:     #e3e0f3;
+  --debug-color-light5:     #e1ddf7;
+  --debug-color-medium:     #8c85ae;
 
-  --played-color: #1ebbd7;
-  --unplayed-color: #8d8d8d;
-  --white: #ffffff;
-  --black: #111111;
-  --shadow: #11111105;
-  --shadow-dark: #11111125;
-  --off-white: #f1f1f1;
-  --gray: #e1e1e1;
-  --gray-medium: #a7a7a7;
-  --gray-dark: #787878;
-  --marker-color: #222222;
+  --played-color:           #1ebbd7;
+  --unplayed-color:         #8d8d8d;
+  --white:                  #ffffff;
+  --black:                  #111111;
+  --shadow:                 #11111105;
+  --shadow-dark:            #11111125;
+  --off-white:              #f1f1f1;
+  --gray:                   #e1e1e1;
+  --gray-medium:            #a7a7a7;
+  --gray-dark:              #787878;
+  --marker-color:           #222222;
 
-  --window-win1: #5ec767;
-  --window-win2: #51ac59;
-  --window-lose1: #c75e5e;
-  --window-lose2: #ad5151;
-  --window-game-over-win: #d8e4d9;
-  --window-game-over-lose: #e9dddd;
+  --window-win1:            #5ec767;
+  --window-win2:            #51ac59;
+  --window-skip1:           #cec514;
+  --window-lose1:           #c75e5e;
+  --window-lose2:           #ad5151;
+  --window-game-over-win:   #d8e4d9;
+  --window-game-over-lose:  #e9dddd;
 }
 
 * {
@@ -602,7 +603,7 @@ section#game {
     }
       section#game #top-half #guesses-container .guess {
         align-items: center;
-        border: 1px solid var(--gray-dark);
+        border: 2px solid var(--gray-dark);
         display: flex;
         flex-shrink: 0;
         font-size: 1.1rem;
@@ -611,10 +612,16 @@ section#game {
         line-height: 0.9;
         padding: 8px;
       }
+        section#game #top-half #guesses-container .guess.skipped {
+          border-color: var(--window-skip1)
+        }
+        section#game #top-half #guesses-container .guess.wrong {
+          border-color: var(--window-lose1)
+        }
         section#game #top-half #guesses-container .guess .symbol {
           align-items: center;
           display: flex;
-          margin: 0 8px 0 2px;
+          margin: 0 8px 2px 2px;
         }
 
   section#game #bot-first-half {

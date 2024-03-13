@@ -1880,6 +1880,8 @@ Nebyoodle.__updateStatus = function(type, guessText = null, guessIndex = null) {
       guessDiv.appendChild(symbol)
       guessDiv.appendChild(title)
 
+      guessDiv.classList.add('skipped')
+
       break
 
     // added a wrong guess status
@@ -1891,6 +1893,8 @@ Nebyoodle.__updateStatus = function(type, guessText = null, guessIndex = null) {
       symbol.appendChild(svg)
       guessDiv.appendChild(symbol)
       guessDiv.appendChild(title)
+
+      guessDiv.classList.add('wrong')
 
       break
 
