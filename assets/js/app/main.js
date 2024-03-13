@@ -1515,7 +1515,7 @@ Nebyoodle._attachEventListeners = function() {
 
   // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
   document.addEventListener('keydown', (event) => {
-    if (event.code == 'Space') {
+    if (event.code == 'Space' && document.activeElement.id != 'guess-input') {
       Nebyoodle._handlePlayButton()
     }
   })
