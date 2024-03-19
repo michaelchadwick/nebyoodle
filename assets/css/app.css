@@ -25,6 +25,7 @@
   --marker-color:           #222222;
 
   --window-win1:            #5ec767;
+  --window-win1-light:      #e6f2e8;
   --window-win2:            #51ac59;
   --window-skip1:           #cec514;
   --window-skip1-light:     #f1f1db;
@@ -621,6 +622,10 @@ section#game {
         section#game #top-half #guesses-container .guess.wrong {
           background-color: var(--window-lose1-light);
           border-color: var(--window-lose1)
+        }
+        section#game #top-half #guesses-container .guess.correct {
+          background-color: var(--window-win1-light);
+          border-color: var(--window-win2)
         }
         section#game #top-half #guesses-container .guess .symbol {
           align-items: center;

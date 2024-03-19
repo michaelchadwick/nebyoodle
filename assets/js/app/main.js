@@ -1908,16 +1908,20 @@ Nebyoodle.__updateStatus = function(type, guessText = null, guessIndex = null) {
       guessDiv.appendChild(symbol)
       guessDiv.appendChild(title)
 
+      guessDiv.classList.add('correct')
+
       break
 
     // last guess was correct, so updating last guess to correct
     case 'correct-fix':
       // get last guess's svg and update its img and classes
+      guessDiv.classList.remove('wrong')
       guessDiv.querySelector('img').src = '/assets/images/checkmark.svg'
       guessDiv.querySelector('img').classList.remove('wrong')
       guessDiv.querySelector('img').classList.add('correct')
 
       break
+
     default:
       break
   }
