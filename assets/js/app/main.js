@@ -772,6 +772,9 @@ Nebyoodle._disableUI = function() {
 Nebyoodle._refreshUI = function(guesses = null) {
   Object.values(Nebyoodle.dom.guessesContainer.children).forEach(guess => {
     guess.innerHTML = ''
+    guess.classList.remove('correct')
+    guess.classList.remove('skipped')
+    guess.classList.remove('wrong')
   })
 
   if (guesses) {
