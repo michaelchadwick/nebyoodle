@@ -1583,14 +1583,15 @@ Nebyoodle._attachEventListeners = function() {
  * _private __helper methods *
  ************************************************************************/
 
-Nebyoodle.__autocompleteMatch = function(input) {
-  if (input == '') {
+Nebyoodle.__autocompleteMatch = function(raw) {
+  if (raw == '') {
     return []
   }
 
-  input = input.replace(/[^A-Za-z0-9\-\'\"\s]/g, '')
+  const regex = /[^A-Za-z0-9\-\'\"\s]/
+  const input = raw.replace(regex, '')
+  const reg = new RegExp(input, 'gi')
 
-  const reg = new RegExp(input, 'i')
   const songs = Nebyoodle.allSongData
   const guesses = Nebyoodle.__getGuesses().map(g => g.answer)
 
