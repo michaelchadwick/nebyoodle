@@ -4,6 +4,12 @@ A Heardle-like daily music guessing game, featuring the works of, well, me. Name
 
 [https://guess.nebyoolae.com](https://guess.nebyoolae.com)
 
+## Local Development
+
+* `git clone git@github.com:michaelchadwick/nebyoodle.git`
+* `cd /path/to/nebyoodle`
+* `composer install`
+
 ## JSON:API
 
 Uses the following Drupal modules to pull song info from [https://music.nebyoolae.com](https://music.nebyoolae.com):
