@@ -1218,7 +1218,7 @@ Nebyoodle._handleGuessInput = function(event) {
 Nebyoodle._handleGuessList = function(event) {
   let elem = null
 
-  if (event.target.computedRole == 'strong') {
+  if (event.target.tagName == 'STRONG') {
     elem = event.target.parentElement
   } else {
     elem = event.target
