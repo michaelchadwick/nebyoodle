@@ -1359,17 +1359,25 @@ Nebyoodle._submitGuess = function(guess = null) {
 }
 
 // check latest guess to see if correct and if game is won
-Nebyoodle._checkWinState = function() {
+Nebyoodle._checkWinState = async function() {
   // console.log('FUNC _checkWinState()')
 
   const gameMode = Nebyoodle.__getGameMode()
   const solution = Nebyoodle.__getSolution()
   const guesses = Nebyoodle.__getGuesses()
 
-  // console.log('solution', solution)
-  // console.log('guesses', guesses)
-  // console.log(Object.values(guesses).map(g => g.answer).includes(solution))
+  const debugKey = Nebyoodle._loadQueryString('debugKey')
 
+  if (debugKey) {
+    const response = await fetch(`${NEBYOODLE_DEBUG_SCRIPT}?debugKey=${debugKey}`)
+    const isAllowed = await response.json()
+
+    if (isAllowed) { 
+      console.log('guesses:', Object.values(guesses).map(g => g.answer))
+      console.log(`solution: "${solution}"`)
+    }
+  }
+  
   if (guesses) {
     // if game won, set state and display win modal
     if (Object.values(guesses).map(g => g.answer).includes(solution)) {
@@ -1464,6 +1472,18 @@ Nebyoodle._getNebyooApps = async function() {
     appLink.target = '_blank'
     appList.appendChild(appLink)
   })
+}
+
+Nebyoodle._loadQueryString = function (param) {
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  })
+
+  if (params) {
+    return params[param]
+  } else {
+    return false
+  }
 }
 
 // add event listeners to DOM
