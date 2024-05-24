@@ -1,0 +1,9 @@
+{
+  "name": "michaelchadwick/guess.nebyoolae.com",
+  "license": "MIT",
+  "type": "project",
+  "description": "Nebyoodle",
+  "require": {
+    "vlucas/phpdotenv": "^5.6"
+  }
+}
