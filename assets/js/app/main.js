@@ -1577,6 +1577,10 @@ Nebyoodle._attachEventListeners = function() {
   // When the user clicks or touches anywhere outside of the modal, close it
   window.addEventListener('click', Nebyoodle._handleClickTouch)
   window.addEventListener('touchend', Nebyoodle._handleClickTouch)
+
+  document.body.addEventListener('touchmove', function (event) {
+    event.preventDefault
+  }, { passive: false })
 }
 
 /************************************************************************
