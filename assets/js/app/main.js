@@ -2007,11 +2007,6 @@ Nebyoodle.__updateDailyDetails = function(index) {
   Nebyoodle.dom.dailyDetails.querySelector('.day').innerHTML = Nebyoodle.__getTodaysDate()
 }
 
-// TODO
-Nebyoodle.__winAnimation = async function() {
-  console.log('TODO: add win animation')
-}
-
 /************************************************************************
  * ON PAGE LOAD, DO THIS *
  ************************************************************************/
