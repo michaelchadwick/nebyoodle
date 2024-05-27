@@ -59,8 +59,6 @@ class Modal {
   }
 
   _createModal(modalType) {
-    // console.log('_createModal', modalType, this.modalTitle)
-
     // Background dialog
     this.modal = document.createElement('dialog')
     this.modal.classList.add('modal-dialog')
@@ -159,17 +157,13 @@ class Modal {
     }
 
     // Let's rock
-    this.parent.appendChild(this.modal)
+    if (!document.body.contains(document.getElementsByClassName('modal-dialog')[0])) {
+      this.parent.appendChild(this.modal)
+    }
   }
 
   _destroyModal() {
-    // console.log('_destroyModal', Nebyoodle.myModal)
-    // console.log('_destroyModal', this.modal)
-
-    if (this.parent.contains(this.modal)) {
-      this.parent.removeChild(this.modal)
-      delete this
-      Nebyoodle.myModal = null
-    }
+    this.parent.removeChild(this.modal)
+    delete this
   }
 }

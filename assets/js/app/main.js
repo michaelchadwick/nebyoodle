@@ -1170,7 +1170,6 @@ Nebyoodle._handleClickTouch = function(event) {
     // only close if not a confirmation (and not a special temp-api/end-state)!
     if (event.target == dialog && !isConfirm && !isTempApi && !isEndState) {
       dialog.remove()
-      if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
     }
   }
 
