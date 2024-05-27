@@ -247,7 +247,6 @@ select:disabled {
     display: block;
     height: 20px;
     position: relative;
-    vertical-align: middle;
     width: 32px;
   }
     .switch[data-status='true'] {
@@ -644,10 +643,6 @@ section#game {
     justify-content: center;
     width: 100%;
   }
-    section#game #bot-first-half #audio-container {
-
-    }
-
     section#game #bot-first-half #timeline-container {
       align-items: center;
       border-bottom: 1px solid var(--black);
