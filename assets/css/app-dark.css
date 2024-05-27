@@ -117,6 +117,8 @@ body.dark-mode {
   }
   body.dark-mode .modal-dialog.temp .modal-window {
     background-color: var(--black);
+    border-color: var(--white);
+    border-radius: 8px;
     color: var(--white);
   }
   body.dark-mode .modal-text {
