@@ -7,7 +7,7 @@
  *************************************************************************/
 
 // modal methods
-async function modalOpen(type, data = null) {
+Nebyoodle.modalOpen = async function(type, data = null) {
   let modalText = ''
 
   switch(type) {
@@ -480,7 +480,7 @@ Nebyoodle._loadGame = async function(mode = null) {
   }
 
   if (Nebyoodle.__getGameState() != 'GAME_OVER') {
-    modalOpen('readysetguess')
+    Nebyoodle.modalOpen('readysetguess')
   }
 }
 
@@ -562,7 +562,7 @@ Nebyoodle._loadSettings = function() {
 
     Nebyoodle.settings = NEBYOODLE_DEFAULTS.settings
 
-    modalOpen('start')
+    Nebyoodle.modalOpen('start')
 
     localStorage.setItem(NEBYOODLE_SETTINGS_KEY, JSON.stringify(Nebyoodle.settings))
   }
@@ -1263,18 +1263,18 @@ Nebyoodle._shareResults = async function() {
   } else {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(shareText).then(() => {
-        modalOpen('shared')
+        Nebyoodle.modalOpen('shared')
       }).catch(() => {
         console.error('could not copy text to clipboard')
 
-        modalOpen('no-clipboard-access')
+        Nebyoodle.modalOpen('no-clipboard-access')
 
         return
       })
     } else {
       console.warn('no sharing or clipboard access available')
 
-      modalOpen('no-clipboard-access')
+      Nebyoodle.modalOpen('no-clipboard-access')
 
       return
     }
@@ -1420,9 +1420,7 @@ Nebyoodle._checkWinState = async function() {
       Nebyoodle._disableUI()
 
       // display modal win thingy
-      if (!Nebyoodle.myModal) {
-        modalOpen('game-over-win')
-      }
+      Nebyoodle.modalOpen('game-over-win')
 
       return true
     }
@@ -1441,7 +1439,7 @@ Nebyoodle._checkWinState = async function() {
       Nebyoodle._saveGame(gameMode)
 
       if (!Nebyoodle.myModal) {
-        modalOpen('game-over-lose')
+        Nebyoodle.modalOpen('game-over-lose')
       }
 
       return true
@@ -1495,13 +1493,13 @@ Nebyoodle._attachEventListeners = function() {
     Nebyoodle.dom.navOverlay.classList.toggle('show')
   })
   Nebyoodle.dom.interactive.btnHelp.addEventListener('click', () => {
-    modalOpen('help')
+    Nebyoodle.modalOpen('help')
   })
   Nebyoodle.dom.interactive.btnStats.addEventListener('click', () => {
-    modalOpen('stats')
+    Nebyoodle.modalOpen('stats')
   })
   Nebyoodle.dom.interactive.btnSettings.addEventListener('click', () => {
-    modalOpen('settings')
+    Nebyoodle.modalOpen('settings')
   })
 
   // listen for when audio empties
@@ -1548,26 +1546,26 @@ Nebyoodle._attachEventListeners = function() {
       // 🪣 get single Nebyoolae song from music.nebyoolae.com
       if (Nebyoodle.dom.interactive.debug.btnGetSong) {
         Nebyoodle.dom.interactive.debug.btnGetSong.addEventListener('click', () => {
-          modalOpen('get-song')
+          Nebyoodle.modalOpen('get-song')
         })
       }
       // 🪣 get all Nebyoolae songs from music.nebyoolae.com
       if (Nebyoodle.dom.interactive.debug.btnGetSongs) {
         Nebyoodle.dom.interactive.debug.btnGetSongs.addEventListener('click', () => {
-          modalOpen('get-songs')
+          Nebyoodle.modalOpen('get-songs')
         })
       }
 
       // ⚙️ show current Nebyoodle config
       if (Nebyoodle.dom.interactive.debug.btnShowConfig) {
         Nebyoodle.dom.interactive.debug.btnShowConfig.addEventListener('click', () => {
-          modalOpen('show-config')
+          Nebyoodle.modalOpen('show-config')
         })
       }
       // 🎚️ show current Nebyoodle state
       if (Nebyoodle.dom.interactive.debug.btnShowState) {
         Nebyoodle.dom.interactive.debug.btnShowState.addEventListener('click', () => {
-          modalOpen('show-state')
+          Nebyoodle.modalOpen('show-state')
         })
       }
     }

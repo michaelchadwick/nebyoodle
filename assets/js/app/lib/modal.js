@@ -157,13 +157,13 @@ class Modal {
     }
 
     // Let's rock
-    if (!document.body.contains(document.getElementsByClassName('modal-dialog')[0])) {
+    if (!this.parent.contains(document.getElementsByClassName('modal-dialog')[0])) {
       this.parent.appendChild(this.modal)
     }
   }
 
   _destroyModal() {
-    if (this.parent.hasChildNodes()) {
+    if (this.parent.contains(document.getElementsByClassName('modal-dialog')[0])) {
       this.parent.removeChild(this.modal)
       delete this
     }
