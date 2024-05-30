@@ -7,7 +7,7 @@ module.exports = {
       options: {
         singleQuote: true,
         printWidth: 100,
-        trailingCommas: true,
+        trailingComma: 'es5',
       },
     },
   ],
