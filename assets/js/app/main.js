@@ -1427,6 +1427,9 @@ Nebyoodle._checkWinState = async function() {
       // console.log('SAVE: _checkWinState() solution not found yet, no more skips')
       Nebyoodle._saveGame(gameMode)
 
+      // display modal lose thingy
+      Nebyoodle.modalOpen('game-over-lose')
+
       if (!Nebyoodle.myModal) {
         Nebyoodle.modalOpen('game-over-lose')
       }
