@@ -1320,15 +1320,8 @@ Nebyoodle._submitGuess = function(guess = null) {
         isSkipped: true
       })
 
-      // clear the lookup input
-      Nebyoodle._clearGuess()
-
       // update skip button and audio file durationMax, if necessary
       Nebyoodle.__updateStatus('skipped', null)
-
-      // save to local storage
-      // console.log('SAVE: _checkWinState() adding skip')
-      // Nebyoodle._saveGame()
     }
     // guess was entered
     else {
@@ -1339,16 +1332,12 @@ Nebyoodle._submitGuess = function(guess = null) {
         isSkipped: false
       })
 
-      // clear the lookup input
-      Nebyoodle._clearGuess()
-
       // update skip button and audio file durationMax, if necessary
       Nebyoodle.__updateStatus('wrong', guess)
-
-      // save to local storage
-      // console.log('SAVE: _checkWinState() adding skip')
-      // Nebyoodle._saveGame()
     }
+
+    // clear the lookup input
+    Nebyoodle._clearGuess()
 
     // check if a guess has won the game or not
     Nebyoodle._checkWinState()
