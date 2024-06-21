@@ -287,14 +287,14 @@ Nebyoodle._loadGame = async function(mode = null) {
 
   if (!mode) {
     /* ************************* */
-    /* settings LS -> code       */
-    /* ************************* */
-    Nebyoodle._loadSettings()
-
-    /* ************************* */
     /* allSongData from LS       */
     /* ************************* */
     await Nebyoodle._loadAllSongData()
+
+    /* ************************* */
+    /* settings LS -> code       */
+    /* ************************* */
+    Nebyoodle._loadSettings()
   }
 
   // console.log('daily state', Nebyoodle.state.daily)
@@ -340,7 +340,7 @@ Nebyoodle._loadGame = async function(mode = null) {
         const response = await fetch(NEBYOODLE_DAILY_SCRIPT)
         const data = await response.json()
 
-        Nebyoodle.myModal._destroyModal()
+        // Nebyoodle.myModal._destroyModal()
 
         const dailySongId = data['songId']
         const savedSongId = lsStateDaily[Nebyoodle.__getSessionIndex()].songId
@@ -489,6 +489,14 @@ Nebyoodle._loadAllSongData = async function() {
   const lsSongData = localStorage.getItem(NEBYOODLE_SONG_DATA_KEY)
 
   if (lsSongData) {
+    console.log('Song data loaded!')
+
+    Nebyoodle.myModal = new Modal('temp', null,
+      'Song data loaded',
+      null,
+      null
+    )
+
     Nebyoodle.allSongData = JSON.parse(lsSongData)
   } else {
     await Nebyoodle._getSongs()
@@ -656,37 +664,6 @@ Nebyoodle._saveSetting = function(setting, value) {
   localStorage.setItem(NEBYOODLE_SETTINGS_KEY, JSON.stringify(settings))
 
   // console.log('localStorage setting saved!', Nebyoodle.settings)
-}
-
-// add debug stuff if local
-Nebyoodle._initDebug = function() {
-  // if debug buttons are in template
-  if (Nebyoodle.dom.interactive.debug.debugButtons && Nebyoodle.showDebugMenu) {
-    // show debug buttons
-    Nebyoodle.dom.interactive.debug.debugButtons.style.display = 'flex'
-    // make header buttons smaller to fit in debug buttons
-    document.querySelectorAll('button.icon').forEach((btn) => {
-      btn.style.fontSize = '16px'
-    })
-  }
-
-  let qd = {}
-
-  if (location.search) location.search.substr(1).split("&").forEach(function(item) {
-    let s = item.split("="),
-        k = s[0],
-        v = s[1] && decodeURIComponent(s[1]); // null-coalescing / short-circuit
-    //(k in qd) ? qd[k].push(v) : qd[k] = [v]
-    (qd[k] = qd[k] || []).push(v) // null-coalescing / short-circuit
-  })
-
-  if (qd.debugCSS && qd.debugCSS == 1) {
-    let debugStyles = document.createElement('link')
-
-    debugStyles.rel = 'stylesheet'
-    debugStyles.href = './assets/css/debug.css'
-    document.head.appendChild(debugStyles)
-  }
 }
 
 // create new solution, which resets progress
@@ -929,10 +906,12 @@ Nebyoodle._getSongs = async function() {
   const lsSongData = localStorage.getItem(NEBYOODLE_SONG_DATA_KEY)
 
   if (!lsSongData) {
+    console.warn('Need to download song data...')
+
     Nebyoodle.allSongData = []
 
     Nebyoodle.myModal = new Modal('temp-api', ' ',
-      'loading...',
+      'loading song data...',
       null,
       null,
       'lds-dual-ring'
@@ -952,6 +931,12 @@ Nebyoodle._getSongs = async function() {
       })
 
       localStorage.setItem(NEBYOODLE_SONG_DATA_KEY, JSON.stringify(Nebyoodle.allSongData))
+
+      Nebyoodle.myModal = new Modal('temp', null,
+        'Song data loaded',
+        null,
+        null
+      )
     } else {
       Nebyoodle.myModal = new Modal('temp', null,
         'Could not load songs!',
@@ -962,114 +947,16 @@ Nebyoodle._getSongs = async function() {
       console.error('could not fetch songs from remote source')
     }
   } else {
+    console.log('Song data loaded!')
+
     Nebyoodle.myModal = new Modal('temp', null,
-      'Song data already loaded',
+      'Song data loaded',
       null,
       null
     )
 
     Nebyoodle.allSongData = JSON.parse(lsSongData)
   }
-}
-
-// modal: debug: display Nebyoodle.config
-Nebyoodle._debugDisplayConfig = function() {
-  const configs = Nebyoodle.config
-
-  let html = ''
-
-  html += `<h3>GLOBAL (ENV: ${Nebyoodle.env})</h3>`
-  html += '<h3>----------------------------</h3>'
-
-  html += '<dl>'
-
-  Object.keys(configs).forEach(config => {
-    html += `<h4>CONFIG: ${config}</h4>`
-
-    Object.keys(configs[config]).forEach(key => {
-      const label = key
-      const value = configs[config][key]
-
-      html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
-    })
-  })
-
-  html += '</dl>'
-
-  return html
-}
-// modal: debug: display Nebyoodle.state
-Nebyoodle._debugDisplayState = function() {
-  const states = Nebyoodle.state
-
-  let html = ''
-
-  html += '<dl class="centered">'
-
-  Object.keys(states).forEach(state => {
-    html += '<div class="debug-state">'
-    html += `<h4>STATE: ${state}</h4>`
-
-    Object.keys(states[state]).forEach(session => {
-      html += '<div class="debug-session">'
-      html += `<h5>SESSION: ${session}</h5>`
-
-      Object.keys(states[state][session]).forEach(key => {
-        const value = states[state][session][key]
-
-        if (typeof value == 'object'
-          && !Array.isArray(value)
-          && value != null
-        ) {
-          html += `<dd><code>${key}: {</code><dl>`
-
-          if (key == 'statistics') {
-            Object.keys(states[state][session][key]).forEach(subkey => {
-              value = states[state][session][key][subkey]
-
-              html += `<dd><code>${subkey}:</code></dd><dt>${value}</dt>`
-            })
-
-            html += '</dl><code>}</code></dd>'
-          }
-          else {
-            Object.keys(states[state][session][key]).forEach(subkey => {
-              value = states[state][session][key][subkey]
-
-              if (subkey == 'lastCompletedTime' || subkey == 'lastPlayedTime') {
-                value = Nebyoodle.__getFormattedDate(new Date(value))
-              }
-
-              if (value) {
-
-                if (typeof value == 'object' && subkey == 'guesses') {
-                  html += `<dd><code>${subkey}:</code></dd><dt>${value.map(v => v.answer).join(', ')}</dt>`
-                } else {
-                  html += `<dd><code>${subkey}:</code></dd><dt>${value.join(', ')}</dt>`
-                }
-              }
-            })
-
-            html += '</dl><code>}</code></dd>'
-          }
-        } else {
-          if (typeof value == 'object' && key == 'guesses') {
-            html += `<dd><code>${key}:</code></dd><dt>${value.map(v => v.answer != '' ? `'${v.answer}'` : '[skip]').join(', ')}</dt>`
-          } else {
-            html += `<dd><code>${key}:</code></dd><dt>${value}</dt>`
-          }
-        }
-      })
-
-      html += '</div>'
-    })
-
-    html += '</div>'
-  })
-
-  html += '</dl>'
-
-  return html
 }
 
 Nebyoodle._getWinMarkup = async function() {
@@ -1360,12 +1247,12 @@ Nebyoodle._checkWinState = async function() {
     const response = await fetch(`${NEBYOODLE_DEBUG_SCRIPT}?debugKey=${debugKey}`)
     const isAllowed = await response.json()
 
-    if (isAllowed) { 
+    if (isAllowed) {
       console.log('guesses:', Object.values(guesses).map(g => g.answer))
       console.log(`solution: "${solution}"`)
     }
   }
-  
+
   if (guesses) {
     // if game won, set state and display win modal
     if (Object.values(guesses).map(g => g.answer).includes(solution)) {
@@ -1969,27 +1856,6 @@ Nebyoodle.__updateStatus = function(type, guessText = null, guessIndex = null) {
   }
 }
 
-// get displayable string for today's date
-Nebyoodle.__getTodaysDate = function() {
-  const d = new Date(Date.now())
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
-  return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
-}
-// timestamp to display date
-Nebyoodle.__getFormattedDate = function(date) {
-  let formatted_date = ''
-
-  formatted_date += `${date.getFullYear()}/`
-  formatted_date += `${(date.getMonth() + 1).toString().padStart(2, '0')}/` // months are 0-indexed!
-  formatted_date += `${date.getDate().toString().padStart(2, '0')} `
-  formatted_date += `${date.getHours().toString().padStart(2, '0')}:`
-  formatted_date += `${date.getMinutes().toString().padStart(2, '0')}:`
-  formatted_date += `${date.getSeconds().toString().padStart(2, '0')}`
-
-  return formatted_date
-}
 // update config and UI with daily song attributes
 Nebyoodle.__updateDailyDetails = function(index) {
   Nebyoodle.config.daily.index = index

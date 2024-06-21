@@ -1,258 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <!-- BASIC
+  <head>
+    <!-- BASIC
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta charset="utf-8">
-  <meta http-equiv="cache-control" content="no-cache">
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-  <title>Nebyoodle</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta
+      name="viewport"
+      content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+    <title>Nebyoodle</title>
 
-  <!-- META
+    <!-- META
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="description" content="Heardle for the music of Nebyoolae.">
-  <meta name="author" content="Michael Chadwick">
-  <meta name="application-name" content="Nebyoodle">
-  <meta name="title" content="Nebyoodle" />
-  <meta property="og:url" content="https://guess.nebyoolae.com">
-  <meta property="og:title" content="Nebyoodle - A daily Nebyoolae music guessing game">
-  <meta property="og:description" content="Guess the song. A new song each day.">
-  <meta property="og:image" content="https://guess.nebyoolae.com/assets/icons/android-chrome-384x384.png">
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:domain" content="guess.nebyoolae.com">
+    <meta name="description" content="Heardle for the music of Nebyoolae." />
+    <meta name="author" content="Michael Chadwick" />
+    <meta name="application-name" content="Nebyoodle" />
+    <meta name="title" content="Nebyoodle" />
+    <meta property="og:url" content="https://guess.nebyoolae.com" />
+    <meta
+      property="og:title"
+      content="Nebyoodle - A daily Nebyoolae music guessing game"
+    />
+    <meta
+      property="og:description"
+      content="Guess the song. A new song each day."
+    />
+    <meta
+      property="og:image"
+      content="https://guess.nebyoolae.com/assets/icons/android-chrome-384x384.png"
+    />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:domain" content="guess.nebyoolae.com" />
 
-  <!-- FAVICONS
+    <!-- FAVICONS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png">
-  <link rel="manifest" href="./site.webmanifest">
-  <link rel="mask-icon" href="./assets/icons/safari-pinned-tab.svg" color="#529952">
-  <link rel="shortcut icon" href="./favicon.ico">
-  <meta name="msapplication-TileColor" content="#529952">
-  <meta name="msapplication-config" content="./browserconfig.xml">
-  <meta name="theme-color" content="#529952">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./assets/icons/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./assets/icons/favicon-16x16.png"
+    />
+    <link rel="manifest" href="./site.webmanifest" />
+    <link
+      rel="mask-icon"
+      href="./assets/icons/safari-pinned-tab.svg"
+      color="#529952"
+    />
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <meta name="msapplication-TileColor" content="#529952" />
+    <meta name="msapplication-config" content="./browserconfig.xml" />
+    <meta name="theme-color" content="#529952" />
 
-  <!-- FONT
+    <!-- FONT
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Changa:wght@300;400;700&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Changa:wght@300;400;700&display=swap"
+    />
 
-  <!-- FONTAWESOME
+    <!-- FONTAWESOME
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="./assets/fontawesome/css/fontawesome.min.css">
-  <link rel="stylesheet" href="./assets/fontawesome/css/regular.min.css">
-  <link rel="stylesheet" href="./assets/fontawesome/css/solid.min.css">
-  <link rel="stylesheet" href="./assets/fontawesome/css/brands.min.css">
+    <link
+      rel="stylesheet"
+      href="./assets/fontawesome/css/fontawesome.min.css"
+    />
+    <link rel="stylesheet" href="./assets/fontawesome/css/regular.min.css" />
+    <link rel="stylesheet" href="./assets/fontawesome/css/solid.min.css" />
+    <link rel="stylesheet" href="./assets/fontawesome/css/brands.min.css" />
 
-  <!-- CSS
+    <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="./assets/css/app.css">
-  <link rel="stylesheet" href="./assets/css/app-dark.css">
-  <link rel="stylesheet" href="./assets/css/modal.css">
-  <link rel="stylesheet" href="./assets/css/animation.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-</head>
-<body>
-  <header>
-    <div class="menu-left">
+    <link rel="stylesheet" href="./assets/css/app.css" />
+    <link rel="stylesheet" href="./assets/css/app-dark.css" />
+    <link rel="stylesheet" href="./assets/css/modal.css" />
+    <link rel="stylesheet" href="./assets/css/animation.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="menu-left">
+        <div id="nav-links">
+          <button
+            id="button-nav"
+            class="icon"
+            aria-label="Click for links to more apps by neb.host"
+            tabindex="-1"
+          >
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div id="nav-overlay">
+            <div id="nav-content">
+              <div class="container">
+                <div class="nav-header">More Apps By Neb</div>
 
-      <div id="nav-links">
-        <button id="button-nav" class="icon" aria-label="Click for links to more apps by neb.host" tabindex="-1">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-        <div id="nav-overlay">
-          <div id="nav-content">
-            <div class="container">
+                <div class="nav-list"></div>
 
-              <div class="nav-header">More Apps By Neb</div>
+                <div class="nav-footer">
+                  <!-- vvv neb.host subsite footer -->
+                  <footer id="footer-neb-host">
+                    site by
+                    <a
+                      style="
+                        color: #ffffff;
+                        font-family: 'Consolas', sans-serif;
+                        font-size: 12px;
+                      "
+                      href="https://neb.host"
+                      >neb.host</a
+                    >
+                  </footer>
+                  <!-- ^^^ neb.host subsite footer -->
+                </div>
+              </div>
 
-              <div class="nav-list"></div>
-
-              <div class="nav-footer">
-                <!-- vvv neb.host subsite footer -->
-                <footer id="footer-neb-host">site by <a style="color: #ffffff; font-family: 'Consolas', sans-serif; font-size: 12px;" href="https://neb.host">neb.host</a>
-                </footer>
-                <!-- ^^^ neb.host subsite footer -->
+              <div id="button-nav-close">
+                <a href="#">X</a>
               </div>
             </div>
-
-            <div id="button-nav-close">
-              <a href="#">X</a>
-            </div>
-
           </div>
+        </div>
+
+        <button id="button-help" class="icon" aria-label="Help" tabindex="-1">
+          <i class="fa-solid fa-question"></i>
+        </button>
+
+        <div id="debug-buttons" class="debug">
+          <nav class="ddmenu">
+            <div class="ddgroup">
+              <button id="button-debug-dropdown" class="icon debug">
+                <i class="fa-solid fa-bug"></i>
+              </button>
+              <div class="ddsub">
+                <button id="button-get-song" class="icon" title="Get Song">
+                  <i class="fa-brands fa-itunes-note"></i>
+                </button>
+                <button id="button-get-songs" class="icon" title="Get Songs">
+                  <i class="fa-solid fa-music"></i>
+                </button>
+                <button
+                  id="button-show-config"
+                  class="icon"
+                  title="Show Config"
+                >
+                  <i class="fa-solid fa-gears"></i>
+                </button>
+                <button id="button-show-state" class="icon" title="Show State">
+                  <i class="fa-solid fa-sliders"></i>
+                </button>
+              </div>
+            </div>
+          </nav>
         </div>
       </div>
 
-      <button id="button-help" class="icon" aria-label="Help" tabindex="-1">
-        <i class="fa-solid fa-question"></i>
-      </button>
+      <div class="title">
+        <h1>Nebyoodle</h1>
+      </div>
 
-      <div id="debug-buttons" class="debug">
-        <nav class="ddmenu">
-          <div class="ddgroup">
-            <button id="button-debug-dropdown" class="icon debug">
-              <i class="fa-solid fa-bug"></i>
+      <div class="menu-right">
+        <button
+          id="button-stats"
+          class="icon"
+          aria-label="Statistics"
+          tabindex="-1"
+        >
+          <i class="fa-solid fa-chart-simple"></i>
+        </button>
+        <button
+          id="button-settings"
+          class="icon"
+          aria-label="Settings"
+          tabindex="-1"
+        >
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+    <section id="game">
+      <div id="top-half">
+        <div id="mode-container">
+          <div id="gamemode-container" class="setting-row">
+            <a
+              href="#"
+              id="gamemode-0"
+              data-active="true"
+              date-gamemodeid="daily"
+              onclick="Nebyoodle._changeSetting('gameMode', 'daily', event)"
+              >Daily</a
+            >
+
+            &nbsp;/&nbsp;
+
+            <a
+              href="#"
+              id="gamemode-1"
+              data-active="false"
+              date-gamemodeid="free"
+              onclick="Nebyoodle._changeSetting('gameMode', 'free', event)"
+              >Free Play</a
+            >
+          </div>
+
+          <div id="daily-details" class="setting-row">
+            Nebyoodle #<span class="index"></span> for <span class="day"></span>
+          </div>
+        </div>
+
+        <div id="song-data"></div>
+
+        <div id="guesses-container">
+          <div class="guess" data-guess-id="0"></div>
+          <div class="guess" data-guess-id="1"></div>
+          <div class="guess" data-guess-id="2"></div>
+          <div class="guess" data-guess-id="3"></div>
+          <div class="guess" data-guess-id="4"></div>
+          <div class="guess" data-guess-id="5"></div>
+        </div>
+      </div>
+
+      <div id="bot-first-half">
+        <div id="audio-container">
+          <audio id="audio-element" src=""></audio>
+        </div>
+
+        <div id="timeline-container">
+          <div id="timeline">
+            <div
+              fill="0.0625"
+              class="intro-unplayed"
+              style="transform: scaleX(0.0625)"
+            ></div>
+            <div
+              fill="0"
+              class="intro-played"
+              style="transform: scaleX(0)"
+            ></div>
+            <div class="marker" style="left: 6.25%"></div>
+            <div class="marker" style="left: 12.5%"></div>
+            <div class="marker" style="left: 25%"></div>
+            <div class="marker" style="left: 43.75%"></div>
+            <div class="marker" style="left: 68.75%"></div>
+            <div class="marker" style="left: 99.9%"></div>
+          </div>
+        </div>
+
+        <div id="play-container">
+          <div id="start-time" class="time-bits">
+            <span id="start-time-minutes">0</span>
+            <span>:</span>
+            <span id="start-time-seconds">00</span>
+          </div>
+          <div id="play-stop">
+            <button id="button-play-stop" title="Play/Stop (Space)" disabled>
+              <i id="button-play-stop-icon" class="fa-solid fa-play"></i>
             </button>
-            <div class="ddsub">
-              <button id="button-get-song" class="icon" title="Get Song">
-                <i class="fa-brands fa-itunes-note"></i>
-              </button>
-              <button id="button-get-songs" class="icon" title="Get Songs">
-                <i class="fa-solid fa-music"></i>
-              </button>
-              <button id="button-show-config" class="icon" title="Show Config">
-                <i class="fa-solid fa-gears"></i>
-              </button>
-              <button id="button-show-state" class="icon" title="Show State">
-                <i class="fa-solid fa-sliders"></i>
-              </button>
+          </div>
+          <div id="end-time" class="time-bits">
+            <span id="end-time-minutes">0</span>
+            <span>:</span>
+            <span id="end-time-seconds">16</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="bot-second-half">
+        <div id="search-container" class="disabled">
+          <div id="guess-container">
+            <input
+              type="text"
+              name="guess-input"
+              id="guess-input"
+              placeholder="Search for title / album"
+              disabled
+            />
+            <button id="button-guess-clear">X</button>
+            <div id="guess-result">
+              <ul id="guess-result-list"></ul>
+              <div id="guess-result-counter"></div>
             </div>
           </div>
-        </nav>
-      </div>
-
-    </div>
-
-    <div class="title">
-      <h1>Nebyoodle</h1>
-    </div>
-
-    <div class="menu-right">
-      <button id="button-stats" class="icon" aria-label="Statistics" tabindex="-1">
-        <i class="fa-solid fa-chart-simple"></i>
-      </button>
-      <button id="button-settings" class="icon" aria-label="Settings" tabindex="-1">
-        <i class="fa-solid fa-gear"></i>
-      </button>
-    </div>
-  </header>
-
-  <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
-  <section id="game">
-
-    <div id="top-half">
-
-      <div id="mode-container">
-        <div id="gamemode-container" class="setting-row">
-          <a href="#" id="gamemode-0"
-            data-active="true"
-            date-gamemodeid="daily"
-            onclick="Nebyoodle._changeSetting('gameMode', 'daily', event)"
-          >Daily</a>
-
-          &nbsp;/&nbsp;
-
-          <a href="#" id="gamemode-1"
-            data-active="false"
-            date-gamemodeid="free"
-            onclick="Nebyoodle._changeSetting('gameMode', 'free', event)"
-          >Free Play</a>
         </div>
 
-        <div id="daily-details" class="setting-row">
-          Nebyoodle #<span class="index"></span> for <span class="day"></span>
-        </div>
-      </div>
-
-      <div id="song-data"></div>
-
-      <div id="guesses-container">
-        <div class="guess" data-guess-id="0"></div>
-        <div class="guess" data-guess-id="1"></div>
-        <div class="guess" data-guess-id="2"></div>
-        <div class="guess" data-guess-id="3"></div>
-        <div class="guess" data-guess-id="4"></div>
-        <div class="guess" data-guess-id="5"></div>
-      </div>
-
-    </div>
-
-    <div id="bot-first-half">
-
-      <div id="audio-container">
-        <audio id="audio-element" src=""></audio>
-      </div>
-
-      <div id="timeline-container">
-        <div id="timeline">
-          <div fill="0.0625" class="intro-unplayed" style="transform: scaleX(0.0625);"></div>
-          <div fill="0" class="intro-played" style="transform: scaleX(0);"></div>
-          <div class="marker" style="left: 6.25%;"></div>
-          <div class="marker" style="left: 12.5%;"></div>
-          <div class="marker" style="left: 25%;"></div>
-          <div class="marker" style="left: 43.75%;"></div>
-          <div class="marker" style="left: 68.75%;"></div>
-          <div class="marker" style="left: 99.9%;"></div>
-        </div>
-      </div>
-
-      <div id="play-container">
-        <div id="start-time" class="time-bits">
-          <span id="start-time-minutes">0</span>
-          <span>:</span>
-          <span id="start-time-seconds">00</span>
-        </div>
-        <div id="play-stop">
-          <button id="button-play-stop" title="Play/Stop (Space)" disabled>
-            <i id="button-play-stop-icon" class="fa-solid fa-play"></i>
+        <div id="submit-container">
+          <button id="button-skip" disabled>
+            <span>Skip</span>
+            <span id="skip-seconds">(+1s)</span>
           </button>
-        </div>
-        <div id="end-time" class="time-bits">
-          <span id="end-time-minutes">0</span>
-          <span>:</span>
-          <span id="end-time-seconds">16</span>
+          <button id="button-submit" disabled>Submit</button>
         </div>
       </div>
+    </section>
 
-    </div>
-
-    <div id="bot-second-half">
-
-      <div id="search-container" class="disabled">
-        <div id="guess-container">
-          <input type="text"
-            name="guess-input"
-            id="guess-input"
-            placeholder="Search for title / album"
-            disabled
-          />
-          <button id="button-guess-clear">X</button>
-          <div id="guess-result">
-            <ul id="guess-result-list"></ul>
-            <div id="guess-result-counter"></div>
-          </div>
-        </div>
-      </div>
-
-      <div id="submit-container">
-        <button id="button-skip" disabled>
-          <span>Skip</span>
-          <span id="skip-seconds">(+1s)</span>
-        </button>
-        <button id="button-submit" disabled>
-          Submit
-        </button>
-      </div>
-
-    </div>
-
-  </section>
-
-  <!-- End Document
+    <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
-  <!-- JAVASCRIPTS
+    <!-- JAVASCRIPTS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="./assets/js/app.js"></script>
-  <script src="./assets/js/app/constants.js"></script>
-  <script src="./assets/js/app/dom.js"></script>
-  <script src="./assets/js/app/lib/modal.js"></script>
-  <script src="./assets/js/app/lib/stats.js"></script>
-  <script src="./assets/js/app/main.js"></script>
-</body>
+    <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/app/constants.js"></script>
+    <script src="./assets/js/app/dom.js"></script>
+    <script src="./assets/js/app/lib/debug.js"></script>
+    <script src="./assets/js/app/lib/helpers.js"></script>
+    <script src="./assets/js/app/lib/modal.js"></script>
+    <script src="./assets/js/app/lib/stats.js"></script>
+    <script src="./assets/js/app/main.js"></script>
+  </body>
 </html>
