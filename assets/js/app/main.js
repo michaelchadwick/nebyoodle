@@ -340,7 +340,7 @@ Nebyoodle._loadGame = async function(mode = null) {
         const response = await fetch(NEBYOODLE_DAILY_SCRIPT)
         const data = await response.json()
 
-        // Nebyoodle.myModal._destroyModal()
+        if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
 
         const dailySongId = data['songId']
         const savedSongId = lsStateDaily[Nebyoodle.__getSessionIndex()].songId
@@ -709,7 +709,7 @@ Nebyoodle._loadExistingSolution = async function(gameMode) {
 
 // use to create new free puzzle without confirmation
 Nebyoodle._createAnotherFree = async function() {
-  Nebyoodle.myModal._destroyModal()
+  if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
 
   await Nebyoodle._createNewSolution('free')
 }
@@ -734,8 +734,8 @@ Nebyoodle._confirmFreeCreateNew = async function() {
     console.error('progress reset failed', err)
   }
 
-  Nebyoodle.myConfirm._destroyModal()
-  Nebyoodle.myModal._destroyModal()
+  if (Nebyoodle.myConfirm) Nebyoodle.myConfirm._destroyModal()
+  if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
 }
 
 Nebyoodle._disableUI = function() {
@@ -888,7 +888,7 @@ Nebyoodle._getSong = async function(songId = null) {
     } else {
       console.error('fetched song has invalid data')
 
-      Nebyoodle.myModal._destroyModal()
+      if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
 
       Nebyoodle.myModal = new Modal('temp', null,
         'Could not load song!',
@@ -920,7 +920,7 @@ Nebyoodle._getSongs = async function() {
     const getSongsResponse = await fetch(NEBYOODLE_ALL_SONGS_SCRIPT)
     const songs = await getSongsResponse.json()
 
-    Nebyoodle.myModal._destroyModal()
+    if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
 
     if (songs && songs.status != 'error') {
       songs.data.forEach((song, index) => {
