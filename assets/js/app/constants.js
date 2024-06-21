@@ -2,6 +2,14 @@
 /* set any global app constants */
 /* eslint-disable no-unused-vars */
 
+const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'
+const NEBYOODLE_SHARE_URL = 'https://guess.nebyoolae.com/?r=share'
+
+const NEBYOODLE_ENV_PROD_URL = [
+  'nebyoodle.fun',
+  'guess.nebyoolae.com'
+]
+
 const NEBYOODLE_STATE_DAILY_KEY = 'nebyoodle-state-daily'
 const NEBYOODLE_STATE_FREE_KEY = 'nebyoodle-state-free'
 
@@ -12,11 +20,6 @@ const NEBYOODLE_SONG_DATA_KEY = 'nebyoodle-song-data'
 const NEBYOOCOM_PROD_URL = 'https://music.nebyoolae.com'
 const NEBYOOCOM_LOCAL_URL = 'https://muzcom-web.ddev.site'
 
-const NEBYOODLE_ENV_PROD_URL = [
-  'nebyoodle.fun',
-  'guess.nebyoolae.com'
-]
-const NEBYOODLE_SHARE_URL = 'https://guess.nebyoolae.com/?r=share'
 const NEBYOODLE_DAILY_SCRIPT = './assets/scripts/daily.php'
 const NEBYOODLE_DEBUG_SCRIPT = './assets/scripts/debug.php'
 const NEBYOODLE_SONG_SCRIPT = './assets/scripts/song.php'
@@ -37,6 +40,11 @@ const NEBYOODLE_DEFAULT_STATE = {
   'guesses': [],
   'songId': null
 }
+const NEBYOODLE_DEFAULT_SETTINGS = {
+  'darkMode': false,
+  'firstTime': true,
+  'gameMode': 'daily',
+}
 
 const NEBYOODLE_DEFAULTS = {
   'allSongData': [],
@@ -48,10 +56,5 @@ const NEBYOODLE_DEFAULTS = {
     'daily': [{...NEBYOODLE_DEFAULT_STATE}],
     'free': [{...NEBYOODLE_DEFAULT_STATE}]
   },
-  'settings': {
-    'darkMode': false,
-    'gameMode': 'daily'
-  }
+  'settings': NEBYOODLE_DEFAULT_SETTINGS
 }
-
-const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'
