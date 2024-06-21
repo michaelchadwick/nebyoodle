@@ -1,3 +1,7 @@
+/* lib/stats */
+/* statistic crunching functions */
+/* global Nebyoodle */
+
 Nebyoodle.__getSessionCount = function(mode) {
   const state = Nebyoodle.state[mode]
 
