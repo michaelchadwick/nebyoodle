@@ -158,14 +158,22 @@ class Modal {
 
     // Let's rock
     if (!this.parent.contains(document.getElementsByClassName('modal-dialog')[0])) {
+      // console.log('_destroyModal: attempting to add this.modal to this.parent', this.modal, this.parent)
+
       this.parent.appendChild(this.modal)
     }
   }
 
   _destroyModal() {
-    if (this.parent.contains(document.getElementsByClassName('modal-dialog')[0])) {
-      this.parent.removeChild(this.modal)
-      delete this
+    if (this.modal != null) {
+      // console.log('_destroyModal: attempting to remove this.modal', this.modal)
+
+      if (this.parent.contains(document.getElementsByClassName('modal-dialog')[0])) {
+        // console.log('_destroyModal: attempting to remove this.modal', this.modal.querySelector('.modal-title'))
+
+        this.parent.removeChild(this.modal)
+        delete this
+      }
     }
   }
 }
