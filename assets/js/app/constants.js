@@ -55,7 +55,3 @@ const NEBYOODLE_DEFAULTS = {
 }
 
 const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'
-
-const NEBYOODLE_TEST_TERMS = [
-  'apple', 'apple watch', 'apple macbook', 'apple macbook pro', 'iphone', 'iphone 12'
-]
