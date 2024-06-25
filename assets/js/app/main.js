@@ -22,6 +22,10 @@ Nebyoodle.modalOpen = async function(type, data = null) {
   switch(type) {
     case 'start':
     case 'help':
+      if (Nebyoodle.myModal) {
+        Nebyoodle.myModal._destroyModal()
+      }
+
       Nebyoodle.myModal = new Modal('perm', 'How to Play Nebyoodle',
         `
           <p>Listen to the intro of a Nebyoolae song, and then find the correct title/album in the list.</p>
@@ -99,6 +103,11 @@ Nebyoodle.modalOpen = async function(type, data = null) {
           </div>
         </div>
       `
+
+      if (Nebyoodle.myModal) {
+        Nebyoodle.myModal._destroyModal()
+      }
+
       Nebyoodle.myModal = new Modal('perm', 'Statistics',
         modalText,
         null,
@@ -176,6 +185,10 @@ Nebyoodle.modalOpen = async function(type, data = null) {
       break
 
     case 'settings':
+      if (Nebyoodle.myModal) {
+        Nebyoodle.myModal._destroyModal()
+      }
+
       Nebyoodle.myModal = new Modal('perm', 'Settings',
         `
           <div id="settings">
@@ -202,7 +215,6 @@ Nebyoodle.modalOpen = async function(type, data = null) {
         null,
         null
       )
-
 
       Nebyoodle._loadSettings()
 
