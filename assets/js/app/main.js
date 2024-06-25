@@ -167,7 +167,7 @@ Nebyoodle.modalOpen = async function(type, data = null) {
       `
 
       if (Nebyoodle.__getGameMode() == 'daily') {
-        modalText += `<div>A new daily song will be available at 12 am PST</div>`
+        modalText += `<div>New daily song available at 12 am PST</div>`
       }
 
       modalText += `
