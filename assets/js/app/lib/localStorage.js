@@ -26,6 +26,8 @@ Nebyoodle._loadGame = async function() {
   const gameMode = Nebyoodle.__getGameMode()
   const lsStateDaily = JSON.parse(localStorage.getItem(NEBYOODLE_STATE_DAILY_KEY))
 
+  // console.log('loadING: daily ls', lsStateDaily[0])
+
   if (lsStateDaily && Object.keys(lsStateDaily).length) {
     const dailyDefaults = NEBYOODLE_DEFAULTS.state.daily
 
@@ -39,6 +41,8 @@ Nebyoodle._loadGame = async function() {
     })
   }
 
+  // console.log('loadED: daily state', Nebyoodle.__getState('daily'))
+
   /* ************************* */
   /* free state LS -> code     */
   /* ************************* */
@@ -50,9 +54,9 @@ Nebyoodle._loadGame = async function() {
 
     let i = 0
     lsStateFree.forEach(lsState => {
-      Nebyoodle.__setState('gameState', lsState.gameState || freeDefaults.gameState, 'daily', i)
-      Nebyoodle.__setState('guesses', lsState.guesses || freeDefaults.guesses, 'daily', i)
-      Nebyoodle.__setState('songId', lsState.songId || freeDefaults.songId, 'daily', i)
+      Nebyoodle.__setState('gameState', lsState.gameState || freeDefaults.gameState, 'free', i)
+      Nebyoodle.__setState('guesses', lsState.guesses || freeDefaults.guesses, 'free', i)
+      Nebyoodle.__setState('songId', lsState.songId || freeDefaults.songId, 'free', i)
 
       i++
     })
@@ -104,7 +108,7 @@ Nebyoodle._loadGame = async function() {
 
             // if we already have previous guesses, check for correct answer
             if (lsDailyGuesses.length) {
-              console.log('DAILY existing guesses found')
+              // console.log('DAILY existing guesses found')
 
               Nebyoodle._refreshUI(lsDailyGuesses)
 
@@ -122,7 +126,7 @@ Nebyoodle._loadGame = async function() {
         }
         // time has elapsed on daily puzzle, and new one is needed
         else {
-          console.log('FUNC _loadGame(); dailySongId and savedSongId do not match; creating new puzzle')
+          // console.log('FUNC _loadGame(); dailySongId and savedSongId do not match; creating new puzzle')
 
           dailyCreateOrLoad = 'create'
         }
@@ -141,11 +145,13 @@ Nebyoodle._loadGame = async function() {
     switch (dailyCreateOrLoad) {
       case 'create':
         await Nebyoodle._createNewSolution('daily')
-        console.log('DAILY solution created!', Nebyoodle.__getSongId('daily'))
+
+        // console.log('DAILY solution created!', Nebyoodle.__getSongId('daily'))
         break
       case 'load':
         await Nebyoodle._loadExistingSolution('daily', Nebyoodle.__getSongId('daily'))
-        console.log('DAILY solution loaded!', Nebyoodle.__getSongId('daily'))
+
+        // console.log('DAILY solution loaded!', Nebyoodle.__getSongId('daily'))
         break
       default:
         console.error('DAILY solution error!', Nebyoodle.__getSongId('daily'))
@@ -183,11 +189,13 @@ Nebyoodle._loadGame = async function() {
     switch (freeCreateOrLoad) {
       case 'create':
         await Nebyoodle._createNewSolution('free', true)
-        console.log('FREE solution created!', Nebyoodle.__getSongId('free'))
+
+        // console.log('FREE solution created!', Nebyoodle.__getSongId('free'))
         break
       case 'load':
         await Nebyoodle._loadExistingSolution('free', Nebyoodle.__getSongId('free'))
-        console.log('FREE solution loaded!', Nebyoodle.__getSongId('free'))
+
+        // console.log('FREE solution loaded!', Nebyoodle.__getSongId('free'))
         break
       default:
         console.error('FREE solution error!', Nebyoodle.__getSongId('free'))
@@ -205,15 +213,13 @@ Nebyoodle._loadGame = async function() {
     Nebyoodle._saveSetting("firstTime", false)
   }
 
-  console.log('-- save game because finished loading game state')
+  // console.log('- save game because finished loading game state')
   Nebyoodle._saveGame()
 }
 // save state/settings from code model -> LS
 Nebyoodle._saveGame = function() {
   // save daily game state
   let curDailyState = Nebyoodle.__getStateObj('daily')
-
-  // console.log('saving: curDailyState', curDailyState)
 
   curDailyState.forEach(sesh => {
     Object.keys(sesh).forEach(key => {
@@ -234,8 +240,6 @@ Nebyoodle._saveGame = function() {
 
   // save free game state
   let curFreeState = Nebyoodle.__getStateObj('free')
-
-  // console.log('saving: curFreeState', curFreeState)
 
   curFreeState.forEach(sesh => {
     Object.keys(sesh).forEach(key => {
@@ -267,7 +271,7 @@ Nebyoodle._saveGame = function() {
     console.error('localStorage global settings save failed', error)
   }
 
-  // console.log('saving: settings', curSettings)
+  // console.log('-- curDailyState, curFreeState', curDailyState, curFreeState)
 }
 
 // check for song data, and load it appropriately
@@ -275,7 +279,7 @@ Nebyoodle._loadAllSongData = async function() {
   const lsSongData = localStorage.getItem(NEBYOODLE_SONG_DATA_KEY)
 
   if (lsSongData) {
-    console.log('Song data loaded (localStorage)!')
+    // console.log('Song data loaded (localStorage)!')
 
     // Nebyoodle.myModal = new Modal('temp', null,
     //   'Song data loaded',
@@ -318,7 +322,7 @@ Nebyoodle._loadSettings = function() {
   } else {
     Nebyoodle.settings = NEBYOODLE_DEFAULTS.settings
 
-    console.log('-- save game because loaded default settings')
+    // console.log('-- save game because loaded default settings')
     Nebyoodle._saveGame()
 
     // console.log('no saved settings found; defaults loaded', Nebyoodle.settings)
@@ -408,7 +412,7 @@ Nebyoodle._saveSetting = function(setting, value) {
     Nebyoodle._refreshUI(Nebyoodle.__getGuesses())
   }
 
-  console.log('_saveSetting', settings)
+  // console.log('_saveSetting', settings)
 
   localStorage.setItem(NEBYOODLE_SETTINGS_KEY, JSON.stringify(settings))
 
@@ -421,49 +425,26 @@ Nebyoodle._getSong = async function(songId = null) {
   let getSongResponse = null
 
   if (Nebyoodle.__getGameMode() == 'daily') {
-    // Nebyoodle.myModal = new Modal('temp-api', ' ',
-    //   'loading daily script...',
-    //   null,
-    //   null,
-    //   'lds-dual-ring'
-    // )
-
     getSongResponse = await fetch(`${NEBYOODLE_DAILY_SCRIPT}?env=${Nebyoodle.env}`)
     const json = await getSongResponse.json()
-
-    // Nebyoodle.myModal._destroyModal()
 
     Nebyoodle.__updateDailyDetails(json.index)
 
     songIdToFetch = json.songId
   }
 
-  // Nebyoodle.myModal = new Modal('temp-api', ' ',
-  //   'loading song script...',
-  //   null,
-  //   null,
-  //   'lds-dual-ring'
-  // )
-
   if (songIdToFetch) {
+    // console.log('getting song: existing id:', songIdToFetch)
+
     getSongResponse = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}&songId=${songIdToFetch}`)
   } else {
+    // console.log('getting song: new id')
+
     getSongResponse = await fetch(`${NEBYOODLE_SONG_SCRIPT}?env=${Nebyoodle.env}`)
   }
 
-  // Nebyoodle.myModal._destroyModal()
-
   if (getSongResponse) {
-    // Nebyoodle.myModal = new Modal('temp-api', ' ',
-    //   'loading song script response...',
-    //   null,
-    //   null,
-    //   'lds-dual-ring'
-    // )
-
     const song = await getSongResponse.json()
-
-    // Nebyoodle.myModal._destroyModal()
 
     if (song.data[0]) {
       const baseURL = NEBYOOCOM_PROD_URL
@@ -496,13 +477,11 @@ Nebyoodle._getSong = async function(songId = null) {
 
       if (solution) {
         Nebyoodle.__setState('songId', randomSongId, Nebyoodle.__getGameMode())
-
-        // console.log('__getSong', Nebyoodle.__getState())
       } else {
         console.error('not able to set config.solution')
       }
 
-      console.log('- save game because songId chosen')
+      // console.log('- save game because songId chosen')
       Nebyoodle._saveGame()
     } else {
       console.error('fetched song has invalid data')
@@ -567,7 +546,7 @@ Nebyoodle._getSongs = async function() {
       console.error('could not fetch songs from remote source')
     }
   } else {
-    console.log('Song data loaded (localStorage)!')
+    // console.log('Song data loaded (localStorage)!')
 
     // Nebyoodle.myModal = new Modal('temp', null,
     //   'Song data loaded',

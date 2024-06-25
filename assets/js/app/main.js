@@ -291,7 +291,7 @@ Nebyoodle.initApp = async () => {
 
 // create new solution, which resets progress
 Nebyoodle._createNewSolution = async function(gameMode, reset = null) {
-  console.log(`**** creatING new '${gameMode}' solution ****`)
+  // console.log(`**** creatING new '${gameMode}' solution ****`)
 
   if (reset) {
     Nebyoodle.__setConfig('gameMode', NEBYOODLE_DEFAULTS.state[gameMode], gameMode)
@@ -311,9 +311,9 @@ Nebyoodle._createNewSolution = async function(gameMode, reset = null) {
 
 // load existing solution, which retains past progress
 Nebyoodle._loadExistingSolution = async function(gameMode) {
-  const songId = Nebyoodle.__getSongId(gameMode)
+  // console.log(`**** loadING existing '${gameMode}' solution ****`, songId)
 
-  console.log(`**** loadING existing '${gameMode}' solution ****`, songId)
+  const songId = Nebyoodle.__getSongId(gameMode)
 
   await Nebyoodle._getSong(songId)
 }
@@ -406,7 +406,7 @@ Nebyoodle._enableUI = function() {
 Nebyoodle._getWinMarkup = async function() {
   const baseURL = NEBYOOCOM_PROD_URL
 
-  let data = Nebyoodle.__getConfig(mode).songData
+  let data = Nebyoodle.__getConfig().songData
 
   if (!data) {
     const response = await fetch(`${NEBYOODLE_SONGID_SCRIPT}?songId=${Nebyoodle.__getSongId()}`)
@@ -765,7 +765,7 @@ Nebyoodle._checkWinState = async function() {
     }
   }
 
-  console.log('- save game because finished checking win state')
+  // console.log('- save game because finished checking win state')
   Nebyoodle._saveGame()
 
   return gameIsWon
@@ -1028,6 +1028,7 @@ Nebyoodle.__setState = function(
   mode = Nebyoodle.__getGameMode(),
   index = Nebyoodle.__getSessionIndex()
 ) {
+  // console.log(`!!! SAVING STATE: Nebyoodle.state[${mode}][${index}][${key}] = ${val}`)
   Nebyoodle.state[mode][index][key] = val
 }
 Nebyoodle.__getStateObj = function(mode = Nebyoodle.__getGameMode()) {
