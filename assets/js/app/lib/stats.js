@@ -6,7 +6,7 @@ Nebyoodle.__getSessionCount = function(mode) {
   const state = Nebyoodle.__getState(mode)
 
   if (state) {
-    return Nebyoodle.__getState(mode)
+    return Nebyoodle.__getStateObj(mode)
       .filter(session => Nebyoodle.___isDone(session))
       .length
   } else {
@@ -16,7 +16,7 @@ Nebyoodle.__getSessionCount = function(mode) {
 
 Nebyoodle.__getSuccessPerc = function(mode) {
   const allCount = Nebyoodle.__getSessionCount(mode)
-  const winCount = Nebyoodle.__getState(mode)
+  const winCount = Nebyoodle.__getStateObj(mode)
     .filter(session => Nebyoodle.___isWin(session))
     .length
 
@@ -31,7 +31,7 @@ Nebyoodle.__getStreak = function(mode, max = null) {
   let streakCur = 0
   let streakMax = 0
 
-  Nebyoodle.__getState(mode).forEach(session => {
+  Nebyoodle.__getStateObj(mode).forEach(session => {
     if (Nebyoodle.___isDone(session)) {
       if (Nebyoodle.___isWin(session)) {
         streakCur++
