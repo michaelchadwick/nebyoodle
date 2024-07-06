@@ -1,43 +1,53 @@
 :root {
-  --base-color:             #527099;
-  --light-color:            #a6c4ee;
-  --dark-color:             #244471;
+  --base-color: #527099;
+  --light-color: #a6c4ee;
+  --dark-color: #244471;
 
-  --debug-color:            #715ec7;
-  --debug-color-secondary:  #dbbce2;
-  --debug-color-light1:     #e5e0ff;
-  --debug-color-light2:     #e8e3ff;
-  --debug-color-light3:     #ded8ff;
-  --debug-color-light4:     #e3e0f3;
-  --debug-color-light5:     #e1ddf7;
-  --debug-color-medium:     #8c85ae;
+  --debug-color: #715ec7;
+  --debug-color-secondary: #dbbce2;
+  --debug-color-light1: #e5e0ff;
+  --debug-color-light2: #e8e3ff;
+  --debug-color-light3: #ded8ff;
+  --debug-color-light4: #e3e0f3;
+  --debug-color-light5: #e1ddf7;
+  --debug-color-medium: #8c85ae;
 
-  --played-color:           #1ebbd7;
-  --unplayed-color:         #8d8d8d;
-  --white:                  #ffffff;
-  --black:                  #111111;
-  --shadow:                 #11111105;
-  --shadow-dark:            #11111125;
-  --off-white:              #f1f1f1;
-  --gray:                   #e1e1e1;
-  --gray-medium:            #a7a7a7;
-  --gray-dark:              #787878;
-  --marker-color:           #222222;
+  --played-color: #1ebbd7;
+  --unplayed-color: #8d8d8d;
+  --white: #ffffff;
+  --black: #111111;
+  --shadow: #11111105;
+  --shadow-dark: #11111125;
+  --off-white: #f1f1f1;
+  --gray: #e1e1e1;
+  --gray-medium: #a7a7a7;
+  --gray-dark: #787878;
+  --marker-color: #222222;
 
-  --window-win1:            #5ec767;
-  --window-win1-light:      #e6f2e8;
-  --window-win2:            #51ac59;
-  --window-skip1:           #cec514;
-  --window-skip1-light:     #f1f1db;
-  --window-lose1:           #c75e5e;
-  --window-lose1-light:     #efdbdb;
-  --window-lose2:           #ad5151;
-  --window-game-over-win:   #d8e4d9;
-  --window-game-over-lose:  #e9dddd;
+  --window-win1: #5ec767;
+  --window-win1-light: #e6f2e8;
+  --window-win2: #51ac59;
+  --window-skip1: #cec514;
+  --window-skip1-light: #f1f1db;
+  --window-lose1: #c75e5e;
+  --window-lose1-light: #efdbdb;
+  --window-lose2: #ad5151;
+  --window-game-over-win: #d8e4d9;
+  --window-game-over-lose: #e9dddd;
+}
+
+@font-face {
+  font-family: changaRegular;
+  src: url("../fonts/Changa/static/Changa-Regular.ttf");
+}
+
+@font-face {
+  font-family: changaBold;
+  src: url("../fonts/Changa/static/Changa-Bold.ttf");
 }
 
 :root {
-  font-family: 'Changa', sans-serif;
+  font-family: changaRegular, sans-serif;
   font-size: 16px;
 }
 
@@ -46,7 +56,9 @@
   padding: 0;
 }
 
-*, ::before, ::after {
+*,
+::before,
+::after {
   box-sizing: border-box;
 }
 
@@ -71,14 +83,15 @@ body {
 a,
 a:visited {
   color: var(--dark-color);
+  font-family: changaBold;
   font-weight: bold;
   text-decoration: none;
 }
-  @media (hover: hover) {
-    a:hover {
-      text-decoration: underline;
-    }
+@media (hover: hover) {
+  a:hover {
+    text-decoration: underline;
   }
+}
 
 code {
   background-color: var(--off-white);
@@ -88,7 +101,13 @@ code {
   padding: 2px 4px 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: changaBold;
   margin: 0 auto;
   text-align: center;
   text-transform: uppercase;
@@ -107,7 +126,7 @@ button {
   cursor: pointer;
   display: flex;
   flex: 1;
-  font-family: inherit;
+  font-family: changaBold;
   font-weight: bold;
   height: 50px;
   justify-content: center;
@@ -117,66 +136,66 @@ button {
   user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
 }
-  button:disabled {
-    background-color: var(--gray);
-    border-color: var(--gray-medium);
-    color: var(--gray-medium);
-    cursor: not-allowed;
-  }
-    button:disabled:hover {
-      background-color: var(--gray);
-      color: var(--gray-medium);
-    }
+button:disabled {
+  background-color: var(--gray);
+  border-color: var(--gray-medium);
+  color: var(--gray-medium);
+  cursor: not-allowed;
+}
+button:disabled:hover {
+  background-color: var(--gray);
+  color: var(--gray-medium);
+}
 
-  button.icon {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    padding: 0;
-  }
-    button.icon:hover {
-      color: var(--base-color);
-    }
-  button.help {
-    background-color: var(--gray);
-    border-radius: 4px;
-    display: inline-block;
-    height: 21px;
-    margin-right: 2px;
-    position: relative;
-    top: 1px;
-    width: 21px;
-  }
-    button.help i {
-      bottom: 1px;
-      position: relative;
-    }
-  button.new-free {
-    background-color: var(--dark-color);
-    color: var(--white);
-    height: 30px;
-    margin: 10px 0 0;
-    padding: 5px;
-    width: 200px;
-  }
-    button.new-free i {
-      margin-left: 6px;
-    }
-  button.share {
-    background-color: var(--base-color);
-    color: var(--white);
-    height: 30px;
-    margin: 5px 0;
-    padding: 5px;
-    width: 100px;
-  }
-    button.share i {
-      margin-left: 6px;
-    }
-  button.game-over {
-    margin-top: 10px;
-  }
+button.icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 0;
+}
+button.icon:hover {
+  color: var(--base-color);
+}
+button.help {
+  background-color: var(--gray);
+  border-radius: 4px;
+  display: inline-block;
+  height: 21px;
+  margin-right: 2px;
+  position: relative;
+  top: 1px;
+  width: 21px;
+}
+button.help i {
+  bottom: 1px;
+  position: relative;
+}
+button.new-free {
+  background-color: var(--dark-color);
+  color: var(--white);
+  height: 30px;
+  margin: 10px 0 0;
+  padding: 5px;
+  width: 200px;
+}
+button.new-free i {
+  margin-left: 6px;
+}
+button.share {
+  background-color: var(--base-color);
+  color: var(--white);
+  height: 30px;
+  margin: 5px 0;
+  padding: 5px;
+  width: 100px;
+}
+button.share i {
+  margin-left: 6px;
+}
+button.game-over {
+  margin-top: 10px;
+}
 
 input:disabled,
 select:disabled {
@@ -200,73 +219,73 @@ select:disabled {
 .radio {
   margin: 0.2rem;
 }
-  .radio input[type=radio] {
-    position: absolute;
-    opacity: 0;
-  }
-    .radio input[type=radio] + .radio-label.radio-label-disabled {
-      color: var(--unplayed-color);
-    }
-    .radio input[type=radio] + .radio-label:before {
-      background: var(--off-white);
-      border: 1px solid var(--gray-medium);
-      border-radius: 100%;
-      content: "";
-      cursor: pointer;
-      display: inline-block;
-      height: 1em;
-      margin-right: 0.5em;
-      position: relative;
-      text-align: center;
-      transition: all 250ms ease;
-      top: 0;
-      vertical-align: top;
-      width: 1em;
-    }
-    .radio input[type=radio]:checked + .radio-label:before {
-      background-color: var(--base-color);
-      box-shadow: inset 0 0 0 4px var(--off-white);
-    }
-    .radio input[type=radio]:focus + .radio-label:before {
-      outline: none;
-      border-color: var(--base-color);
-    }
-    .radio input[type=radio]:disabled + .radio-label:before {
-      box-shadow: inset 0 0 0 4px var(--off-white);
-      border-color: var(--gray-medium);
-      background: var(--gray-medium);
-    }
-    .radio input[type=radio] + .radio-label:empty:before {
-      margin-right: 0;
-    }
+.radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+.radio input[type="radio"] + .radio-label.radio-label-disabled {
+  color: var(--unplayed-color);
+}
+.radio input[type="radio"] + .radio-label:before {
+  background: var(--off-white);
+  border: 1px solid var(--gray-medium);
+  border-radius: 100%;
+  content: "";
+  cursor: pointer;
+  display: inline-block;
+  height: 1em;
+  margin-right: 0.5em;
+  position: relative;
+  text-align: center;
+  transition: all 250ms ease;
+  top: 0;
+  vertical-align: top;
+  width: 1em;
+}
+.radio input[type="radio"]:checked + .radio-label:before {
+  background-color: var(--base-color);
+  box-shadow: inset 0 0 0 4px var(--off-white);
+}
+.radio input[type="radio"]:focus + .radio-label:before {
+  outline: none;
+  border-color: var(--base-color);
+}
+.radio input[type="radio"]:disabled + .radio-label:before {
+  box-shadow: inset 0 0 0 4px var(--off-white);
+  border-color: var(--gray-medium);
+  background: var(--gray-medium);
+}
+.radio input[type="radio"] + .radio-label:empty:before {
+  margin-right: 0;
+}
 
-  .switch {
-    background-color: #444;
-    border-radius: 999px;
-    cursor: pointer;
-    display: block;
-    height: 20px;
-    position: relative;
-    width: 32px;
-  }
-    .switch[data-status='true'] {
-      background-color: var(--base-color);
-    }
-    .switch[data-status='true'] .knob {
-      transform: translateX(calc(100% - 4px));
-    }
-    .switch .knob {
-      background-color: var(--white);
-      border-radius: 8px;
-      display: block;
-      height: calc(100% - 4px);
-      left: 2px;
-      position: absolute;
-      top: 2px;
-      transform: translateX(0);
-      transition: transform 0.3s;
-      width: 50%;
-    }
+.switch {
+  background-color: #444;
+  border-radius: 999px;
+  cursor: pointer;
+  display: block;
+  height: 20px;
+  position: relative;
+  width: 32px;
+}
+.switch[data-status="true"] {
+  background-color: var(--base-color);
+}
+.switch[data-status="true"] .knob {
+  transform: translateX(calc(100% - 4px));
+}
+.switch .knob {
+  background-color: var(--white);
+  border-radius: 8px;
+  display: block;
+  height: calc(100% - 4px);
+  left: 2px;
+  position: absolute;
+  top: 2px;
+  transform: translateX(0);
+  transition: transform 0.3s;
+  width: 50%;
+}
 
 .invalid {
   color: var(--black);
@@ -279,6 +298,7 @@ select:disabled {
 }
 .help .invalid,
 .help .valid {
+  font-family: changaBold;
   font-weight: 600;
 }
 
@@ -295,202 +315,204 @@ header {
   height: 50px;
   padding: 0;
 }
-  /*
+/*
     z-index 11 keeps it above <dialog>
     z-index 10 so you can still interact
     with header even when in an end state
   */
-  header button,
-  header #nav-links,
-  #mode-container {
-    z-index: 11;
+header button,
+header #nav-links,
+#mode-container {
+  z-index: 11;
+}
+header .menu-left {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+  width: 70px;
+}
+header .menu-left #nav-overlay {
+  align-items: unset;
+  background-color: transparent;
+  display: none;
+  height: 100%;
+  justify-content: left;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+header .menu-left #nav-overlay.show {
+  display: flex;
+}
+header .menu-left #nav-overlay #nav-content {
+  background-color: var(--white);
+  border-radius: 0;
+  box-shadow: 3px 5px 5px rgb(0 0 0 / 15%);
+  box-sizing: border-box;
+  margin-top: 50px;
+  max-height: calc(100% - 50px);
+  max-width: 500px;
+  overflow-y: auto;
+  padding: 0px;
+  position: relative;
+  width: 100%;
+}
+@media (min-width: 415px) {
+  header .menu-left #nav-overlay #nav-content {
+    width: 325px;
   }
-  header .menu-left {
-    align-items: center;
-    display: flex;
-    justify-content: flex-start;
-    margin: 0;
-    padding: 0;
-    width: 70px;
-  }
-    header .menu-left #nav-overlay {
-      align-items: unset;
-      background-color: transparent;
-      display: none;
-      height: 100%;
-      justify-content: left;
-      left: 0;
-      position: absolute;
-      top: 0;
-      width: 100%;
-      z-index: 10;
-    }
-      header .menu-left #nav-overlay.show {
-        display: flex;
-      }
-        header .menu-left #nav-overlay #nav-content {
-          background-color: var(--white);
-          border-radius: 0;
-          box-shadow: 3px 5px 5px rgb(0 0 0 / 15%);
-          box-sizing: border-box;
-          margin-top: 50px;
-          max-height: calc(100% - 50px);
-          max-width: 500px;
-          overflow-y: auto;
-          padding: 0px;
-          position: relative;
-          width: 100%;
-        }
-        @media (min-width: 415px) {
-          header .menu-left #nav-overlay #nav-content {
-            width: 325px;
-          }
-        }
-          header .menu-left #nav-overlay #nav-content a {
-            color: var(--black);
-            text-decoration: none;
-          }
+}
+header .menu-left #nav-overlay #nav-content a {
+  color: var(--black);
+  text-decoration: none;
+}
 
-          header .menu-left #nav-overlay #nav-content .container {
-            align-items: normal;
-            padding: 0;
-          }
-            header .menu-left #nav-overlay #nav-content .container .nav-header {
-              font-size: 20px;
-              padding-bottom: 18px;
-              padding-left: 18px;
-              padding-top: 18px;
-            }
-            header .menu-left #nav-overlay #nav-content .container .nav-list a {
-              align-items: center;
-              background-color: transparent;
-              display: flex;
-              font-size: 16px;
-              font-weight: bold;
-              height: 30px;
-              justify-content: left;
-              padding: 4px 0 4px 18px;
-            }
-            header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
-              background-color: var(--light-color);
-            }
-          header .menu-left #nav-overlay #nav-content #button-nav-close {
-            font-size: 20px;
-            font-weight: 600;
-            height: 24px;
-            position: absolute;
-            right: 10px;
-            top: 16px;
-            width: 24px;
-          }
-          header .menu-left #nav-overlay #nav-content .nav-footer {
-            display: flex;
-          }
-          #footer-neb-host {
-            background: var(--base-color);
-            border-top: 2px solid var(--dark-color);
-            bottom: 0;
-            color: var(--light-color);
-            font-family: 'Consolas', sans-serif;
-            font-size: 12px;
-            font-weight: 500;
-            height: 18px;
-            left: 0;
-            letter-spacing: initial;
-            margin-top: 20px;
-            padding: 10px 18px 25px;
-            position: absolute;
-            right: 0;
-            text-align: left;
-            z-index: 2
-          }
+header .menu-left #nav-overlay #nav-content .container {
+  align-items: normal;
+  padding: 0;
+}
+header .menu-left #nav-overlay #nav-content .container .nav-header {
+  font-size: 20px;
+  padding-bottom: 18px;
+  padding-left: 18px;
+  padding-top: 18px;
+}
+header .menu-left #nav-overlay #nav-content .container .nav-list a {
+  align-items: center;
+  background-color: transparent;
+  display: flex;
+  font-family: changaBold;
+  font-size: 16px;
+  font-weight: bold;
+  height: 30px;
+  justify-content: left;
+  padding: 4px 0 4px 18px;
+}
+header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
+  background-color: var(--light-color);
+}
+header .menu-left #nav-overlay #nav-content #button-nav-close {
+  font-family: changaBold;
+  font-size: 20px;
+  font-weight: 600;
+  height: 24px;
+  position: absolute;
+  right: 10px;
+  top: 16px;
+  width: 24px;
+}
+header .menu-left #nav-overlay #nav-content .nav-footer {
+  display: flex;
+}
+#footer-neb-host {
+  background: var(--base-color);
+  border-top: 2px solid var(--dark-color);
+  bottom: 0;
+  color: var(--light-color);
+  font-family: "Consolas", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  height: 18px;
+  left: 0;
+  letter-spacing: initial;
+  margin-top: 20px;
+  padding: 10px 18px 25px;
+  position: absolute;
+  right: 0;
+  text-align: left;
+  z-index: 2;
+}
 
-  header #debug-buttons {
-    display: none;
+header #debug-buttons {
+  display: none;
+}
+header #debug-buttons button {
+  color: var(--debug-color);
+}
+header #debug-buttons .ddmenu {
+  align-items: center;
+  display: flex;
+  z-index: 10;
+}
+header #debug-buttons .ddmenu .ddgroup {
+  border: 1px solid transparent;
+  position: relative;
+  text-decoration: none;
+  width: 100%;
+}
+header #debug-buttons .ddmenu .ddgroup button {
+  margin-right: 0;
+}
+header #debug-buttons .ddmenu .ddgroup:hover {
+  background: var(--debug-color-light3);
+  border: 1px solid var(--debug-color-medium);
+  cursor: pointer;
+}
+header #debug-buttons .ddmenu .ddgroup .ddsub {
+  display: none;
+  left: -1px;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+}
+header #debug-buttons .ddmenu .ddgroup .ddsub a {
+  box-sizing: border-box;
+  display: block;
+}
+header #debug-buttons .ddmenu .ddgroup .ddsub button {
+  background-color: var(--debug-color-light4);
+  border: 1px solid transparent;
+  border-radius: 0;
+  height: 20px;
+  padding: 5px;
+  width: 26px;
+}
+header #debug-buttons .ddmenu .ddgroup .ddsub button:hover {
+  background: var(--debug-color-light5);
+  border: 1px solid var(--debug-color-medium);
+}
+header #debug-buttons .ddmenu .ddgroup:hover .ddsub {
+  display: flex;
+  flex-direction: column;
+}
+@media screen and (max-width: 640px) {
+  .ddmenu {
+    flex-wrap: wrap;
   }
-  header #debug-buttons button {
-    color: var(--debug-color);
+  .ddsub {
+    position: static;
   }
-  header #debug-buttons .ddmenu {
-    align-items: center;
-    display: flex;
-    z-index: 10;
-  }
-    header #debug-buttons .ddmenu .ddgroup {
-      border: 1px solid transparent;
-      position: relative;
-      text-decoration: none;
-      width: 100%;
-    }
-      header #debug-buttons .ddmenu .ddgroup button {
-        margin-right: 0;
-      }
-      header #debug-buttons .ddmenu .ddgroup:hover {
-        background: var(--debug-color-light3);
-        border: 1px solid var(--debug-color-medium);
-        cursor: pointer;
-      }
-        header #debug-buttons .ddmenu .ddgroup .ddsub {
-          display: none;
-          left: -1px;
-          position: absolute;
-          top: 100%;
-          width: 100%;
-        }
-          header #debug-buttons .ddmenu .ddgroup .ddsub a {
-            box-sizing: border-box;
-            display: block;
-          }
-          header #debug-buttons .ddmenu .ddgroup .ddsub button {
-            background-color: var(--debug-color-light4);
-            border: 1px solid transparent;
-            border-radius: 0;
-            height: 20px;
-            padding: 5px;
-            width: 26px;
-          }
-          header #debug-buttons .ddmenu .ddgroup .ddsub button:hover {
-            background: var(--debug-color-light5);
-            border: 1px solid var(--debug-color-medium);
-          }
-          header #debug-buttons .ddmenu .ddgroup:hover .ddsub {
-            display: flex;
-            flex-direction: column;
-          }
-        @media screen and (max-width: 640px) {
-          .ddmenu {
-            flex-wrap: wrap;
-          }
-          .ddsub {
-            position: static;
-          }
-        }
+}
 
+header .title {
+  font-family: changaBold;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  text-align: center;
+  text-transform: uppercase;
+}
+@media (min-width: 768px) {
   header .title {
-    font-family: 'Changa', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 100%;
-    letter-spacing: 0.1em;
-    pointer-events: none;
-    text-align: center;
-    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: 0.01em;
   }
-  @media (min-width: 768px) {
-    header .title {
-      font-size: 20px;
-      letter-spacing: 0.01em;
-    }
-  }
-  header .menu-right {
-    display: flex;
-    width: 70px;
-  }
-    header .menu-right button#button-settings {
-      display: flex;
-      justify-content: flex-end;
-      margin-right: 0;
-    }
+}
+header .menu-right {
+  display: flex;
+  width: 70px;
+}
+header .menu-right button#button-settings {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 0;
+}
 
 /*
  * GAME
@@ -503,375 +525,432 @@ section#game {
   width: 100%;
 }
 
-  section#game #top-half {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    gap: 8px;
-    margin: 0 auto;
-    max-width: 640px;
-    padding: 0 12px 12px;
-    width: 100%;
+section#game #top-half {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 8px;
+  margin: 0 auto;
+  max-width: 640px;
+  padding: 0 12px 12px;
+  width: 100%;
+}
+section#game #top-half #mode-container {
+  height: 40px;
+  margin: 0 auto;
+  text-transform: uppercase;
+  text-underline-offset: 2px;
+  width: 100%;
+}
+section#game #top-half #mode-container .setting-row {
+  font-size: 20px;
+  margin: 0 auto;
+  padding: 4px;
+  text-align: center;
+}
+section#game #top-half #mode-container .setting-row a {
+  color: var(--black);
+  text-decoration: none;
+}
+section#game #top-half #mode-container .setting-row a:hover:not(.disabled),
+section#game #top-half #mode-container .setting-row a[data-active="true"] {
+  text-decoration: underline;
+}
+section#game #top-half #mode-container .setting-row button#button-create-new {
+  background-color: var(--gray);
+  border-radius: 4px;
+  font-weight: normal;
+  height: 22px;
+  margin-left: 10px;
+  padding: 13px 5px;
+}
+section#game #top-half #mode-container .setting-row button#button-create-new i {
+  margin-right: 5px;
+}
+section#game #top-half #mode-container #gamemode-container {
+  height: 30px;
+}
+
+section#game #top-half #mode-container #daily-details {
+  color: var(--marker-color);
+  display: none;
+  font-size: 0.9rem;
+  padding: 0 4px;
+  transform: scale(0);
+}
+section#game #top-half #mode-container #daily-details.show {
+  display: block;
+  transform: scale(1);
+}
+section#game #top-half #mode-container #daily-details .day {
+  font-family: changaBold;
+  font-weight: 600;
+}
+
+section#game #top-half #song-data {
+  background-color: var(--light-color);
+  display: none;
+  padding: 1rem;
+}
+section#game #top-half #song-data.show {
+  display: block;
+}
+section#game #top-half #song-data.lds-dual-ring {
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.song-win-block {
+  background-color: var(--off-white);
+}
+.song-win-block .song-main {
+  display: flex;
+}
+.song-win-block .song-main {
+  padding: 10px 10px 5px;
+}
+.song-win-block .song-main a {
+  margin-right: 10px;
+}
+.song-win-block .song-misc {
+  background: var(--white);
+  line-height: 1;
+  padding: 10px;
+}
+
+section#game #top-half #guesses-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 8px;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 640px;
+  overflow-y: scroll;
+  padding: 0;
+  width: 100%;
+}
+section#game #top-half #guesses-container .guess {
+  align-items: center;
+  border: 2px solid var(--gray-dark);
+  display: flex;
+  flex-shrink: 0;
+  font-family: changaBold;
+  font-size: 1.1rem;
+  font-weight: bold;
+  height: 38px;
+  line-height: 0.9;
+  padding: 8px;
+}
+section#game #top-half #guesses-container .guess.skipped {
+  background-color: var(--window-skip1-light);
+  border-color: var(--window-skip1);
+}
+section#game #top-half #guesses-container .guess.wrong {
+  background-color: var(--window-lose1-light);
+  border-color: var(--window-lose1);
+}
+section#game #top-half #guesses-container .guess.correct {
+  background-color: var(--window-win1-light);
+  border-color: var(--window-win2);
+}
+section#game #top-half #guesses-container .guess .symbol {
+  align-items: center;
+  display: flex;
+  margin: 0 8px 2px 2px;
+}
+
+section#game #bot-first-half {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+section#game #bot-first-half #timeline-container {
+  align-items: center;
+  border-bottom: 1px solid var(--black);
+  border-top: 1px solid var(--black);
+  display: flex;
+  height: 14px;
+  justify-content: center;
+  padding: 0 12px;
+  width: 100%;
+}
+section#game #bot-first-half #timeline-container #timeline {
+  height: 100%;
+  max-width: 640px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+section#game #bot-first-half #timeline-container #timeline .intro-unplayed {
+  background-color: var(--unplayed-color);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform-origin: left top;
+  width: 100%;
+}
+section#game #bot-first-half #timeline-container #timeline .intro-played {
+  background-color: var(--played-color);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform-origin: left top;
+  width: 100%;
+  z-index: 1;
+}
+section#game #bot-first-half #timeline-container #timeline .marker {
+  background-color: var(--marker-color);
+  height: 100%;
+  position: absolute;
+  width: 1px;
+  z-index: 1;
+}
+
+section#game #bot-first-half #play-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 640px;
+  padding: 3px;
+  width: 100%;
+}
+section#game #bot-first-half #play-container div {
+  min-width: 100px;
+}
+section#game #bot-first-half #play-container div.time-bits {
+  font-size: 0;
+}
+section#game #bot-first-half #play-container div.time-bits span {
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  padding: 0;
+}
+section#game #bot-first-half #play-container div#start-time {
+  text-align: left;
+}
+section#game #bot-first-half #play-container div#play-stop {
+  display: flex;
+  min-width: 50px;
+}
+section#game #bot-first-half #play-container div#play-stop button {
+  background-color: var(--white);
+  border: 2px solid var(--black);
+  border-radius: 25px;
+  color: var(--black);
+  font-size: 1.5rem;
+  height: 48px;
+  width: 48px;
+}
+@media (hover: hover) {
+  section#game #bot-first-half #play-container div#play-stop button:hover {
+    background-color: var(--light-color);
   }
-    section#game #top-half #mode-container {
-      height: 40px;
-      margin: 0 auto;
-      text-transform: uppercase;
-      text-underline-offset: 2px;
-      width: 100%;
-    }
-      section#game #top-half #mode-container .setting-row {
-        font-size: 20px;
-        margin: 0 auto;
-        padding: 4px;
-        text-align: center;
-      }
-        section#game #top-half #mode-container .setting-row a {
-          color: var(--black);
-          text-decoration: none;
-        }
-        section#game #top-half #mode-container .setting-row a:hover:not(.disabled),
-        section#game #top-half #mode-container .setting-row a[data-active=true] {
-          text-decoration: underline;
-        }
-        section#game #top-half #mode-container .setting-row button#button-create-new {
-          background-color: var(--gray);
-          border-radius: 4px;
-          font-weight: normal;
-          height: 22px;
-          margin-left: 10px;
-          padding: 13px 5px;
-        }
-          section#game #top-half #mode-container .setting-row button#button-create-new i {
-            margin-right: 5px;
-          }
-      section#game #top-half #mode-container #gamemode-container {
-        height: 30px;
-      }
+}
+section#game #bot-first-half #play-container div#play-stop button:disabled {
+  background-color: var(--gray);
+  border-color: var(--gray-medium);
+  color: var(--gray-medium);
+}
 
-      section#game #top-half #mode-container #daily-details {
-        color: var(--marker-color);
-        display: none;
-        font-size: 0.9rem;
-        padding: 0 4px;
-        transform: scale(0);
-      }
-        section#game #top-half #mode-container #daily-details.show {
-          display: block;
-          transform: scale(1);
-        }
-          section#game #top-half #mode-container #daily-details .day {
-            font-weight: 600;
-          }
+section#game #bot-first-half #play-container div#end-time {
+  text-align: right;
+}
 
-    section#game #top-half #song-data {
-      background-color: var(--light-color);
-      display: none;
-      padding: 1rem;
-    }
-      section#game #top-half #song-data.show {
-        display: block;
-      }
-      section#game #top-half #song-data.lds-dual-ring {
-        padding: 1rem 0;
-        width: 100%;
-      }
+section#game #bot-second-half {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 640px;
+  padding: 0 12px 20px;
+  width: 100%;
+}
+section#game #bot-second-half #search-container {
+  align-items: center;
+  border: 2px solid var(--gray);
+  display: flex;
+  height: 40px;
+  padding: 0 13px;
+  position: relative;
+}
+section#game #bot-second-half #search-container.disabled {
+  background: var(--gray);
+}
+section#game #bot-second-half #search-container:focus-within {
+  border-color: var(--dark-color);
+}
+section#game #bot-second-half #search-container #guess-container {
+  align-items: center;
+  display: flex;
+  width: 100%;
+}
+section#game
+  #bot-second-half
+  #search-container
+  #guess-container
+  input#guess-input {
+  background: none;
+  border: none;
+  padding: 13px 0;
+  width: 100%;
+}
+section#game
+  #bot-second-half
+  #search-container
+  #guess-container
+  input#guess-input:focus {
+  outline: none;
+}
+section#game
+  #bot-second-half
+  #search-container
+  #guess-container
+  button#button-guess-clear {
+  background-color: transparent;
+  color: var(--black);
+  display: none;
+  font-family: changaBold;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
 
-      .song-win-block {
-        background-color: var(--off-white);
-      }
-        .song-win-block .song-main {
-          display: flex;
-        }
-          .song-win-block .song-main {
-            padding: 10px 10px 5px;
-          }
-            .song-win-block .song-main a {
-              margin-right: 10px;
-            }
-          .song-win-block .song-misc {
-            background: var(--white);
-            line-height: 1;
-            padding: 10px;
-          }
-
-    section#game #top-half #guesses-container {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      gap: 8px;
-      justify-content: center;
-      margin: 0 auto;
-      max-width: 640px;
-      overflow-y: scroll;
-      padding: 0;
-      width: 100%;
-    }
-      section#game #top-half #guesses-container .guess {
-        align-items: center;
-        border: 2px solid var(--gray-dark);
-        display: flex;
-        flex-shrink: 0;
-        font-size: 1.1rem;
-        font-weight: bold;
-        height: 38px;
-        line-height: 0.9;
-        padding: 8px;
-      }
-        section#game #top-half #guesses-container .guess.skipped {
-          background-color: var(--window-skip1-light);
-          border-color: var(--window-skip1)
-        }
-        section#game #top-half #guesses-container .guess.wrong {
-          background-color: var(--window-lose1-light);
-          border-color: var(--window-lose1)
-        }
-        section#game #top-half #guesses-container .guess.correct {
-          background-color: var(--window-win1-light);
-          border-color: var(--window-win2)
-        }
-        section#game #top-half #guesses-container .guess .symbol {
-          align-items: center;
-          display: flex;
-          margin: 0 8px 2px 2px;
-        }
-
-  section#game #bot-first-half {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
+section#game #bot-second-half #search-container #guess-container #guess-result {
+  background: var(--white);
+  border: 2px solid var(--dark-color);
+  border-bottom: none;
+  bottom: 100%;
+  display: none;
+  left: -2px;
+  padding: 0;
+  position: absolute;
+  top: auto;
+  z-index: 1;
+}
+section#game
+  #bot-second-half
+  #search-container
+  #guess-container
+  #guess-result
+  ul#guess-result-list {
+  list-style-type: none;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: scroll;
+  padding: 0;
+}
+@media (min-width: 768px) {
+  section#game
+    #bot-second-half
+    #search-container
+    #guess-container
+    #guess-result
+    ul#guess-result-list {
+    max-height: 310px;
   }
-    section#game #bot-first-half #timeline-container {
-      align-items: center;
-      border-bottom: 1px solid var(--black);
-      border-top: 1px solid var(--black);
-      display: flex;
-      height: 14px;
-      justify-content: center;
-      padding: 0 12px;
-      width: 100%;
-    }
-      section#game #bot-first-half #timeline-container #timeline {
-        height: 100%;
-        max-width: 640px;
-        overflow: hidden;
-        position: relative;
-        width: 100%;
-      }
-        section#game #bot-first-half #timeline-container #timeline .intro-unplayed {
-          background-color: var(--unplayed-color);
-          height: 100%;
-          left: 0;
-          position: absolute;
-          top: 0;
-          transform-origin: left top;
-          width: 100%;
-        }
-        section#game #bot-first-half #timeline-container #timeline .intro-played {
-          background-color: var(--played-color);
-          height: 100%;
-          left: 0;
-          position: absolute;
-          top: 0;
-          transform-origin: left top;
-          width: 100%;
-          z-index: 1;
-        }
-        section#game #bot-first-half #timeline-container #timeline .marker {
-          background-color: var(--marker-color);
-          height: 100%;
-          position: absolute;
-          width: 1px;
-          z-index: 1;
-        }
-
-    section#game #bot-first-half #play-container {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-      margin: 0 auto;
-      max-width: 640px;
-      padding: 3px;
-      width: 100%;
-    }
-      section#game #bot-first-half #play-container div {
-        min-width: 100px;
-      }
-        section#game #bot-first-half #play-container div.time-bits {
-          font-size: 0;
-        }
-          section#game #bot-first-half #play-container div.time-bits span {
-            font-size: 1rem;
-            letter-spacing: 0.05rem;
-            padding: 0;
-          }
-        section#game #bot-first-half #play-container div#start-time {
-          text-align: left;
-        }
-        section#game #bot-first-half #play-container div#play-stop {
-          display: flex;
-          min-width: 50px;
-        }
-          section#game #bot-first-half #play-container div#play-stop button {
-            background-color: var(--white);
-            border: 2px solid var(--black);
-            border-radius: 25px;
-            color: var(--black);
-            font-size: 1.5rem;
-            height: 48px;
-            width: 48px;
-          }
-            @media (hover: hover) {
-              section#game #bot-first-half #play-container div#play-stop button:hover {
-                background-color: var(--light-color);
-              }
-            }
-            section#game #bot-first-half #play-container div#play-stop button:disabled {
-              background-color: var(--gray);
-              border-color: var(--gray-medium);
-              color: var(--gray-medium);
-            }
-
-        section#game #bot-first-half #play-container div#end-time {
-          text-align: right;
-        }
-
-  section#game #bot-second-half {
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
-    max-width: 640px;
-    padding: 0 12px 20px;
-    width: 100%;
+}
+section#game
+  #bot-second-half
+  #search-container
+  #guess-container
+  #guess-result
+  ul#guess-result-list
+  li {
+  border-color: var(--light-color);
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-style: solid;
+  border-top-color: transparent;
+  border-width: 1px;
+  padding: 0.25rem 0.5rem;
+}
+section#game
+  #bot-second-half
+  #search-container
+  #guess-container
+  #guess-result
+  ul#guess-result-list
+  li:last-child {
+  border-bottom: none;
+}
+@media (hover: hover) {
+  section#game
+    #bot-second-half
+    #search-container
+    #guess-container
+    #guess-result
+    ul#guess-result-list
+    li:hover {
+    background: var(--light-color);
   }
-    section#game #bot-second-half #search-container {
-      align-items: center;
-      border: 2px solid var(--gray);
-      display: flex;
-      height: 40px;
-      padding: 0 13px;
-      position: relative;
-    }
-      section#game #bot-second-half #search-container.disabled {
-        background: var(--gray);
-      }
-      section#game #bot-second-half #search-container:focus-within {
-        border-color: var(--dark-color);
-      }
-      section#game #bot-second-half #search-container #guess-container {
-        align-items: center;
-        display: flex;
-        width: 100%;
-      }
-        section#game #bot-second-half #search-container #guess-container input#guess-input {
-          background: none;
-          border: none;
-          padding: 13px 0;
-          width: 100%;
-        }
-          section#game #bot-second-half #search-container #guess-container input#guess-input:focus {
-            outline: none;
-          }
-        section#game #bot-second-half #search-container #guess-container button#button-guess-clear {
-          background-color: transparent;
-          color: var(--black);
-          display: none;
-          font-size: 1.25rem;
-          font-weight: 700;
-        }
+}
 
-        section#game #bot-second-half #search-container #guess-container #guess-result {
-          background: var(--white);
-          border: 2px solid var(--dark-color);
-          border-bottom: none;
-          bottom: 100%;
-          display: none;
-          left: -2px;
-          padding: 0;
-          position: absolute;
-          top: auto;
-          z-index: 1;
-        }
-          section#game #bot-second-half #search-container #guess-container #guess-result ul#guess-result-list {
-            list-style-type: none;
-            margin: 0;
-            max-height: 200px;
-            overflow-y: scroll;
-            padding: 0;
-          }
-            @media (min-width: 768px) {
-              section#game #bot-second-half #search-container #guess-container #guess-result ul#guess-result-list {
-                max-height: 310px;
-              }
-            }
-            section#game #bot-second-half #search-container #guess-container #guess-result ul#guess-result-list li {
-              border-color: var(--light-color);
-              border-left-color: transparent;
-              border-right-color: transparent;
-              border-style: solid;
-              border-top-color: transparent;
-              border-width: 1px;
-              padding: 0.25rem 0.5rem;
-            }
-              section#game #bot-second-half #search-container #guess-container #guess-result ul#guess-result-list li:last-child {
-                border-bottom: none;
-              }
-            @media (hover: hover) {
-              section#game #bot-second-half #search-container #guess-container #guess-result ul#guess-result-list li:hover {
-                background: var(--light-color);
-              }
-            }
+section#game
+  #bot-second-half
+  #search-container
+  #guess-container
+  #guess-result
+  #guess-result-counter {
+  background-color: var(--white);
+  border-bottom: 1px solid var(--dark-color);
+  border-top: 1px solid var(--dark-color);
+  font-size: 0.75rem;
+  color: var(--base-color);
+  letter-spacing: 1px;
+  line-height: 1.3;
+  padding: 0.25rem 0.75rem;
+}
 
-          section#game #bot-second-half #search-container #guess-container #guess-result #guess-result-counter {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--dark-color);
-            border-top: 1px solid var(--dark-color);
-            font-size: 0.75rem;
-            color: var(--base-color);
-            letter-spacing: 1px;
-            line-height: 1.3;
-            padding: 0.25rem 0.75rem;
-          }
-
-    section#game #bot-second-half #submit-container {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-    }
-      section#game #bot-second-half #submit-container button {
-        border-radius: 250px;
-        display: inline-block;
-        flex-basis: 0%;
-        flex-grow: 1;
-        flex-shrink: 1;
-        max-width: 200px;
-        padding: 0 35px;
-        position: relative;
-      }
-        section#game #bot-second-half #submit-container button:last-child {
-          margin-right: 0;
-        }
-        @media (hover: hover) {
-          section#game #bot-second-half #submit-container button:not(:disabled):hover {
-            background-color: var(--light-color);
-            transform: scale(103%);
-          }
-        }
-        section#game #bot-second-half #submit-container button#button-skip:not(:disabled) {
-          background-color: var(--white);
-          border: 2px solid var(--gray-dark);
-        }
-          section#game #bot-second-half #submit-container button#button-skip span:nth-child(2) {
-            text-transform: initial;
-          }
-        section#game #bot-second-half #submit-container button#button-submit:not(:disabled) {
-          background-color: var(--base-color);
-          border: 2px solid var(--gray-dark);
-          color: var(--white);
-        }
-
+section#game #bot-second-half #submit-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+section#game #bot-second-half #submit-container button {
+  border-radius: 250px;
+  display: inline-block;
+  flex-basis: 0%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  max-width: 200px;
+  padding: 0 35px;
+  position: relative;
+}
+section#game #bot-second-half #submit-container button:last-child {
+  margin-right: 0;
+}
+@media (hover: hover) {
+  section#game #bot-second-half #submit-container button:not(:disabled):hover {
+    background-color: var(--light-color);
+    transform: scale(103%);
+  }
+}
+section#game
+  #bot-second-half
+  #submit-container
+  button#button-skip:not(:disabled) {
+  background-color: var(--white);
+  border: 2px solid var(--gray-dark);
+}
+section#game
+  #bot-second-half
+  #submit-container
+  button#button-skip
+  span:nth-child(2) {
+  text-transform: initial;
+}
+section#game
+  #bot-second-half
+  #submit-container
+  button#button-submit:not(:disabled) {
+  background-color: var(--base-color);
+  border: 2px solid var(--gray-dark);
+  color: var(--white);
+}
 
 /* utility classes */
 .debug {
@@ -882,15 +961,15 @@ section#game {
   border: 2px solid var(--debug-color);
   margin-bottom: 5px;
 }
-  .debug-state .debug-session {
-    padding: 5px;
-  }
-    .debug-state .debug-session:nth-child(odd) {
-      background-color: var(--debug-color-light2);
-    }
-    .debug-state .debug-session:nth-child(even) {
-      background-color: var(--debug-color-light3);
-    }
+.debug-state .debug-session {
+  padding: 5px;
+}
+.debug-state .debug-session:nth-child(odd) {
+  background-color: var(--debug-color-light2);
+}
+.debug-state .debug-session:nth-child(even) {
+  background-color: var(--debug-color-light3);
+}
 
 .disabled {
   color: var(--gray-dark) !important;
