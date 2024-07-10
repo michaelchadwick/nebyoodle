@@ -38,12 +38,12 @@
 
 @font-face {
   font-family: changaRegular;
-  src: url("../fonts/Changa/static/Changa-Regular.ttf");
+  src: url(https://fonts.neb.host/Changa/static/Changa-Regular.ttf);
 }
 
 @font-face {
   font-family: changaBold;
-  src: url("../fonts/Changa/static/Changa-Bold.ttf");
+  src: url(https://fonts.neb.host/Changa/static/Changa-Bold.ttf);
 }
 
 :root {
