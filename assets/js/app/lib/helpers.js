@@ -3,16 +3,29 @@
 /* global Nebyoodle */
 
 // get displayable string for today's date
-Nebyoodle.__getTodaysDate = function() {
+Nebyoodle.__getTodaysDate = function () {
   const d = new Date(Date.now())
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
 
   return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
 }
 
 // timestamp to display date
-Nebyoodle.__getFormattedDate = function(date) {
+Nebyoodle.__getFormattedDate = function (date) {
   let formatted_date = ''
 
   formatted_date += `${date.getFullYear()}/`

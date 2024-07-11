@@ -3,7 +3,7 @@
 /* global Nebyoodle */
 
 // add debug stuff if local
-Nebyoodle._initDebug = function() {
+Nebyoodle._initDebug = function () {
   // if debug buttons are in template
   if (Nebyoodle.dom.interactive.debug.debugButtons && Nebyoodle.showDebugMenu) {
     // show debug buttons
@@ -16,13 +16,17 @@ Nebyoodle._initDebug = function() {
 
   let qd = {}
 
-  if (location.search) location.search.substr(1).split("&").forEach(function(item) {
-    let s = item.split("="),
-        k = s[0],
-        v = s[1] && decodeURIComponent(s[1]); // null-coalescing / short-circuit
-    //(k in qd) ? qd[k].push(v) : qd[k] = [v]
-    (qd[k] = qd[k] || []).push(v) // null-coalescing / short-circuit
-  })
+  if (location.search)
+    location.search
+      .substr(1)
+      .split('&')
+      .forEach(function (item) {
+        let s = item.split('='),
+          k = s[0],
+          v = s[1] && decodeURIComponent(s[1]) // null-coalescing / short-circuit
+        //(k in qd) ? qd[k].push(v) : qd[k] = [v]
+        ;(qd[k] = qd[k] || []).push(v) // null-coalescing / short-circuit
+      })
 
   if (qd.debugCSS && qd.debugCSS == 1) {
     let debugStyles = document.createElement('link')
@@ -34,7 +38,7 @@ Nebyoodle._initDebug = function() {
 }
 
 // modal: debug: display Nebyoodle.config
-Nebyoodle._debugDisplayConfig = function() {
+Nebyoodle._debugDisplayConfig = function () {
   const configs = Nebyoodle.config
 
   let html = ''
@@ -44,10 +48,10 @@ Nebyoodle._debugDisplayConfig = function() {
 
   html += '<dl>'
 
-  Object.keys(configs).forEach(config => {
+  Object.keys(configs).forEach((config) => {
     html += `<h4>CONFIG: ${config}</h4>`
 
-    Object.keys(configs[config]).forEach(key => {
+    Object.keys(configs[config]).forEach((key) => {
       const label = key
       const value = configs[config][key]
 
@@ -60,41 +64,37 @@ Nebyoodle._debugDisplayConfig = function() {
   return html
 }
 // modal: debug: display Nebyoodle.state
-Nebyoodle._debugDisplayState = function() {
+Nebyoodle._debugDisplayState = function () {
   const states = Nebyoodle.state
 
   let html = ''
 
   html += '<dl class="centered">'
 
-  Object.keys(states).forEach(state => {
+  Object.keys(states).forEach((state) => {
     html += '<div class="debug-state">'
     html += `<h4>STATE: ${state}</h4>`
 
-    Object.keys(states[state]).forEach(session => {
+    Object.keys(states[state]).forEach((session) => {
       html += '<div class="debug-session">'
       html += `<h5>SESSION: ${session}</h5>`
 
-      Object.keys(states[state][session]).forEach(key => {
+      Object.keys(states[state][session]).forEach((key) => {
         const value = states[state][session][key]
 
-        if (typeof value == 'object'
-          && !Array.isArray(value)
-          && value != null
-        ) {
+        if (typeof value == 'object' && !Array.isArray(value) && value != null) {
           html += `<dd><code>${key}: {</code><dl>`
 
           if (key == 'statistics') {
-            Object.keys(states[state][session][key]).forEach(subkey => {
+            Object.keys(states[state][session][key]).forEach((subkey) => {
               value = states[state][session][key][subkey]
 
               html += `<dd><code>${subkey}:</code></dd><dt>${value}</dt>`
             })
 
             html += '</dl><code>}</code></dd>'
-          }
-          else {
-            Object.keys(states[state][session][key]).forEach(subkey => {
+          } else {
+            Object.keys(states[state][session][key]).forEach((subkey) => {
               value = states[state][session][key][subkey]
 
               if (subkey == 'lastCompletedTime' || subkey == 'lastPlayedTime') {
@@ -102,9 +102,10 @@ Nebyoodle._debugDisplayState = function() {
               }
 
               if (value) {
-
                 if (typeof value == 'object' && subkey == 'guesses') {
-                  html += `<dd><code>${subkey}:</code></dd><dt>${value.map(v => v.answer).join(', ')}</dt>`
+                  html += `<dd><code>${subkey}:</code></dd><dt>${value
+                    .map((v) => v.answer)
+                    .join(', ')}</dt>`
                 } else {
                   html += `<dd><code>${subkey}:</code></dd><dt>${value.join(', ')}</dt>`
                 }
@@ -115,7 +116,9 @@ Nebyoodle._debugDisplayState = function() {
           }
         } else {
           if (typeof value == 'object' && key == 'guesses') {
-            html += `<dd><code>${key}:</code></dd><dt>${value.map(v => v.answer != '' ? `'${v.answer}'` : '[skip]').join(', ')}</dt>`
+            html += `<dd><code>${key}:</code></dd><dt>${value
+              .map((v) => (v.answer != '' ? `'${v.answer}'` : '[skip]'))
+              .join(', ')}</dt>`
           } else {
             html += `<dd><code>${key}:</code></dd><dt>${value}</dt>`
           }

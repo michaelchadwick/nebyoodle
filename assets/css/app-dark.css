@@ -2,146 +2,205 @@ body.dark-mode {
   background-color: var(--black);
   color: var(--white);
 }
-  body.dark-mode a {
-    color: var(--white);
-  }
+body.dark-mode a {
+  color: var(--white);
+}
 
-  body.dark-mode code {
-    background-color: var(--gray-dark);
-  }
+body.dark-mode code {
+  background-color: var(--gray-dark);
+}
 
-  body.dark-mode header,
-  body.dark-mode button {
-    color: var(--white);
-  }
+body.dark-mode header,
+body.dark-mode button {
+  color: var(--white);
+}
 
-  body.dark-mode button.help {
-    background-color: var(--black);
-    border: 1px solid var(--white);
-  }
+body.dark-mode button.help {
+  background-color: var(--black);
+  border: 1px solid var(--white);
+}
 
-  body.dark-mode header .menu-left #nav-overlay #nav-content {
-    background-color: var(--black);
-  }
-    body.dark-mode header .menu-left #nav-overlay #nav-content a {
-      color: var(--white);
-    }
-      body.dark-mode header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
-        background-color: var(--base-color);
-      }
+body.dark-mode header .menu-left #nav-overlay #nav-content {
+  background-color: var(--black);
+}
+body.dark-mode header .menu-left #nav-overlay #nav-content a {
+  color: var(--white);
+}
+body.dark-mode
+  header
+  .menu-left
+  #nav-overlay
+  #nav-content
+  .container
+  .nav-list
+  a:hover {
+  background-color: var(--base-color);
+}
 
-  body.dark-mode section#game #top-half #mode-container .setting-row a {
-    color: var(--white);
-  }
+body.dark-mode section#game #top-half #mode-container .setting-row a {
+  color: var(--white);
+}
 
-  body.dark-mode section#game #top-half #mode-container #daily-details {
-    color: var(--white);
-  }
+body.dark-mode section#game #top-half #mode-container #daily-details {
+  color: var(--white);
+}
 
-  body.dark-mode section#game #top-half #song-data {
-    background-color: var(--dark-color);
-  }
+body.dark-mode section#game #top-half #song-data {
+  background-color: var(--dark-color);
+}
 
-  body.dark-mode .song-win-block {
-    background-color: var(--black);
-  }
-    body.dark-mode .song-win-block .song-misc {
-      background-color: var(--marker-color);
-    }
+body.dark-mode .song-win-block {
+  background-color: var(--black);
+}
+body.dark-mode .song-win-block .song-misc {
+  background-color: var(--marker-color);
+}
 
-  body.dark-mode section#game #top-half #guesses-container .guess {
-    color: var(--white);
-  }
-    body.dark-mode section#game #top-half #guesses-container .guess.wrong {
-      background-color: var(--window-lose2);
-    }
-    body.dark-mode section#game #top-half #guesses-container .guess.skipped {
-      background-color: var(--window-skip1);
-    }
-    body.dark-mode section#game #top-half #guesses-container .guess.correct {
-      background-color: var(--window-win2);
-    }
-    body.dark-mode section#game #top-half #guesses-container .guess .symbol {
-      border-color: var(--white);
-    }
-      body.dark-mode section#game #top-half #guesses-container .guess .symbol img.skipped {
-        filter: invert(100%) sepia(98%) saturate(0%) hue-rotate(7deg) brightness(103%) contrast(106%);
-      }
+body.dark-mode section#game #top-half #guesses-container .guess {
+  color: var(--white);
+}
+body.dark-mode section#game #top-half #guesses-container .guess.wrong {
+  background-color: var(--window-lose2);
+}
+body.dark-mode section#game #top-half #guesses-container .guess.skipped {
+  background-color: var(--window-skip1);
+}
+body.dark-mode section#game #top-half #guesses-container .guess.correct {
+  background-color: var(--window-win2);
+}
+body.dark-mode section#game #top-half #guesses-container .guess .symbol {
+  border-color: var(--white);
+}
+body.dark-mode
+  section#game
+  #top-half
+  #guesses-container
+  .guess
+  .symbol
+  img.skipped {
+  filter: invert(100%) sepia(98%) saturate(0%) hue-rotate(7deg) brightness(103%)
+    contrast(106%);
+}
 
-  body.dark-mode section#game #bot-first-half #timeline-container {
-    border-bottom-color: var(--white);
-    border-top-color: var(--white);
-  }
-    body.dark-mode section#game #bot-first-half #timeline-container #timeline .marker {
-      background-color: var(--white);
-    }
+body.dark-mode section#game #bot-first-half #timeline-container {
+  border-bottom-color: var(--white);
+  border-top-color: var(--white);
+}
+body.dark-mode
+  section#game
+  #bot-first-half
+  #timeline-container
+  #timeline
+  .marker {
+  background-color: var(--white);
+}
 
-  body.dark-mode section#game #bot-second-half #search-container #guess-container input#guess-input {
-    color: var(--white);
-  }
+body.dark-mode
+  section#game
+  #bot-second-half
+  #search-container
+  #guess-container
+  input#guess-input {
+  color: var(--white);
+}
 
-  body.dark-mode section#game #bot-second-half #search-container #guess-container #guess-result {
-    background: var(--black);
-  }
-    body.dark-mode section#game #bot-second-half #search-container #guess-container #guess-result ul#guess-result-list li {
-      border-bottom-color: var(--base-color);
-    }
+body.dark-mode
+  section#game
+  #bot-second-half
+  #search-container
+  #guess-container
+  #guess-result {
+  background: var(--black);
+}
+body.dark-mode
+  section#game
+  #bot-second-half
+  #search-container
+  #guess-container
+  #guess-result
+  ul#guess-result-list
+  li {
+  border-bottom-color: var(--base-color);
+}
 
-    @media (hover: hover) {
-      body.dark-mode section#game #bot-second-half #search-container #guess-container #guess-result ul#guess-result-list li:hover {
-        background: var(--dark-color);
-      }
-    }
+@media (hover: hover) {
+  body.dark-mode
+    section#game
+    #bot-second-half
+    #search-container
+    #guess-container
+    #guess-result
+    ul#guess-result-list
+    li:hover {
+    background: var(--dark-color);
+  }
+}
 
-  body.dark-mode section#game #bot-second-half #submit-container button#button-skip {
-    color: var(--gray-dark);
-  }
-    body.dark-mode section#game #bot-second-half #submit-container button#button-skip:not(:disabled) {
-      border: 2px solid var(--black);
-      color: var(--black);
-    }
+body.dark-mode
+  section#game
+  #bot-second-half
+  #submit-container
+  button#button-skip {
+  color: var(--gray-dark);
+}
+body.dark-mode
+  section#game
+  #bot-second-half
+  #submit-container
+  button#button-skip:not(:disabled) {
+  border: 2px solid var(--black);
+  color: var(--black);
+}
 
-  body.dark-mode section#game #bot-second-half #submit-container button#button-submit {
-    color: var(--gray-dark);
-  }
-    body.dark-mode section#game #bot-second-half #submit-container button#button-submit:not(:disabled) {
-      background-color: var(--dark-color);
-      border-color: var(--black);
-      color: var(--white);
-    }
+body.dark-mode
+  section#game
+  #bot-second-half
+  #submit-container
+  button#button-submit {
+  color: var(--gray-dark);
+}
+body.dark-mode
+  section#game
+  #bot-second-half
+  #submit-container
+  button#button-submit:not(:disabled) {
+  background-color: var(--dark-color);
+  border-color: var(--black);
+  color: var(--white);
+}
 
-  body.dark-mode #settings .setting-row .text .description {
-    color: var(--gray);
-  }
+body.dark-mode #settings .setting-row .text .description {
+  color: var(--gray);
+}
 
-  body.dark-mode .switch {
-    background-color: var(--gray-dark);
-  }
-    body.dark-mode .switch[data-status='true'] {
-      background-color: var(--base-color);
-    }
+body.dark-mode .switch {
+  background-color: var(--gray-dark);
+}
+body.dark-mode .switch[data-status="true"] {
+  background-color: var(--base-color);
+}
 
-  body.dark-mode .modal-window {
-    background-color: var(--black);
-  }
-  body.dark-mode .modal-dialog.temp .modal-window {
-    background-color: var(--black);
-    border-color: var(--white);
-    border-radius: 8px;
-    color: var(--white);
-  }
-  body.dark-mode .modal-text {
-    background-color: var(--black);
-    color: var(--white);
-  }
-    body.dark-mode .modal-window.game-over-win .modal-text,
-    body.dark-mode .modal-window.game-over-lose .modal-text {
-      background-color: var(--black);
-    }
-    body.dark-mode .modal-text ul li span.solution-category + ul {
-      background-color: var(--marker-color);
-      color: var(--white);
-    }
-  body.dark-mode .modal-button-group {
-    background-color: var(--black);
-  }
+body.dark-mode .modal-window {
+  background-color: var(--black);
+}
+body.dark-mode .modal-dialog.temp .modal-window {
+  background-color: var(--black);
+  border-color: var(--white);
+  border-radius: 8px;
+  color: var(--white);
+}
+body.dark-mode .modal-text {
+  background-color: var(--black);
+  color: var(--white);
+}
+body.dark-mode .modal-window.game-over-win .modal-text,
+body.dark-mode .modal-window.game-over-lose .modal-text {
+  background-color: var(--black);
+}
+body.dark-mode .modal-text ul li span.solution-category + ul {
+  background-color: var(--marker-color);
+  color: var(--white);
+}
+body.dark-mode .modal-button-group {
+  background-color: var(--black);
+}
