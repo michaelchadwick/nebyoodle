@@ -11,6 +11,11 @@ Nebyoodle._initDebug = function () {
     // make header buttons smaller to fit in debug buttons
     document.querySelectorAll('button.icon').forEach((btn) => {
       btn.style.fontSize = '16px'
+
+      if (btn.id == 'button-nav') {
+        btn.querySelector('img').style.height = '16px'
+        btn.querySelector('img').style.width = '16px'
+      }
     })
   }
 
