@@ -254,7 +254,7 @@ Nebyoodle._saveGame = function (lsType, src = 'unknown') {
       break
 
     case 'settings':
-      localStorage.setItem(NEBYOODLE_SETTINGS_LS_KEY, JSON.stringify(curSettings))
+      localStorage.setItem(NEBYOODLE_SETTINGS_LS_KEY, JSON.stringify(Nebyoodle.settings))
 
       break
   }
