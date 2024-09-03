@@ -1,4 +1,4 @@
-/* lib/stats */
+/* lib/misc/stats */
 /* statistic crunching functions */
 /* global Nebyoodle */
 

@@ -1,0 +1,406 @@
+header {
+  align-items: center;
+  background-color: var(--vlight-color);
+  border-bottom: 1px solid var(--base-color);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  height: 50px;
+  padding: 0;
+}
+/*
+    z-index 11 keeps it above <dialog>
+    z-index 10 so you can still interact
+    with header even when in an end state
+  */
+header button,
+header #nav-links,
+#mode-container {
+  z-index: 11;
+}
+header .menu-left {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+  width: 70px;
+}
+header .menu-left #nav-overlay {
+  align-items: unset;
+  background-color: transparent;
+  display: none;
+  height: 100%;
+  justify-content: left;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+header .menu-left #nav-overlay.show {
+  display: flex;
+}
+header .menu-left #nav-overlay #nav-content {
+  background-color: var(--white);
+  border-radius: 0;
+  box-shadow: 3px 5px 5px rgb(0 0 0 / 15%);
+  box-sizing: border-box;
+  margin-top: 50px;
+  max-height: calc(100% - 50px);
+  max-width: 500px;
+  overflow-y: auto;
+  padding: 0px;
+  position: relative;
+  width: 100%;
+}
+@media (min-width: 415px) {
+  header .menu-left #nav-overlay #nav-content {
+    width: 325px;
+  }
+}
+header .menu-left #nav-overlay #nav-content a {
+  color: var(--black);
+  text-decoration: none;
+}
+
+header .menu-left #nav-overlay #nav-content .container {
+  align-items: normal;
+  padding: 0;
+}
+header .menu-left #nav-overlay #nav-content .container .nav-header {
+  font-size: 20px;
+  padding-bottom: 18px;
+  padding-left: 18px;
+  padding-top: 18px;
+}
+header .menu-left #nav-overlay #nav-content .container .nav-list a {
+  align-items: center;
+  background-color: transparent;
+  display: flex;
+  font-family: "Changa Bold";
+  font-size: 16px;
+  font-weight: bold;
+  height: 30px;
+  justify-content: left;
+  padding: 4px 0 4px 18px;
+}
+header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
+  background-color: var(--light-color);
+}
+header .menu-left #nav-overlay #nav-content #button-nav-close {
+  font-family: "Changa Bold";
+  font-size: 20px;
+  font-weight: 600;
+  height: 24px;
+  position: absolute;
+  right: 10px;
+  top: 16px;
+  width: 24px;
+}
+header .menu-left #nav-overlay #nav-content .nav-footer {
+  display: flex;
+}
+#footer-neb-host {
+  background: var(--base-color);
+  border-top: 2px solid var(--dark-color);
+  bottom: 0;
+  color: var(--light-color);
+  font-family: "Consolas", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  height: 18px;
+  left: 0;
+  letter-spacing: initial;
+  margin-top: 20px;
+  padding: 10px 18px 25px;
+  position: absolute;
+  right: 0;
+  text-align: left;
+  z-index: 2;
+}
+
+header #debug-buttons {
+  display: none;
+}
+header #debug-buttons button {
+  color: var(--debug-color);
+}
+header #debug-buttons .ddmenu {
+  align-items: center;
+  display: flex;
+  z-index: 10;
+}
+header #debug-buttons .ddmenu .ddgroup {
+  border: 1px solid transparent;
+  position: relative;
+  text-decoration: none;
+  width: 100%;
+}
+header #debug-buttons .ddmenu .ddgroup button {
+  margin-right: 0;
+}
+header #debug-buttons .ddmenu .ddgroup:hover {
+  background: var(--debug-color-light3);
+  border: 1px solid var(--debug-color-medium);
+  cursor: pointer;
+}
+header #debug-buttons .ddmenu .ddgroup .ddsub {
+  display: none;
+  left: -1px;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+}
+header #debug-buttons .ddmenu .ddgroup .ddsub a {
+  box-sizing: border-box;
+  display: block;
+}
+header #debug-buttons .ddmenu .ddgroup .ddsub button {
+  background-color: var(--debug-color-light4);
+  border: 1px solid transparent;
+  border-radius: 0;
+  height: 20px;
+  padding: 5px;
+  width: 26px;
+}
+header #debug-buttons .ddmenu .ddgroup .ddsub button:hover {
+  background: var(--debug-color-light5);
+  border: 1px solid var(--debug-color-medium);
+}
+header #debug-buttons .ddmenu .ddgroup:hover .ddsub {
+  display: flex;
+  flex-direction: column;
+}
+@media screen and (max-width: 640px) {
+  .ddmenu {
+    flex-wrap: wrap;
+  }
+  .ddsub {
+    position: static;
+  }
+}
+
+header .title {
+  font-family: "Changa Bold";
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  text-align: center;
+  text-transform: uppercase;
+}
+@media (min-width: 768px) {
+  header .title {
+    font-size: 20px;
+    letter-spacing: 0.01em;
+  }
+}
+header .menu-right {
+  display: flex;
+  width: 70px;
+}
+header .menu-right button#button-settings {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 0;
+}
+
+/*
+ * GAME
+ */
+section#game {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 50px); /* whole screen except for header */
+  margin: 0 auto;
+  width: 100%;
+}
+
+section#game #top-half {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 8px;
+  margin: 0 auto;
+  max-width: 640px;
+  padding: 0 12px 12px;
+  width: 100%;
+}
+section#game #top-half #mode-container {
+  height: 40px;
+  margin: 0 auto;
+  text-transform: uppercase;
+  text-underline-offset: 2px;
+  width: 100%;
+}
+section#game #top-half #mode-container .setting-row {
+  font-size: 20px;
+  margin: 0 auto;
+  padding: 4px;
+  text-align: center;
+}
+section#game #top-half #mode-container .setting-row a {
+  color: var(--black);
+  text-decoration: none;
+}
+section#game #top-half #mode-container .setting-row a:hover:not(.disabled),
+section#game #top-half #mode-container .setting-row a[data-active="true"] {
+  text-decoration: underline;
+}
+section#game #top-half #mode-container .setting-row button#button-create-new {
+  background-color: var(--gray);
+  border-radius: 4px;
+  font-weight: normal;
+  height: 22px;
+  margin-left: 10px;
+  padding: 13px 5px;
+}
+section#game #top-half #mode-container .setting-row button#button-create-new i {
+  margin-right: 5px;
+}
+section#game #top-half #mode-container #gamemode-container {
+  height: 30px;
+}
+
+section#game #top-half #mode-container #daily-details {
+  color: var(--marker-color);
+  display: none;
+  font-size: 0.9rem;
+  padding: 0 4px;
+  transform: scale(0);
+}
+section#game #top-half #mode-container #daily-details.show {
+  display: block;
+  transform: scale(1);
+}
+section#game #top-half #mode-container #daily-details .day {
+  font-family: "Changa Bold";
+  font-weight: 600;
+}
+
+section#game #top-half #song-data {
+  background-color: var(--light-color);
+  display: none;
+  padding: 1rem;
+}
+section#game #top-half #song-data.show {
+  display: block;
+}
+section#game #top-half #song-data.lds-dual-ring {
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.song-win-block {
+  background-color: var(--off-white);
+}
+.song-win-block .song-main {
+  display: flex;
+}
+.song-win-block .song-main {
+  padding: 10px 10px 5px;
+}
+.song-win-block .song-main a {
+  margin-right: 10px;
+}
+.song-win-block .song-misc {
+  background: var(--white);
+  line-height: 1;
+  padding: 10px;
+}
+
+section#game #top-half #guesses-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 8px;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 640px;
+  overflow-y: scroll;
+  padding: 0;
+  width: 100%;
+}
+section#game #top-half #guesses-container .guess {
+  align-items: center;
+  border: 2px solid var(--gray-dark);
+  display: flex;
+  flex-shrink: 0;
+  font-family: "Changa Bold";
+  font-size: 1.1rem;
+  font-weight: bold;
+  height: 38px;
+  line-height: 0.9;
+  padding: 8px;
+}
+section#game #top-half #guesses-container .guess.skipped {
+  background-color: var(--window-skip1-light);
+  border-color: var(--window-skip1);
+}
+section#game #top-half #guesses-container .guess.wrong {
+  background-color: var(--window-lose1-light);
+  border-color: var(--window-lose1);
+}
+section#game #top-half #guesses-container .guess.correct {
+  background-color: var(--window-win1-light);
+  border-color: var(--window-win2);
+}
+section#game #top-half #guesses-container .guess .symbol {
+  align-items: center;
+  display: flex;
+  margin: 0 8px 2px 2px;
+}
+
+section#game #bot-first-half {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+section#game #bot-first-half #timeline-container {
+  align-items: center;
+  border-bottom: 1px solid var(--black);
+  border-top: 1px solid var(--black);
+  display: flex;
+  height: 14px;
+  justify-content: center;
+  padding: 0 12px;
+  width: 100%;
+}
+section#game #bot-first-half #timeline-container #timeline {
+  height: 100%;
+  max-width: 640px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+section#game #bot-first-half #timeline-container #timeline .intro-unplayed {
+  background-color: var(--unplayed-color);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform-origin: left top;
+  width: 100%;
+}
+section#game #bot-first-half #timeline-container #timeline .intro-played {
+  background-color: var(--played-color);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform-origin: left top;
+  width: 100%;
+  z-index: 1;
+}
+section#game #bot-first-half #timeline-container #timeline .marker {
+  background-color: var(--marker-color);
+  height: 100%;
+  position: absolute;
+  width: 1px;
+  z-index: 1;
+}

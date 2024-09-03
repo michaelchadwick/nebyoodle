@@ -1,15 +1,15 @@
-'use strict';
+'use strict'
 
 module.exports = {
   overrides: [
     {
       files: '*.{js,ts}',
       options: {
+        printWidth: 100,
         semi: false,
         singleQuote: true,
-        printWidth: 100,
         trailingComma: 'es5',
       },
     },
   ],
-};
+}

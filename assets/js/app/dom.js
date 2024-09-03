@@ -50,3 +50,5 @@ Nebyoodle.dom.interactive.debug = {
   btnShowState: document.getElementById('button-show-state'),
   debugButtons: document.getElementById('debug-buttons'),
 }
+
+Nebyoodle._logStatus('[LOADED] /app/dom')
