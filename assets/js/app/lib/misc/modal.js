@@ -38,8 +38,6 @@ class Modal {
         this.modalDelay
       )
     }
-
-    Nebyoodle._logStatus('[LOADED] /app/modal', modalText)
   }
 
   question() {
