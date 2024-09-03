@@ -488,8 +488,7 @@ Nebyoodle._checkWinState = async function () {
     }
   }
 
-  // console.log('- save game because finished checking win state')
-  Nebyoodle._saveGame()
+  Nebyoodle._saveGame(Nebyoodle.__getGameMode())
 
   return gameIsWon
 }
