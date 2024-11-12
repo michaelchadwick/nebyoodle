@@ -509,29 +509,40 @@ Nebyoodle._loadQueryString = function (param) {
 Nebyoodle._shareResults = async function () {
   let shareText = Nebyoodle.__getShareText()
 
-  if (navigator.canShare) {
-    navigator.share({ text: shareText })
+  // if (navigator.canShare({ text: shareText })) {
+  //   navigator.share({ text: shareText }).then(() => {
+  //     console.log('sharing was successful')
+  //   })
+  //   .catch((error) => {
+  //     if (error.name == 'AbortError') {
+  //       console.log('user canceled share')
+  //     } else {
+  //       console.log('navigator.share failed', error)
+  //     }
+  //   })
+  //   .finally(() => {
+  //     // console.log('navigator.share() ended')
+  //   })
+  // } else {
+  if (navigator.clipboard) {
+    navigator.clipboard
+      .writeText(shareText)
+      .then(() => {
+        Nebyoodle.modalOpen('shared')
+      })
+      .catch(() => {
+        console.error('could not copy text to clipboard')
+
+        Nebyoodle.modalOpen('no-clipboard-access')
+
+        return
+      })
   } else {
-    if (navigator.clipboard) {
-      navigator.clipboard
-        .writeText(shareText)
-        .then(() => {
-          Nebyoodle.modalOpen('shared')
-        })
-        .catch(() => {
-          console.error('could not copy text to clipboard')
+    console.warn('no sharing or clipboard access available')
 
-          Nebyoodle.modalOpen('no-clipboard-access')
+    Nebyoodle.modalOpen('no-clipboard-access')
 
-          return
-        })
-    } else {
-      console.warn('no sharing or clipboard access available')
-
-      Nebyoodle.modalOpen('no-clipboard-access')
-
-      return
-    }
+    return
   }
 }
 
