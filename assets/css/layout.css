@@ -5,9 +5,9 @@ header {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-evenly;
+  justify-content: space-between;
   height: 50px;
-  padding: 0;
+  padding: 0 16px;
 }
 /*
     z-index 11 keeps it above <dialog>
