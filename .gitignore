@@ -1,7 +1,7 @@
 .DS_Store
 _archive
 _debug
+assets/php
 assets/text
-scripts
 
 !assets/icons
