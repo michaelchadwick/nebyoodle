@@ -30,20 +30,24 @@ Nebyoodle._handleAudioDuration = function (event) {
 // handle both clicks and touches outside of modals
 Nebyoodle._handleClickTouch = function (event) {
   const dialog = document.getElementsByClassName('modal-dialog')[0]
+  const elem = event.target
 
   if (dialog) {
     const isConfirm = dialog.classList.contains('modal-confirm')
+    const isShareLink = elem.classList.contains('share')
     const isTempApi = dialog.classList.contains('temp-api')
-    const isEndState = dialog.classList.contains('end-state')
+    // const isEndState = dialog.classList.contains('end-state')
 
-    // only close if not a confirmation (and not a special temp-api/end-state)!
-    if (event.target == dialog && !isConfirm && !isTempApi && !isEndState) {
+    // only close if not a confirmation, share link, or temp-api!
+    if (elem == dialog && !isConfirm && !isShareLink && !isTempApi) {
       dialog.remove()
     }
-  }
-
-  if (event.target == Nebyoodle.dom.navOverlay) {
-    Nebyoodle.dom.navOverlay.classList.toggle('show')
+  } else {
+    if (elem == Nebyoodle.dom.navOverlay) {
+      Nebyoodle.dom.navOverlay.classList.toggle('show')
+    } else {
+      // console.log('something with no handler was clicked/touched', elem)
+    }
   }
 }
 
@@ -158,14 +162,7 @@ Nebyoodle._attachEventListeners = function () {
   Nebyoodle.dom.mainUI.btnSkip.addEventListener('click', Nebyoodle._handleSkipButton, false)
   Nebyoodle.dom.mainUI.btnSubmit.addEventListener('click', Nebyoodle._handleSubmitButton, false)
 
-  // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
-  document.addEventListener('keydown', (event) => {
-    if (event.code == 'Space' && document.activeElement.id != 'guess-input') {
-      Nebyoodle._handlePlayButton()
-    }
-  })
-
-  // if local dev, show debug buttons
+  // local debug buttons
   if (Nebyoodle.env == 'local') {
     if (Nebyoodle.dom.interactive.debug.debugButtons && Nebyoodle.showDebugMenu) {
       // 🪣 get single Nebyoolae song from music.nebyoolae.com
@@ -196,13 +193,20 @@ Nebyoodle._attachEventListeners = function () {
     }
   }
 
+  // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
+  document.addEventListener('keydown', (event) => {
+    if (event.code == 'Space' && document.activeElement.id != 'guess-input') {
+      Nebyoodle._handlePlayButton()
+    }
+  })
+
   // When the user clicks or touches anywhere outside of the modal, close it
   window.addEventListener('click', Nebyoodle._handleClickTouch)
   window.addEventListener('touchend', Nebyoodle._handleClickTouch)
 
   document.body.addEventListener(
     'touchmove',
-    function (event) {
+    (event) => {
       event.preventDefault
     },
     { passive: false }
