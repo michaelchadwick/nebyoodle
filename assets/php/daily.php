@@ -1,21 +1,17 @@
 <?php
 
-function getId($song) {
-  return $song['drupal_internal__nid'];
-}
-
-$SERVER_VALID_SONGIDS_FILE = '../text/validSongIds.txt';
-
 $HASH_ALGO = 'crc32';
 $DATE_FORMAT = 'l jS \of F Y';
 $DATE_FORMAT_LOG = 'Y-m-d';
-
+$SERVER_VALID_SONGIDS_FILE = '../text/validSongIds.txt';
+$tz = (new DateTimeZone('America/Los_Angeles'));
 $env = isset($_REQUEST['env']) ? $_REQUEST['env'] : 'local';
 
-$nebyoodleEpoch = new DateTime('2023-04-14T00:00:00-0700');
-$serverDate = new DateTime();
+$epochDateTime = new DateTime('2023-04-14', $tz);
+$serverDateTime = new DateTime('now', $tz);
 
-$daysSinceEpoch = $nebyoodleEpoch->diff($serverDate)->format('%a');
+// daily puzzle index == days since epoch (int)
+$index = intval($epochDateTime->diff($serverDateTime)->format('%a'));
 
 $seeds = null;
 
@@ -35,6 +31,10 @@ if (!file_exists($SERVER_VALID_SONGIDS_FILE)) {
   curl_close($ch);
 
   $temp = json_decode($songIds, true);
+
+  function getId($song) {
+    return $song['drupal_internal__nid'];
+  }
   $seeds = array_map('getId', $temp['data']);
 
   $fp = fopen($SERVER_VALID_SONGIDS_FILE, 'w');
@@ -48,13 +48,13 @@ if (!file_exists($SERVER_VALID_SONGIDS_FILE)) {
 
 $seedsCount = count($seeds);
 
-// get unique date string for today
-$today = date($DATE_FORMAT);
-$todayLog = date($DATE_FORMAT_LOG);
+// get unique date string for today (int-> string)
+$today = $serverDateTime->format($DATE_FORMAT);
+$todayLog = $serverDateTime->format($DATE_FORMAT_LOG);
 
-// get integer hash for today
+// get integer hash for today (hex)
 $hashHex = hash($HASH_ALGO, strval($today));
-$hashInt = base_convert($hashHex, 16, 10);
+$hashInt = intval(base_convert($hashHex, 16, 10));
 
 // get bounded seeds index from today's hash
 $seedsIndex = intval($hashInt) % $seedsCount;
@@ -62,9 +62,7 @@ $seedsIndex = intval($hashInt) % $seedsCount;
 // get today's songId
 $todaySongId = $seeds[$seedsIndex];
 
-/*
-  get song data via songId
-*/
+// get song data from remote API via songId
 $ch = curl_init();
 
 $url = 'https://music.nebyoolae.com';
@@ -80,7 +78,7 @@ curl_close($ch);
 
 if ($song) {
   echo json_encode(array(
-    'index' => $daysSinceEpoch,
+    'index' => $index,
     'message' => 'Got daily song and index',
     'songId' => $todaySongId,
     'status' => 'ok'
