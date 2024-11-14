@@ -1,23 +1,22 @@
+/* Modal class */
 /* eslint-disable no-unused-vars */
 
 class Modal {
-  constructor(modalType, modalTitle, modalText, acceptText, cancelText, modalClass) {
+  constructor(
+    modalType = 'perm',
+    modalTitle = 'Confirmation',
+    modalText = 'You sure?',
+    acceptText = 'Yes',
+    cancelText = 'No',
+    modalClass = null
+  ) {
     this.modalDelay = 1500
-    this.modalType = modalType || 'perm'
-    this.modalTitle = modalTitle || 'Confirmation'
-    this.modalText = modalText || 'Are you sure you want to do this?'
-    this.modalClass = modalClass || null
-
-    if (acceptText) {
-      this.acceptText = acceptText || 'Yes'
-    } else {
-      this.acceptText = null
-    }
-    if (cancelText) {
-      this.cancelText = cancelText || 'No'
-    } else {
-      this.cancelText = null
-    }
+    this.modalType = modalType
+    this.modalTitle = modalTitle
+    this.modalText = modalText
+    this.modalClass = modalClass
+    this.acceptText = acceptText
+    this.cancelText = cancelText
 
     this.parent = document.body
 
@@ -30,7 +29,7 @@ class Modal {
 
     if (modalType == 'temp') {
       // close temp modals after delay
-      var modal = this
+      let modal = this
       setTimeout(
         function (modal) {
           modal._destroyModal()
@@ -65,45 +64,52 @@ class Modal {
     this.modal = document.createElement('dialog')
     this.modal.classList.add('modal-dialog')
 
-    if (modalType == 'confirm' || modalType == 'confirm-debug') {
-      this.modal.classList.add('modal-confirm')
-    }
+    // add proper CSS class
+    switch (modalType) {
+      case 'confirm':
+      case 'confirm-debug':
+        this.modal.classList.add('modal-confirm')
+        break
 
-    if (modalType == 'temp') {
-      this.modal.classList.add('temp')
-    }
+      case 'temp':
+        this.modal.classList.add('temp')
+        break
 
-    if (modalType == 'temp-api') {
-      this.modal.classList.add('temp-api')
-    }
+      case 'temp-api':
+        this.modal.classList.add('temp-api')
+        break
 
-    if (modalType == 'end-state') {
-      this.modal.classList.add('end-state')
+      case 'end-state':
+        this.modal.classList.add('end-state')
+        break
     }
 
     // Message window
-    const window = document.createElement('div')
-    window.classList.add('modal-window')
-    window.classList.add('animate__animated', 'animate__fadeInUp')
+    const msgWindow = document.createElement('div')
+    msgWindow.classList.add('modal-window')
+    msgWindow.classList.add('animate__animated', 'animate__fadeInUp')
 
     if (this.modalClass) {
-      window.classList.add(this.modalClass)
+      msgWindow.classList.add(this.modalClass)
     }
 
     if (modalType == 'perm-debug' || modalType == 'confirm-debug') {
-      window.classList.add('debug')
+      msgWindow.classList.add('debug')
     }
-    this.modal.appendChild(window)
+
+    this.modal.appendChild(msgWindow)
 
     // if not a temporary modal, add a title and close button
     if (modalType != 'temp' && modalType != 'temp-api') {
       // Title
       const title = document.createElement('div')
       title.classList.add('modal-title')
+
       if (modalType == 'perm-debug' || modalType == 'confirm-debug') {
         title.classList.add('debug')
       }
-      window.appendChild(title)
+
+      msgWindow.appendChild(title)
 
       // Title text
       const titleText = document.createElement('div')
@@ -127,17 +133,19 @@ class Modal {
     const text = document.createElement('div')
     text.classList.add('modal-text')
     text.innerHTML = this.modalText
-    window.appendChild(text)
+    msgWindow.appendChild(text)
 
     // if a confirm modal, add buttons
     if (modalType == 'confirm' || modalType == 'confirm-debug') {
       // Accept and cancel button group
       const buttonGroup = document.createElement('div')
       buttonGroup.classList.add('modal-button-group')
+
       if (modalType == 'confirm-debug') {
         buttonGroup.classList.add('debug')
       }
-      window.appendChild(buttonGroup)
+
+      msgWindow.appendChild(buttonGroup)
 
       // Cancel button
       this.cancelButton = document.createElement('button')
@@ -159,24 +167,20 @@ class Modal {
     }
 
     // Let's rock
-    if (!this.parent.contains(document.getElementsByClassName('modal-dialog')[0])) {
-      // console.log('_destroyModal: attempting to add this.modal to this.parent', this.modal, this.parent)
-
-      this.parent.appendChild(this.modal)
-    }
+    this.parent.appendChild(this.modal)
   }
 
   _destroyModal() {
     if (this.modal) {
-      // console.log('_destroyModal: attempting to remove this.modal', this.modal)
-
-      const modal = document.getElementsByClassName('modal-dialog')[0]
+      const modals = document.getElementsByClassName('modal-dialog')
+      const modalCount = modals.length
+      const modal = modals[modalCount - 1]
 
       if (this.parent.contains(modal)) {
-        // console.log('_destroyModal: attempting to remove this.modal', this.modal.querySelector('.modal-title'))
-
-        this.parent.removeChild(modal)
-        delete this
+        if (!modal.classList.contains('modal-confirm')) {
+          this.parent.removeChild(modal)
+          delete this
+        }
       }
     }
   }
