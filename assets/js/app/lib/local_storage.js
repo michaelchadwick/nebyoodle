@@ -214,7 +214,7 @@ Nebyoodle._loadGame = async function () {
     Nebyoodle.modalOpen('readysetguess')
   }
 
-  if (Nebyoodle.settings.firstTime) {
+  if (Nebyoodle.settings.firstTime && document.referrer.indexOf('omni.neb.host') < 0) {
     Nebyoodle.modalOpen('start')
   }
 
@@ -289,7 +289,9 @@ Nebyoodle._loadSettings = function () {
       Nebyoodle.settings.gameMode = lsSettings.gameMode
     }
   } else {
-    Nebyoodle.modalOpen('start')
+    if (document.referrer.indexOf('omni.neb.host') < 0) {
+      Nebyoodle.modalOpen('start')
+    }
   }
 
   // STATE->GAMEMODE
