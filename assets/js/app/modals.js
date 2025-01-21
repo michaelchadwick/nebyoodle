@@ -274,5 +274,9 @@ Nebyoodle.modalOpen = async function (type, data = null) {
     case 'win-game-hax':
       Nebyoodle.myModal = new Modal('temp', null, 'Hacking the game, I see', null, null)
       break
+
+    case 'cleared-local-storage':
+      Nebyoodle.myModal = new Modal('temp', null, 'Local Storage has been cleared', null, null)
+      break
   }
 }

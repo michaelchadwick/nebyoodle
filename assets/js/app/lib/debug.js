@@ -140,3 +140,18 @@ Nebyoodle._debugDisplayState = function () {
 
   return html
 }
+
+// modal: debug: clear localStorage
+Nebyoodle._clearLocalStorage = (showModal = true) => {
+  localStorage.clear()
+
+  if (showModal) {
+    if (
+      localStorage.key(NEBYOODLE_SETTINGS_LS_KEY) == undefined &&
+      localStorage.key(NEBYOODLE_STATE_DAILY_LS_KEY) == undefined &&
+      localStorage.key(NEBYOODLE_STATE_FREE_LS_KEY) == undefined
+    ) {
+      Nebyoodle.modalOpen('cleared-local-storage')
+    }
+  }
+}
