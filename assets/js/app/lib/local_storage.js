@@ -17,7 +17,9 @@ Nebyoodle._loadGame = async function () {
   /* allSongData from LS/API   */
   /* ************************* */
 
-  await Nebyoodle._loadAllSongData()
+  if (document.referrer.indexOf('omni.neb.host') < 0) {
+    await Nebyoodle._loadAllSongData()
+  }
 
   /* ************************* */
   /* daily state LS -> code    */
