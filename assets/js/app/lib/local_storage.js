@@ -495,12 +495,18 @@ Nebyoodle._getSongs = async function () {
     )
 
     const getSongsResponse = await fetch(NEBYOODLE_ALL_SONGS_SCRIPT)
-    const songs = await getSongsResponse.json()
+    const response = await getSongsResponse.json()
 
     if (Nebyoodle.myModal) Nebyoodle.myModal._destroyModal()
 
-    if (songs && songs.status != 'error') {
-      songs.data.forEach((song, index) => {
+    if (response && !response.error) {
+      if (Nebyoodle.myTempModal) {
+        Nebyoodle.myTempModal._destroyModal()
+      }
+
+      const songs = response.data
+
+      songs.forEach((song, index) => {
         const songName = song.title
         const albumName = song.field_album_id.name
 
