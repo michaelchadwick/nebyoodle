@@ -83,7 +83,7 @@ Nebyoodle._loadGame = async function () {
         Nebyoodle.myModal = new Modal(
           'temp-api',
           ' ',
-          'loading saved daily info...',
+          'loading data...',
           null,
           null,
           'lds-dual-ring'
@@ -488,7 +488,7 @@ Nebyoodle._getSongs = async function () {
     Nebyoodle.myTempModal = new Modal(
       'temp-api',
       ' ',
-      'loading song data...',
+      'loading songs...',
       null,
       null,
       'lds-dual-ring'
